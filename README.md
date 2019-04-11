@@ -23,7 +23,7 @@ From a new terminal window locate the path to your mongodb directory. Run the ex
 For example if you put it in your Users directory (and your user is called JoeSchmo) you would run this command
 
 ```bash
-/Users/frederikklovborg/mongodb/bin/mongod --dbpath=/Users/frederikklovborg/mongodb-data
+/Users/JoeSchmo/mongodb/bin/mongod --dbpath=/Users/JoeSchmo/mongodb-data
 ```
 
 If everything went as expected you should look for the local port in the output. It should look like this:
