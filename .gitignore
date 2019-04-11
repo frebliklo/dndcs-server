@@ -1,0 +1,9 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+
+# Javascript
+src/**/*.js
+src/**/*.js.map

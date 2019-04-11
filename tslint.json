@@ -1,0 +1,53 @@
+{
+  "extends": ["tslint:latest", "tslint-config-prettier"],
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "rules": {
+    "prettier": [
+      true,
+      {
+        "printWidth": 80,
+        "bracketSpacing": true,
+        "singleQuote": true,
+        "semi": false,
+        "trailingComma": "es5"
+      }
+    ],
+    "align": [false, "parameters", "arguments", "statements"],
+    "ordered-imports": true,
+    "object-literal-sort-keys": false,
+    "semicolon": { "options": "never" },
+    "switch-default": true,
+    "max-line-length": [true, 120],
+    "interface-name": [true, "never-prefix"],
+    "interface-over-type-literal": false,
+    "quotemark": [true, "single", "avoid-escape"],
+    "max-classes-per-file": false,
+    "no-console": { "severity": "warning" },
+    "no-submodule-imports": false,
+    "no-this-assignment": false,
+    "no-object-literal-type-assertion": false,
+    "no-var-requires": false,
+    "no-shadowed-variable": false,
+    "no-empty-interface": false,
+    "no-implicit-dependencies": false,
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore",
+      "allow-pascal-case"
+    ],
+    "member-access": false,
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "public-static-field",
+          "protected-static-field",
+          "public-static-method",
+          "protected-static-method"
+        ]
+      }
+    ]
+  }
+}
