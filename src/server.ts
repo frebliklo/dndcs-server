@@ -49,10 +49,19 @@ app.get('/api/users/:id', async (req, res) => {
 })
 
 app.patch('/api/users/:id', async (req, res) => {
-  const { body, id } = req.params
+  const { id } = req.params
+  const updates = Object.keys(req.body)
+  const allowedUpdates = ['name', 'email', 'password']
+  const isValidUpdates = updates.every(update =>
+    allowedUpdates.includes(update)
+  )
+
+  if (!isValidUpdates) {
+    return res.status(400).send({ error: 'Invalid updates' })
+  }
 
   try {
-    const user = await User.findByIdAndUpdate(id, body, {
+    const user = await User.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     })
@@ -64,6 +73,22 @@ app.patch('/api/users/:id', async (req, res) => {
     res.send(user)
   } catch (err) {
     res.status(400).send(err)
+  }
+})
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const user = await User.findByIdAndDelete(id)
+
+    if (!user) {
+      return res.status(404).send()
+    }
+
+    res.send(user)
+  } catch (err) {
+    res.status(500).send()
   }
 })
 
@@ -92,6 +117,62 @@ app.get('/api/characters/:id', async (req, res) => {
 
   try {
     const character = await Character.findById(id)
+
+    if (!character) {
+      return res.status(404).send()
+    }
+
+    res.send(character)
+  } catch (err) {
+    res.status(500).send()
+  }
+})
+
+app.patch('/api/characters/:id', async (req, res) => {
+  const { id } = req.params
+  const updates = Object.keys(req.body)
+  const allowedUpdates = [
+    'name',
+    'level',
+    'strength',
+    'dexterity',
+    'constitution',
+    'intelligence',
+    'wisdom',
+    'charisma',
+    'maxHp',
+    'currentHp',
+    'proficiencies',
+  ]
+  const isValidUpdates = updates.every(update =>
+    allowedUpdates.includes(update)
+  )
+
+  if (!isValidUpdates) {
+    return res.status(400).send({ error: 'Invalid updates' })
+  }
+
+  try {
+    const character = await Character.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    })
+
+    if (!character) {
+      return res.status(404).send()
+    }
+
+    res.send(character)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+})
+
+app.delete('/api/characters/:id', async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const character = await Character.findByIdAndDelete(id)
 
     if (!character) {
       return res.status(404).send()
