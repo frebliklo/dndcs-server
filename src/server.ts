@@ -12,66 +12,76 @@ app.get('/', (req, res) => {
   res.send('Hello world')
 })
 
-app.post('/api/users', (req, res) => {
+app.post('/api/users', async (req, res) => {
   const user = new User(req.body)
 
-  user
-    .save()
-    .then(() => {
-      res.status(201).send(user)
-    })
-    .catch(err => res.status(400).send(err))
+  try {
+    await user.save()
+    res.status(201).send(user)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 })
 
-app.get('/api/users', (req, res) => {
-  User.find({})
-    .then(users => res.send(users))
-    .catch(err => res.status(500).send())
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await User.find({})
+    res.send(users)
+  } catch (err) {
+    res.status(500).send()
+  }
 })
 
-app.get('/api/users/:id', (req, res) => {
+app.get('/api/users/:id', async (req, res) => {
   const { id } = req.params
 
-  User.findById(id)
-    .then(user => {
-      if (!user) {
-        return res.status(404).send()
-      }
+  try {
+    const user = await User.findById(id)
 
-      res.send(user)
-    })
-    .catch(err => res.status(500).send())
+    if (!user) {
+      return res.status(404).send()
+    }
+
+    res.send(user)
+  } catch (err) {
+    res.status(500).send()
+  }
 })
 
-app.post('/api/characters', (req, res) => {
+app.post('/api/characters', async (req, res) => {
   const character = new Character(req.body)
 
-  character
-    .save()
-    .then(() => {
-      res.status(201).send(character)
-    })
-    .catch(err => res.status(400).send(err))
+  try {
+    await character.save()
+    res.status(201).send(character)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 })
 
-app.get('/api/characters', (req, res) => {
-  Character.find({})
-    .then(characters => res.send(characters))
-    .catch(err => res.status(500).send())
+app.get('/api/characters', async (req, res) => {
+  try {
+    const characters = await Character.find({})
+    res.send(characters)
+  } catch (err) {
+    res.status(500).send()
+  }
 })
 
-app.get('/api/characters/:id', (req, res) => {
+app.get('/api/characters/:id', async (req, res) => {
   const { id } = req.params
 
-  Character.findById(id)
-    .then(character => {
-      if (!character) {
-        return res.status(404).send()
-      }
+  try {
+    const character = await Character.findById(id)
 
-      res.send(character)
-    })
-    .catch(err => res.status(500).send())
+    if (!character) {
+      return res.status(404).send()
+    }
+
+    res.send(character)
+  } catch (err) {
+    res.status(500).send()
+  }
 })
 
 const port = process.env.PORT || 5000
