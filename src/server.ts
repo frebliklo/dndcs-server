@@ -48,6 +48,25 @@ app.get('/api/users/:id', async (req, res) => {
   }
 })
 
+app.patch('/api/users/:id', async (req, res) => {
+  const { body, id } = req.params
+
+  try {
+    const user = await User.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    })
+
+    if (!user) {
+      return res.status(404).send()
+    }
+
+    res.send(user)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+})
+
 app.post('/api/characters', async (req, res) => {
   const character = new Character(req.body)
 
