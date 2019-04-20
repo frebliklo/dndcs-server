@@ -9,12 +9,11 @@ This project uses MongoDB and requires a database running locally. You could als
 ### 1.1 Download Mongo
 
 _The following steps are for macOS_
-
 Download MongoDB in their [download section here](https://www.mongodb.com/download-center).
 
 Once downloaded extract the content of the tgz download. I suggest moving the content to your users folder or some other more permanent directory than Downloads and renaming the directory to `mongodb`.
 
-Next to your `mongodb` directory create a new directory called `mongo-data` which will contain the data for your local databases.
+Next to your `mongodb` directory create a new directory called `mongodb-data` which will contain the data for your local databases.
 
 ### 1.2 Run mongo
 
