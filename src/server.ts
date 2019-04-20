@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import './db/mongoose'
+import Character from './models/character'
 import User from './models/user'
 
 const app = express()
@@ -17,11 +18,22 @@ app.post('/api/users', (req, res) => {
   user
     .save()
     .then(() => {
-      res.send(user)
+      res.status(201).send(user)
     })
     .catch(err => {
       res.status(400).send(err)
     })
+})
+
+app.post('/api/characters', (req, res) => {
+  const character = new Character(req.body)
+
+  character
+    .save()
+    .then(() => {
+      res.status(201).send(character)
+    })
+    .catch(err => res.status(400).send(err))
 })
 
 const port = process.env.PORT || 5000
