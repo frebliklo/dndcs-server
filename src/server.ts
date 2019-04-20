@@ -20,9 +20,27 @@ app.post('/api/users', (req, res) => {
     .then(() => {
       res.status(201).send(user)
     })
-    .catch(err => {
-      res.status(400).send(err)
+    .catch(err => res.status(400).send(err))
+})
+
+app.get('/api/users', (req, res) => {
+  User.find({})
+    .then(users => res.send(users))
+    .catch(err => res.status(500).send())
+})
+
+app.get('/api/users/:id', (req, res) => {
+  const { id } = req.params
+
+  User.findById(id)
+    .then(user => {
+      if (!user) {
+        return res.status(404).send()
+      }
+
+      res.send(user)
     })
+    .catch(err => res.status(500).send())
 })
 
 app.post('/api/characters', (req, res) => {
@@ -34,6 +52,26 @@ app.post('/api/characters', (req, res) => {
       res.status(201).send(character)
     })
     .catch(err => res.status(400).send(err))
+})
+
+app.get('/api/characters', (req, res) => {
+  Character.find({})
+    .then(characters => res.send(characters))
+    .catch(err => res.status(500).send())
+})
+
+app.get('/api/characters/:id', (req, res) => {
+  const { id } = req.params
+
+  Character.findById(id)
+    .then(character => {
+      if (!character) {
+        return res.status(404).send()
+      }
+
+      res.send(character)
+    })
+    .catch(err => res.status(500).send())
 })
 
 const port = process.env.PORT || 5000
