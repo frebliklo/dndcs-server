@@ -1,26 +1,14 @@
 import bcrypt from 'bcryptjs'
-import mongoose, { Document, Model, Schema } from 'mongoose'
+import mongoose, { Model, Schema } from 'mongoose'
+import { IUserDoc } from '../interfaces/user'
 import generateAuthToken from '../utils/generateAuthToken'
 import hashPassword from '../utils/hashPassword'
 
-type AuthToken = {
-  token: string
+type UserSchema = Model<IUserDoc> & {
+  findByCredentials: (email: string, password: string) => IUserDoc
 }
 
-export interface UserInterface extends Document {
-  [key: string]: any
-  name: string
-  email: string
-  password: string
-  token: AuthToken[]
-  generateAuthToken(): string
-}
-
-type UserSchema = Model<UserInterface> & {
-  findByCredentials: (email: string, password: string) => UserInterface
-}
-
-const userSchema: Schema = new Schema<UserInterface>({
+const userSchema: Schema = new Schema<IUserDoc>({
   name: {
     type: String,
     required: true,
@@ -80,7 +68,7 @@ userSchema.statics.findByCredentials = async (
 }
 
 // Hash password before saving document
-userSchema.pre<UserInterface>('save', async function(next) {
+userSchema.pre<IUserDoc>('save', async function(next) {
   const user = this
 
   if (user.isModified('password')) {
@@ -90,6 +78,6 @@ userSchema.pre<UserInterface>('save', async function(next) {
   next()
 })
 
-const User = mongoose.model<UserInterface, UserSchema>('User', userSchema)
+const User = mongoose.model<IUserDoc, UserSchema>('User', userSchema)
 
 export default User

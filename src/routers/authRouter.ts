@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import User from '../models/user'
-import generateAuthToken from '../utils/generateAuthToken'
 
 const router = Router()
 

@@ -1,21 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose'
-
-export interface CharacterInterface extends Document {
-  [key: string]: any
-  name: string
-  level: number
-  class?: string[]
-  race?: string
-  strength?: number
-  dexterity?: number
-  constitution?: number
-  intelligence?: number
-  wisdom?: number
-  charisma?: number
-  maxHp?: number
-  currentHp?: number
-  proficiencies?: string[]
-}
+import mongoose, { Schema } from 'mongoose'
+import { ICharacterDoc } from '../interfaces/character'
 
 const characterSchema: Schema = new Schema({
   name: {
@@ -59,9 +43,6 @@ const characterSchema: Schema = new Schema({
   },
 })
 
-const Character = mongoose.model<CharacterInterface>(
-  'Character',
-  characterSchema
-)
+const Character = mongoose.model<ICharacterDoc>('Character', characterSchema)
 
 export default Character

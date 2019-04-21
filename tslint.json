@@ -19,7 +19,7 @@
     "semicolon": { "options": "never" },
     "switch-default": true,
     "max-line-length": [true, 120],
-    "interface-name": [true, "never-prefix"],
+    "interface-name": [true, "always-prefix"],
     "interface-over-type-literal": false,
     "quotemark": [true, "single", "avoid-escape"],
     "max-classes-per-file": false,

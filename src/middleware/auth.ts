@@ -1,10 +1,8 @@
-import { NextFunction, Request, Response } from 'express'
-import User, { UserInterface } from '../models/user'
-import verifyAuthToken, { AuthToken } from '../utils/verifyAuthToken'
-
-interface RequestWithUser extends Request {
-  user: UserInterface
-}
+import { NextFunction, Response } from 'express'
+import AuthToken from '../interfaces/authToken'
+import RequestWithUser from '../interfaces/requestWithUser'
+import User from '../models/user'
+import verifyAuthToken from '../utils/verifyAuthToken'
 
 const auth = async (
   req: RequestWithUser,
