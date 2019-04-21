@@ -12,7 +12,7 @@ const auth = async (
   try {
     const token = req.header('Authorization').replace('Bearer ', '')
     const decoded = verifyAuthToken(token) as AuthToken
-    const user = await User.findOne({ _id: decoded.id, 'tokens.token': '' })
+    const user = await User.findOne({ _id: decoded.id, 'tokens.token': token })
 
     if (!user) {
       throw new Error()
