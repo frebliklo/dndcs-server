@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose'
 
 export interface CharacterInterface extends Document {
+  [key: string]: any
   name: string
   level: number
   class?: string[]
@@ -16,7 +17,7 @@ export interface CharacterInterface extends Document {
   proficiencies?: string[]
 }
 
-const CharacterSchema: Schema = new Schema({
+const characterSchema: Schema = new Schema({
   name: {
     type: String,
     required: true,
@@ -60,7 +61,7 @@ const CharacterSchema: Schema = new Schema({
 
 const Character = mongoose.model<CharacterInterface>(
   'Character',
-  CharacterSchema
+  characterSchema
 )
 
 export default Character

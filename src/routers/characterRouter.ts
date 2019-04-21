@@ -64,10 +64,11 @@ router.patch('/:id', async (req, res) => {
   }
 
   try {
-    const character = await Character.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    })
+    const character = await Character.findById(id)
+
+    updates.forEach(update => (character[update] = req.body[update]))
+
+    await character.save()
 
     if (!character) {
       return res.status(404).send()
