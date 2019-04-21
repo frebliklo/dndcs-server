@@ -10,7 +10,7 @@ export interface UserInterface extends Document {
 }
 
 type UserSchema = Model<UserInterface> & {
-  findByCredentials: (email: string, password: string) => void
+  findByCredentials: (email: string, password: string) => Document
 }
 
 const userSchema: Schema = new Schema<UserInterface>({
