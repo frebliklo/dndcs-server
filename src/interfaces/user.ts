@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-type AuthToken = {
+export type AuthToken = {
   token: string
 }
 
