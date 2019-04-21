@@ -15,6 +15,7 @@
     "align": [false, "parameters", "arguments", "statements"],
     "ordered-imports": true,
     "object-literal-sort-keys": false,
+    "only-arrow-functions": false,
     "semicolon": { "options": "never" },
     "switch-default": true,
     "max-line-length": [true, 120],
