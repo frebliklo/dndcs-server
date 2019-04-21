@@ -2,6 +2,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import './db/mongoose'
+import auth from './middleware/auth'
 import maintenanceMode from './middleware/maintenance'
 import authRouter from './routers/authRouter'
 import characterRouter from './routers/characterRouter'
@@ -16,8 +17,8 @@ app.use(cors())
 // app.use(maintenanceMode)
 
 app.use('/api/auth', authRouter)
-app.use('/api/users', userRouter)
-app.use('/api/characters', characterRouter)
+app.use('/api/users', auth, userRouter)
+app.use('/api/characters', auth, characterRouter)
 
 const port = process.env.PORT || 5000
 
