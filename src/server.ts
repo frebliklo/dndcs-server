@@ -1,6 +1,8 @@
 import bodyParser from 'body-parser'
+import cors from 'cors'
 import express from 'express'
 import './db/mongoose'
+import maintenanceMode from './middleware/maintenance'
 import authRouter from './routers/authRouter'
 import characterRouter from './routers/characterRouter'
 import userRouter from './routers/userRouter'
@@ -8,6 +10,11 @@ import userRouter from './routers/userRouter'
 const app = express()
 
 app.use(bodyParser.json())
+app.use(cors())
+
+// Uncomment next line when in maintenance
+// app.use(maintenanceMode)
+
 app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 app.use('/api/characters', characterRouter)
