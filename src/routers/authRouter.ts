@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import User from '../models/user'
-import generateJwt from '../utils/generateAuthToken'
+import generateAuthToken from '../utils/generateAuthToken'
 
 const router = Router()
 
@@ -9,7 +9,7 @@ router.post('/login', async (req, res) => {
 
   try {
     const user = await User.findByCredentials(email, password)
-    const token = generateJwt(user.id)
+    const token = await user.generateAuthToken()
 
     res.send({ token, user })
   } catch (err) {
@@ -22,7 +22,7 @@ router.post('/signup', async (req, res) => {
 
   try {
     await user.save()
-    const token = generateJwt(user.id)
+    const token = await user.generateAuthToken()
     res.status(201).send({ token, user })
   } catch (err) {
     res.status(400).send(err)

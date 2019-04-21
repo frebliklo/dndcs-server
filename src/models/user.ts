@@ -1,16 +1,23 @@
 import bcrypt from 'bcryptjs'
 import mongoose, { Document, Model, Schema } from 'mongoose'
+import generateAuthToken from '../utils/generateAuthToken'
 import hashPassword from '../utils/hashPassword'
+
+type AuthToken = {
+  token: string
+}
 
 export interface UserInterface extends Document {
   [key: string]: any
   name: string
   email: string
   password: string
+  token: AuthToken[]
+  generateAuthToken(): string
 }
 
 type UserSchema = Model<UserInterface> & {
-  findByCredentials: (email: string, password: string) => Document
+  findByCredentials: (email: string, password: string) => UserInterface
 }
 
 const userSchema: Schema = new Schema<UserInterface>({
@@ -32,7 +39,25 @@ const userSchema: Schema = new Schema<UserInterface>({
     minlength: 6,
     trim: true,
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 })
+
+userSchema.methods.generateAuthToken = async function() {
+  const user = this
+  const token = generateAuthToken(user._id)
+
+  user.tokens = user.tokens.concat({ token })
+  await user.save()
+
+  return token
+}
 
 // Method to find users based on credentials
 userSchema.statics.findByCredentials = async (

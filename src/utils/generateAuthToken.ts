@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-const generateJwt = (id: string) =>
+const generateAuthToken = (id: string) =>
   jwt.sign({ id }, 'supersecrettemporarykey', { expiresIn: '1m' })
 
-export default generateJwt
+export default generateAuthToken

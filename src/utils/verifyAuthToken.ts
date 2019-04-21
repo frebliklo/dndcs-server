@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-const verifyJwt = (token: string) =>
+const verifyAuthToken = (token: string) =>
   jwt.verify(token, 'supersecrettemporarykey')
 
-export default verifyJwt
+export default verifyAuthToken
