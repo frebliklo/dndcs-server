@@ -10,5 +10,4 @@ export interface IUserDoc extends mongoose.Document {
   email: string
   password: string
   token: AuthToken[]
-  generateAuthToken(): string
 }

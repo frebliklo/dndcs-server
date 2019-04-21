@@ -4,11 +4,15 @@ import { IUserDoc } from '../interfaces/user'
 import generateAuthToken from '../utils/generateAuthToken'
 import hashPassword from '../utils/hashPassword'
 
-type UserSchema = Model<IUserDoc> & {
-  findByCredentials: (email: string, password: string) => IUserDoc
+export interface IUser extends IUserDoc {
+  generateAuthToken(): string
 }
 
-const userSchema: Schema = new Schema<IUserDoc>({
+export interface IUserModel extends Model<IUser> {
+  findByCredentials: (email: string, password: string) => IUser
+}
+
+const userSchema: Schema = new Schema<IUser>({
   name: {
     type: String,
     required: true,
@@ -38,13 +42,24 @@ const userSchema: Schema = new Schema<IUserDoc>({
 })
 
 userSchema.methods.generateAuthToken = async function() {
-  const user = this
+  const user = this as IUser
   const token = generateAuthToken(user._id)
 
   user.tokens = user.tokens.concat({ token })
   await user.save()
 
   return token
+}
+
+// Automatically remove password and tokens array whenever Express stringifies this object
+userSchema.methods.toJSON = function() {
+  const user = this as IUser
+  const userObject = user.toObject()
+
+  delete userObject.password
+  delete userObject.tokens
+
+  return userObject
 }
 
 // Method to find users based on credentials
@@ -68,7 +83,7 @@ userSchema.statics.findByCredentials = async (
 }
 
 // Hash password before saving document
-userSchema.pre<IUserDoc>('save', async function(next) {
+userSchema.pre<IUser>('save', async function(next) {
   const user = this
 
   if (user.isModified('password')) {
@@ -78,6 +93,6 @@ userSchema.pre<IUserDoc>('save', async function(next) {
   next()
 })
 
-const User = mongoose.model<IUserDoc, UserSchema>('User', userSchema)
+const User = mongoose.model<IUser, IUserModel>('User', userSchema)
 
 export default User

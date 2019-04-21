@@ -1,9 +1,9 @@
 import { Request } from 'express'
-import { IUserDoc } from './user'
+import { IUser } from '../models/user'
 
 // tslint:disable-next-line:interface-name
 interface RequestWithUser extends Request {
-  user: IUserDoc
+  user: IUser
   token: string
 }
 
