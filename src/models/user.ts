@@ -1,4 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose'
+import bcrypt from 'bcryptjs'
+import mongoose, { Document, Model, Schema } from 'mongoose'
 import hashPassword from '../utils/hashPassword'
 
 export interface UserInterface extends Document {
@@ -6,6 +7,10 @@ export interface UserInterface extends Document {
   name: string
   email: string
   password: string
+}
+
+type UserSchema = Model<UserInterface> & {
+  findByCredentials: (email: string, password: string) => void
 }
 
 const userSchema: Schema = new Schema<UserInterface>({
@@ -29,6 +34,27 @@ const userSchema: Schema = new Schema<UserInterface>({
   },
 })
 
+// Method to find users based on credentials
+userSchema.statics.findByCredentials = async (
+  email: string,
+  password: string
+) => {
+  const user = await User.findOne({ email })
+
+  if (!user) {
+    throw new Error('Unable to login')
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password)
+
+  if (!isMatch) {
+    throw new Error('Unable to login')
+  }
+
+  return user
+}
+
+// Hash password before saving document
 userSchema.pre<UserInterface>('save', async function(next) {
   const user = this
 
@@ -39,6 +65,6 @@ userSchema.pre<UserInterface>('save', async function(next) {
   next()
 })
 
-const User = mongoose.model<UserInterface>('User', userSchema)
+const User = mongoose.model<UserInterface, UserSchema>('User', userSchema)
 
 export default User
