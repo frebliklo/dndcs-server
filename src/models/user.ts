@@ -3,6 +3,7 @@ import mongoose, { Model, Schema } from 'mongoose'
 import { IUserDoc } from '../interfaces/user'
 import generateAuthToken from '../utils/generateAuthToken'
 import hashPassword from '../utils/hashPassword'
+import Character from './character'
 
 export interface IUser extends IUserDoc {
   generateAuthToken(): string
@@ -96,6 +97,15 @@ userSchema.pre<IUser>('save', async function(next) {
   if (user.isModified('password')) {
     user.password = await hashPassword(user.password)
   }
+
+  next()
+})
+
+// Delete all characters owned by user when user is removed
+userSchema.pre<IUser>('remove', async function(next) {
+  const user = this
+
+  await Character.deleteMany({ owner: user._id })
 
   next()
 })
