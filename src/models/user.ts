@@ -51,6 +51,13 @@ userSchema.methods.generateAuthToken = async function() {
   return token
 }
 
+// Setup relationship between user and characters
+userSchema.virtual('characters', {
+  ref: 'Character',
+  localField: '_id',
+  foreignField: 'owner',
+})
+
 // Automatically remove password and tokens array whenever Express stringifies this object
 userSchema.methods.toJSON = function() {
   const user = this as IUser

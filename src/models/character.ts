@@ -44,6 +44,7 @@ const characterSchema: Schema = new Schema<ICharacterDoc>({
   owner: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: 'User',
   },
 })
 
