@@ -18,20 +18,20 @@ router.post('/', async (req: RequestWithUser, res) => {
   }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: RequestWithUser, res) => {
   try {
-    const characters = await Character.find({})
+    const characters = await Character.find({ owner: req.user.id })
     res.send(characters)
   } catch (err) {
     res.status(500).send()
   }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: RequestWithUser, res) => {
   const { id } = req.params
 
   try {
-    const character = await Character.findById(id)
+    const character = await Character.findOne({ _id: id, owner: req.user.id })
 
     if (!character) {
       return res.status(404).send()
@@ -43,7 +43,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req: RequestWithUser, res) => {
   const { id } = req.params
   const updates = Object.keys(req.body)
   const allowedUpdates = [
@@ -68,7 +68,7 @@ router.patch('/:id', async (req, res) => {
   }
 
   try {
-    const character = await Character.findById(id)
+    const character = await Character.findOne({ _id: id, owner: req.user.id })
 
     updates.forEach(update => (character[update] = req.body[update]))
 
@@ -84,11 +84,14 @@ router.patch('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req: RequestWithUser, res) => {
   const { id } = req.params
 
   try {
-    const character = await Character.findByIdAndDelete(id)
+    const character = await Character.findOneAndDelete({
+      _id: id,
+      owner: req.user.id,
+    })
 
     if (!character) {
       return res.status(404).send()
