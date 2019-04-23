@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 import { ICharacterDoc } from '../interfaces/character'
 
-const characterSchema: Schema = new Schema({
+const characterSchema: Schema = new Schema<ICharacterDoc>({
   name: {
     type: String,
     required: true,
@@ -40,6 +40,10 @@ const characterSchema: Schema = new Schema({
   },
   currentHp: {
     type: Number,
+  },
+  owner: {
+    type: Schema.Types.ObjectId,
+    required: true,
   },
 })
 

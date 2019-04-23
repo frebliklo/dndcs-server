@@ -1,10 +1,14 @@
 import { Router } from 'express'
+import RequestWithUser from '../interfaces/requestWithUser'
 import Character from '../models/character'
 
 const router = Router()
 
-router.post('/', async (req, res) => {
-  const character = new Character(req.body)
+router.post('/', async (req: RequestWithUser, res) => {
+  const character = new Character({
+    ...req.body,
+    owner: req.user.id,
+  })
 
   try {
     await character.save()

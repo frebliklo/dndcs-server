@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 export interface ICharacterDoc extends mongoose.Document {
   [key: string]: any
@@ -15,4 +15,5 @@ export interface ICharacterDoc extends mongoose.Document {
   maxHp?: number
   currentHp?: number
   proficiencies?: string[]
+  owner: Schema.Types.ObjectId
 }
