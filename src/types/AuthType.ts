@@ -1,6 +1,6 @@
 import { Field, ObjectType } from 'type-graphql'
 import { IUserDoc } from '../interfaces/user'
-import UserEntity from './User'
+import UserEntity from './UserType'
 
 @ObjectType()
 class AuthType {
