@@ -1,14 +1,3 @@
-import { Query, Resolver } from 'type-graphql'
+import UserResolver from './UserResolver'
 
-@Resolver()
-class HelloResolver {
-  @Query(() => String, {
-    name: 'helloWorld',
-    description: 'Return a hello world string',
-  })
-  async hello() {
-    return 'Hello world'
-  }
-}
-
-export default [HelloResolver]
+export default [UserResolver]
