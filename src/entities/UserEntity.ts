@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 
 @ObjectType()
-class UserType {
+class UserEntity {
   @Field(type => ID)
   id: string
 
@@ -15,4 +15,4 @@ class UserType {
   password: string
 }
 
-export default UserType
+export default UserEntity

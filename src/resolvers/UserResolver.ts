@@ -1,8 +1,8 @@
 import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import AuthEntity from '../entities/AuthEntity'
+import UserEntity from '../entities/UserEntity'
 import { IUserDoc } from '../interfaces/user'
 import User, { IUser } from '../models/user'
-import AuthType from '../types/AuthType'
-import UserType from '../types/UserType'
 
 type SignUpRes = {
   user: IUser
@@ -11,12 +11,12 @@ type SignUpRes = {
 
 @Resolver()
 class UserResolver {
-  @Query(() => UserType)
+  @Query(() => UserEntity)
   async user(@Arg('id') id: string): Promise<IUserDoc> {
     return User.findById(id)
   }
 
-  @Mutation(() => AuthType)
+  @Mutation(() => AuthEntity)
   async signUpWithEmail(
     @Arg('name') name: string,
     @Arg('email') email: string,

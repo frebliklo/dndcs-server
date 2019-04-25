@@ -1,14 +1,14 @@
 import { Field, ObjectType } from 'type-graphql'
 import { IUserDoc } from '../interfaces/user'
-import UserType from './UserType'
+import UserEntity from './UserEntity'
 
 @ObjectType()
-class AuthType {
+class AuthEntity {
   @Field()
   token: string
 
-  @Field(type => UserType)
+  @Field(type => UserEntity)
   user: IUserDoc
 }
 
-export default AuthType
+export default AuthEntity
