@@ -1,10 +1,13 @@
 import { ApolloServer } from 'apollo-server-express'
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import Express from 'express'
 import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import './db/mongoose'
+import IApolloContext from './interfaces/apolloContext'
+import apolloAuth from './middleware/apeolloAuth'
 import auth from './middleware/auth'
 import resolvers from './resolvers'
 // import maintenanceMode from './middleware/maintenance'
@@ -24,14 +27,28 @@ const main = async () => {
   app.use('/api/auth', authRouter)
   app.use('/api/users', auth, userRouter)
   app.use('/api/characters', auth, characterRouter)
+  app.use('/graphql', apolloAuth)
 
   const schema = await buildSchema({
     resolvers,
+    authChecker: ({ context: { req } }) => {
+      return !!req.user
+    },
   })
 
-  const apolloServer = new ApolloServer({ schema })
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req }: IApolloContext) => {
+      const context = {
+        req,
+        user: req.user,
+      }
 
-  apolloServer.applyMiddleware({ app })
+      return context
+    },
+  })
+
+  apolloServer.applyMiddleware({ app, path: '/graphql' })
 
   const port = process.env.PORT || 5000
 

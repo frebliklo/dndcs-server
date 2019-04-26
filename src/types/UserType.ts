@@ -1,5 +1,5 @@
-import { Field, ID, ObjectType, Root } from 'type-graphql'
-import { ICharacterDoc } from '../interfaces/character'
+import { Ctx, Field, ID, ObjectType, Root } from 'type-graphql'
+import IApolloContext from '../interfaces/apolloContext'
 import { IUser } from '../models/user'
 import CharacterType from './CharacterType'
 
@@ -11,8 +11,14 @@ class UserType {
   @Field()
   name: string
 
-  @Field()
-  email: string
+  @Field(type => String, { nullable: true })
+  email(@Root() user: IUser, @Ctx() context: IApolloContext): string | null {
+    if (user.id === context.req.user.id) {
+      return user.email
+    }
+
+    return null
+  }
 
   @Field(type => [CharacterType], { nullable: true })
   characters: CharacterType[]

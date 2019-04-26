@@ -12,10 +12,17 @@ type AuthRes = {
 @Resolver()
 class AuthResolver {
   @Mutation(() => AuthType)
-  async loginWithEmail(@Arg('data') { email, password }: SigninInput): Promise<
-    AuthRes
-  > {
+  async loginWithEmail(@Arg('data')
+  {
+    email,
+    password,
+  }: SigninInput): Promise<AuthRes | null> {
     const user = await User.findByCredentials(email, password)
+
+    if (!user) {
+      return null
+    }
+
     const token = await user.generateAuthToken()
 
     return { user, token }
@@ -27,7 +34,7 @@ class AuthResolver {
     name,
     email,
     password,
-  }: SignupInput): Promise<AuthRes> {
+  }: SignupInput): Promise<AuthRes | null> {
     const user = new User({
       name,
       email,
