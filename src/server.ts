@@ -2,6 +2,10 @@ import { ApolloServer } from 'apollo-server-express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import Express from 'express'
+import queryComplexity, {
+  fieldConfigEstimator,
+  simpleEstimator,
+} from 'graphql-query-complexity'
 import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import './db/mongoose'
@@ -45,6 +49,22 @@ const main = async () => {
 
       return context
     },
+    validationRules: [
+      queryComplexity({
+        maximumComplexity: 12,
+        variables: {},
+        onComplete: (complexity: number) => {
+          // tslint:disable-next-line:no-console
+          console.log('Query Complexity:', complexity)
+        },
+        estimators: [
+          fieldConfigEstimator(),
+          simpleEstimator({
+            defaultComplexity: 1,
+          }),
+        ],
+      }) as any,
+    ],
   })
 
   apolloServer.applyMiddleware({ app, path: '/graphql' })
