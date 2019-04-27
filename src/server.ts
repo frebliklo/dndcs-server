@@ -1,5 +1,4 @@
 import { ApolloServer } from 'apollo-server-express'
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import Express from 'express'

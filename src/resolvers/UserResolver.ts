@@ -19,7 +19,7 @@ class UserResolver {
   }
 
   @Authorized()
-  @Query(() => UserType)
+  @Query(() => UserType, { description: 'Find a user by id' })
   async user(@Arg('id') id: string): Promise<IUserDoc> {
     return User.findById(id)
   }
