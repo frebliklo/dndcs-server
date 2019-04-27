@@ -23,6 +23,18 @@ class UserResolver {
   async user(@Arg('id') id: string): Promise<IUserDoc> {
     return User.findById(id)
   }
+
+  @Authorized()
+  @Query(() => [UserType], { description: 'Find all users' })
+  async users(): Promise<IUserDoc[]> {
+    const users = await User.find({})
+
+    if (!users) {
+      return []
+    }
+
+    return users
+  }
 }
 
 export default UserResolver
