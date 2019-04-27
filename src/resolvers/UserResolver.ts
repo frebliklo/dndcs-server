@@ -9,19 +9,21 @@ class UserResolver {
   @Authorized()
   @Query(() => UserType)
   async me(@Ctx() context: IApolloContext) {
-    const { user } = context.req
-
-    if (!user) {
+    try {
+      return User.findById(context.req.user.id)
+    } catch (error) {
       return null
     }
-
-    return user
   }
 
   @Authorized()
   @Query(() => UserType, { description: 'Find a user by id' })
   async user(@Arg('id') id: string): Promise<IUserDoc> {
-    return User.findById(id)
+    try {
+      return User.findById(id)
+    } catch (error) {
+      return null
+    }
   }
 
   @Authorized()

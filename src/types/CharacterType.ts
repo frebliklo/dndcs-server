@@ -1,5 +1,6 @@
-import { Field, ID, ObjectType } from 'type-graphql'
-import { IUser } from '../models/user'
+import { Field, ID, ObjectType, Root } from 'type-graphql'
+import { ICharacterDoc } from '../interfaces/character'
+import User, { IUser } from '../models/user'
 import UserType from './UserType'
 
 @ObjectType()
@@ -44,7 +45,10 @@ class CharacterType {
   currentHp: number
 
   @Field(type => UserType)
-  owner: IUser
+  async owner(@Root() character: ICharacterDoc): Promise<IUser> {
+    const user = await User.findById(character.owner)
+    return user
+  }
 }
 
 export default CharacterType
