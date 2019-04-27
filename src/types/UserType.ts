@@ -23,14 +23,21 @@ class UserType {
   }
 
   @Field(type => [CharacterType])
-  async characters(@Root() user: IUser): Promise<ICharacterDoc[]> {
+  async characters(
+    @Root() user: IUser,
+    @Ctx() { req }: IApolloContext
+  ): Promise<ICharacterDoc[]> {
     const characters = await Character.find({ owner: user.id })
 
     if (!characters) {
       return []
     }
 
-    return characters
+    const filteredCharacters = characters.filter(
+      character => !!character.public || user.id === req.user.id
+    )
+
+    return filteredCharacters
   }
 }
 

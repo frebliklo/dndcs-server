@@ -3,6 +3,10 @@ import { ICharacterDoc } from '../interfaces/character'
 
 const characterSchema: Schema = new Schema<ICharacterDoc>(
   {
+    public: {
+      type: Boolean,
+      default: false,
+    },
     name: {
       type: String,
       required: true,

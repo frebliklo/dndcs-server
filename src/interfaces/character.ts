@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 
 export interface ICharacterDoc extends mongoose.Document {
   [key: string]: any
+  public: boolean
   name: string
   level: number
   class?: string[]
