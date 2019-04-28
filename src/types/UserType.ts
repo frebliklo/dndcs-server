@@ -22,6 +22,18 @@ class UserType {
     return null
   }
 
+  @Field(type => Boolean, { nullable: true })
+  emailVerified(
+    @Root() user: IUser,
+    @Ctx() context: IApolloContext
+  ): boolean | null {
+    if (user.id === context.req.user.id) {
+      return user.emailVerified
+    }
+
+    return null
+  }
+
   @Field(type => [CharacterType])
   async characters(
     @Root() user: IUser,

@@ -27,6 +27,10 @@ const userSchema: Schema = new Schema<IUser>(
       trim: true,
       lowercase: true,
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: true,
@@ -71,6 +75,7 @@ userSchema.methods.toJSON = function() {
 
   delete userObject.password
   delete userObject.tokens
+  delete userObject.emailVerified
 
   return userObject
 }

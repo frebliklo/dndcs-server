@@ -1,14 +1,15 @@
-import { Arg, Authorized, Ctx, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import IApolloContext from '../interfaces/apolloContext'
 import { IUserDoc } from '../interfaces/user'
 import User from '../models/user'
+import UpdateUserInput from '../types/UpdateUserInput'
 import UserType from '../types/UserType'
 
 @Resolver()
 class UserResolver {
   @Authorized()
   @Query(() => UserType)
-  async me(@Ctx() context: IApolloContext) {
+  async me(@Ctx() context: IApolloContext): Promise<IUserDoc> {
     try {
       return User.findById(context.req.user.id)
     } catch (error) {
@@ -36,6 +37,39 @@ class UserResolver {
     }
 
     return users
+  }
+
+  @Authorized()
+  @Mutation(() => UserType, {
+    description: 'Updated currently authenticated user',
+  })
+  async updateUser(
+    @Arg('data') data: UpdateUserInput,
+    @Ctx() context: IApolloContext
+  ): Promise<IUserDoc> {
+    const user = await User.findByIdAndUpdate(
+      context.req.user.id,
+      {
+        ...data,
+      },
+      { new: true }
+    )
+
+    await user.save()
+
+    return user
+  }
+
+  @Authorized()
+  @Mutation(() => UserType, {
+    description: 'Delete the currently authenticated user',
+  })
+  async deleteUser(@Ctx() context: IApolloContext): Promise<IUserDoc> {
+    const user = await User.findById(context.req.user.id)
+    // Use remove method instead of findByIdAndDelete to cascade remove characters owned by user
+    await user.remove()
+
+    return user
   }
 }
 
