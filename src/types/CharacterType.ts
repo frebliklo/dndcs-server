@@ -1,17 +1,20 @@
-import { Field, ID, ObjectType, Root } from 'type-graphql'
+import { Field, ID, Int, ObjectType, Root } from 'type-graphql'
 import { ICharacterDoc } from '../interfaces/character'
 import User, { IUser } from '../models/user'
 import UserType from './UserType'
 
 @ObjectType()
 class CharacterType {
+  @Field()
+  public: boolean
+
   @Field(type => ID)
   id: string
 
   @Field()
   name: string
 
-  @Field()
+  @Field(type => Int)
   level: number
 
   @Field(type => [String])
@@ -20,28 +23,28 @@ class CharacterType {
   @Field()
   race: string
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   str: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   dex: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   con: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   int: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   wis: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   cha: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   maxHp: number
 
-  @Field()
+  @Field(type => Int, { nullable: true })
   currentHp: number
 
   @Field(type => UserType)
