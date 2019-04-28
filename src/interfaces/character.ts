@@ -7,12 +7,12 @@ export interface ICharacterDoc extends mongoose.Document {
   level: number
   class?: string[]
   race?: string
-  strength?: number
-  dexterity?: number
-  constitution?: number
-  intelligence?: number
-  wisdom?: number
-  charisma?: number
+  str?: number
+  dex?: number
+  con?: number
+  int?: number
+  wis?: number
+  cha?: number
   maxHp?: number
   currentHp?: number
   proficiencies?: string[]

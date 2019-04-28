@@ -55,8 +55,6 @@ class UserResolver {
       { new: true }
     )
 
-    await user.save()
-
     return user
   }
 
