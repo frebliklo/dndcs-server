@@ -2,9 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es2016",
+    "lib": ["es2016", "esnext.asynciterable"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
@@ -15,7 +19,8 @@
       ]
     }
   },
+  "exclude": ["node_modules"],
   "include": [
-    "src/**/*"
+    "./src/**/*.ts"
   ]
 }

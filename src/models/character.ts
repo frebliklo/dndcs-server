@@ -3,6 +3,10 @@ import { ICharacterDoc } from '../interfaces/character'
 
 const characterSchema: Schema = new Schema<ICharacterDoc>(
   {
+    public: {
+      type: Boolean,
+      default: false,
+    },
     name: {
       type: String,
       required: true,
@@ -18,22 +22,22 @@ const characterSchema: Schema = new Schema<ICharacterDoc>(
     race: {
       type: String,
     },
-    strength: {
+    str: {
       type: Number,
     },
-    dexterity: {
+    dex: {
       type: Number,
     },
-    constitution: {
+    con: {
       type: Number,
     },
-    intelligence: {
+    int: {
       type: Number,
     },
-    wisdom: {
+    wid: {
       type: Number,
     },
-    charisma: {
+    cha: {
       type: Number,
     },
     maxHp: {
