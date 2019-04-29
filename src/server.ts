@@ -34,6 +34,7 @@ const main = async () => {
 
   const schema = await buildSchema({
     resolvers,
+    dateScalarMode: 'timestamp',
     authChecker: ({ context: { req } }) => {
       return !!req.user
     },
@@ -51,7 +52,7 @@ const main = async () => {
     },
     validationRules: [
       queryComplexity({
-        maximumComplexity: 12,
+        maximumComplexity: 30,
         variables: {},
         onComplete: (complexity: number) => {
           // tslint:disable-next-line:no-console

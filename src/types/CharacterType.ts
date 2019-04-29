@@ -12,6 +12,12 @@ class CharacterType {
   id: string
 
   @Field()
+  createdAt: Date
+
+  @Field()
+  updatedAt: Date
+
+  @Field()
   name: string
 
   @Field(type => Int)

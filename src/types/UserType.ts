@@ -13,6 +13,12 @@ class UserType {
   @Field()
   name: string
 
+  @Field()
+  createdAt: Date
+
+  @Field()
+  updatedAt: Date
+
   @Field(type => String, { nullable: true })
   email(@Root() user: IUser, @Ctx() context: IApolloContext): string | null {
     if (user.id === context.req.user.id) {
