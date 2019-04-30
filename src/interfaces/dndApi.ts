@@ -318,7 +318,7 @@ export interface ISubrace extends IDnDApiResponse {
   traits: NamedAPIResource[]
 }
 
-type TraitRaces = {
+export type TraitRaces = {
   name: string
 }
 

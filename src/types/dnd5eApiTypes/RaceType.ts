@@ -4,6 +4,7 @@ import { IRace, NamedAPIResource } from '../../interfaces/dndApi'
 import LanguageChoiceType from './LanguageChoiceType'
 import LanguageType from './LanguageType'
 import ProficiencyType from './ProficiencyType'
+import TraitType from './TraitType'
 
 @ObjectType()
 class RaceType {
@@ -86,6 +87,33 @@ class RaceType {
   @Field(type => LanguageChoiceType, { nullable: true })
   languageOptions(@Root() root: IRace) {
     return root.language_options
+  }
+
+  @Field(type => [TraitType], {
+    description: 'Racial traits that provide benefits to its members',
+    name: 'traits',
+  })
+  async traitsField(@Root() root: IRace): Promise<AxiosResponse[]> {
+    const trimmedTraits = root.traits.map(trait => {
+      return trait.name.split('(')[0].trim()
+    })
+
+    const allTraits = await Axios.get('http://www.dnd5eapi.co/api/traits/')
+    const listOfTraits = allTraits.data.results as NamedAPIResource[]
+
+    const filteredList = listOfTraits.filter(trait => {
+      return trimmedTraits.includes(trait.name)
+    })
+
+    const results = await Promise.all(
+      filteredList.map(async (el: NamedAPIResource) => {
+        const { data } = await Axios.get(el.url)
+
+        return data
+      })
+    )
+
+    return results
   }
 }
 
