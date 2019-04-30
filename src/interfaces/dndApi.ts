@@ -1,13 +1,20 @@
+//  Common models
+export type ListAPIResponse = {
+  count: number
+  results: NamedAPIResource[]
+}
+
 export type NamedAPIResource = {
   name: string
   url: string
 }
 
-type ClassAPIResource = {
+export type ClassAPIResource = {
   class: string
   url: string
 }
 
+//  Ability score
 export enum AbilityScoreEnum {
   STR = 1,
   DEX = 2,
@@ -27,6 +34,7 @@ export interface IAbilityScore {
   url: string
 }
 
+// Skill
 export enum SkillEnum {
   acrobatics = 1,
   animalHandling = 2,
@@ -54,5 +62,35 @@ export interface ISkill {
   name: string
   desc: string[]
   ability_score: NamedAPIResource
+  url: string
+}
+
+// Langauge
+export enum LanguagesEnum {
+  COMMON = 1,
+  DWARWISH = 2,
+  ELVISH = 3,
+  GIANT = 4,
+  GNOMISH = 5,
+  GOBLIN = 6,
+  HALFLING = 7,
+  ORC = 8,
+  ABYSSAL = 9,
+  CELESTIAL = 10,
+  DRACONIC = 11,
+  DEEP_SPEECH = 12,
+  INFERNAL = 13,
+  PRIMORDIAL = 14,
+  SYLVAN = 15,
+  UNDERCOMMON = 16,
+}
+
+export interface ILanguage {
+  _id: string
+  index: number
+  name: string
+  type: string
+  typical_speakers: string[]
+  script: string
   url: string
 }
