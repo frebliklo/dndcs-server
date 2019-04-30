@@ -1,5 +1,14 @@
 import { Length } from 'class-validator'
-import { Field, InputType, Int } from 'type-graphql'
+import { Field, InputType, Int, registerEnumType } from 'type-graphql'
+import { ClassesEnum, RacesEnum } from '../interfaces/dndApi'
+
+registerEnumType(ClassesEnum, {
+  name: 'ClassesEnum',
+})
+
+registerEnumType(RacesEnum, {
+  name: 'RacesEnum',
+})
 
 @InputType()
 class CreateCharacterInput {
@@ -10,11 +19,11 @@ class CreateCharacterInput {
   @Length(1, 255)
   name: string
 
-  @Field(type => String)
-  race: string
+  @Field(type => RacesEnum)
+  race: RacesEnum
 
-  @Field(type => [String])
-  class: string
+  @Field(type => ClassesEnum)
+  class: ClassesEnum
 
   @Field(type => Int, { nullable: true })
   level: number
