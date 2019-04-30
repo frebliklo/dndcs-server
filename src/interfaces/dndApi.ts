@@ -1,3 +1,10 @@
+// Shared values for most responses
+interface IDnDApiResponse {
+  _id: string
+  index: number
+  url: string
+}
+
 //  Common models
 export type ListAPIResponse = {
   count: number
@@ -67,24 +74,18 @@ export enum SkillEnum {
   survival = 18,
 }
 
-export interface ISkill {
-  _id: string
-  index: string
+export interface ISkill extends IDnDApiResponse {
   name: string
   desc: string[]
   ability_score: NamedAPIResource
-  url: string
 }
 
 // Procifincy
-export interface IProficieny {
-  _id: string
-  index: number
+export interface IProficieny extends IDnDApiResponse {
   type: string
   name: string
   classes?: NamedAPIResource[]
   races?: NamedAPIResource[]
-  url: string
 }
 
 // Langauge
@@ -107,14 +108,11 @@ export enum LanguagesEnum {
   UNDERCOMMON = 16,
 }
 
-export interface ILanguage {
-  _id: string
-  index: number
+export interface ILanguage extends IDnDApiResponse {
   name: string
   type: string
   typical_speakers: string[]
   script: string
-  url: string
 }
 
 // Classes
@@ -133,9 +131,7 @@ export enum ClassesEnum {
   WIZARD = 12,
 }
 
-export interface IClasses {
-  _id: string
-  index: number
+export interface IClasses extends IDnDApiResponse {
   name: string
   hit_die: number
   proficiency_choices: ChoiceAPIResource[]
@@ -145,35 +141,26 @@ export interface IClasses {
   class_levels: number[]
   subclasses: NamedAPIResource[]
   spellcasting?: ClassAPIResource
-  url: string
 }
 
 // Features
-export interface IFeature {
-  _id: string
-  index: number
+export interface IFeature extends IDnDApiResponse {
   name: string
   level: number
   class: NamedAPIResource
   subclass?: NamedAPIResource
   desc: string[]
-  url: string
 }
 
 // Spellcating
-export interface ISpellCasting {
-  _id: string
-  index: number
+export interface ISpellCasting extends IDnDApiResponse {
   spellcasting_ability: NamedAPIResource
   info: DescriptionAPIResource[]
-  url: string
   class: NamedAPIResource
 }
 
 // Levels
-export interface ILevel {
-  _id: string
-  index: number
+export interface ILevel extends IDnDApiResponse {
   level: number
   ability_score_bonuses: number
   prof_bonus: number
@@ -182,7 +169,6 @@ export interface ILevel {
   features: NamedAPIResource[]
   spellcasting?: ILevelSpellcasting
   class: NamedAPIResource
-  url: string
 }
 
 export interface ILevelSpellcasting {
@@ -204,6 +190,7 @@ type ClassSpecific =
   | IBarbarianClassSpecific
   | IBardClassSpecific
   | IClericClassSpecific
+  | IDruidClassSpecific
   | IFighterClassSpecific
   | IMonkClassSpecific
   | IPaladinClassSpecific
@@ -290,4 +277,53 @@ interface IWarlockClassSpecific {
 
 interface IWizardClassSpecific {
   arcane_recovery_levels: number
+}
+
+// Races
+export enum RacesEnum {
+  DWARF = 1,
+  ELF = 2,
+  HALFLING = 3,
+  HUMAN = 4,
+  DRAGONBORN = 5,
+  GNOME = 6,
+  HALF_ELF = 7,
+  HALF_ORC = 8,
+  TIEFLING = 9,
+}
+
+export interface IRace extends IDnDApiResponse {
+  name: string
+  speed: number
+  ability_bonuses: number[]
+  alignment: string
+  age: string
+  size: string
+  size_description: string
+  starting_proficiencies: NamedAPIResource[]
+  languages: NamedAPIResource[]
+  language_desc: string
+  language_options: ChoiceAPIResource
+  traits: NamedAPIResource[]
+  subraces: NamedAPIResource[]
+}
+
+export interface ISubrace extends IDnDApiResponse {
+  name: string
+  race: NamedAPIResource
+  desc: string
+  ability_bonuses: number[]
+  starting_proficiencies: NamedAPIResource[]
+  languages: NamedAPIResource[]
+  traits: NamedAPIResource[]
+}
+
+type TraitRaces = {
+  name: string
+}
+
+export interface ITrait extends IDnDApiResponse {
+  races: TraitRaces[]
+  name: string
+  desc: string[]
 }
