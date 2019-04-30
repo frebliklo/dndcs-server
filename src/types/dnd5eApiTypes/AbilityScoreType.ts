@@ -1,5 +1,11 @@
+import Axios, { AxiosResponse } from 'axios'
 import { Field, ObjectType, Root } from 'type-graphql'
-import { IAbilityScore } from '../../interfaces/dndApi'
+import {
+  IAbilityScore,
+  ISkill,
+  NamedAPIResource,
+} from '../../interfaces/dndApi'
+import SkillType from './SkillType'
 
 @ObjectType()
 class AbilityScoreType {
@@ -20,11 +26,23 @@ class AbilityScoreType {
   })
   desc: string[]
 
-  //  Figure out how to iterate over the skills
-  // @Field(type => [SkillType], {
-  //   description: 'The ability score associated with this skill',
-  // })
-  // skills(@Root() root: IAbilityScore): ISkill[] {}
+  @Field(type => [SkillType], {
+    description: 'A list of skills that uses this ability score',
+    nullable: true,
+  })
+  async skill(@Root() abilityScore: IAbilityScore): Promise<ISkill[]> {
+    // The typing here can definetly be done in a smarter way, but now it works ¯\_(ツ)_/¯
+    const results: any = await Promise.all(
+      abilityScore.skills.map(
+        async (skill: NamedAPIResource): Promise<AxiosResponse> => {
+          const { data } = await Axios.get(skill.url)
+          return data
+        }
+      )
+    )
+
+    return results
+  }
 
   @Field(type => String, { description: 'The URL of the referenced resource' })
   url: string
