@@ -29,6 +29,7 @@
     "graphql-query-complexity": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.0",
+    "prisma-client-lib": "^1.30.4",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^0.17.3"
   },

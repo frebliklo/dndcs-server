@@ -1,0 +1,17 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  emailVerified: Boolean! @default(value: false)
+  password: String
+  tokens: [AuthToken]! @relation(link: TABLE onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type AuthToken {
+  id: ID! @id
+  token: String!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
