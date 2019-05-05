@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose'
 
 export interface IHitDie {
-  type: number
-  amount: number
+  diceCount: number
+  diceValue: number
 }
 
 export interface ICharacterProficiency {
@@ -14,6 +14,8 @@ export interface ICharacterProficiency {
 export interface ICharacterFeature {
   searchIndex: number
   name: string
+  diceCount?: number
+  diceValue?: number
 }
 
 export interface ICharacterSpellcasting {
@@ -23,6 +25,11 @@ export interface ICharacterSpellcasting {
   }
   info: string[]
   searchIndex: number
+}
+
+export interface IChoiceType {
+  choose: number
+  from: number[]
 }
 
 export interface ICharacterDoc extends mongoose.Document {
@@ -48,8 +55,9 @@ export interface ICharacterDoc extends mongoose.Document {
   cha: number
   proficiencyBonus: number
   proficiencies: ICharacterProficiency[]
-  proficiencyChoices: number
+  proficiencyChoices: IChoiceType
   features: ICharacterFeature[]
+  featureChoices: IChoiceType
   spellcasting?: ICharacterSpellcasting
   owner: Schema.Types.ObjectId
 }

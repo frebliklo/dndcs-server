@@ -11,20 +11,27 @@ class ProficiencyType {
   type: string
 
   @Field(type => String, {
+    name: 'name',
     description: 'The name of the proficiency resource',
   })
-  name: string
+  nameField(@Root() root: IProficieny): string {
+    const trimmedName = root.name.split(': ')
+
+    if (trimmedName.length === 1) {
+      return root.name
+    }
+
+    return trimmedName[1]
+  }
 
   @Field(type => [ClassType], {
     description: 'Classes that start with this proficiency',
     nullable: true,
   })
-  async classes(
-    @Root() proficiency: IProficieny
-  ): Promise<AxiosResponse[] | []> {
-    if (proficiency.classes) {
+  async classes(@Root() root: IProficieny): Promise<AxiosResponse[] | []> {
+    if (root.classes) {
       const response = await Promise.all(
-        proficiency.classes.map(async (characterClass: NamedAPIResource) => {
+        root.classes.map(async (characterClass: NamedAPIResource) => {
           const { data } = await Axios.get(characterClass.url)
 
           return data

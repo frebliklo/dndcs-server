@@ -28,6 +28,12 @@ class FeatureType {
     description: 'A brief description of the feature',
   })
   desc: string[]
+
+  @Field(type => Int, { nullable: true })
+  diceCount: number
+
+  @Field(type => Int, { nullable: true })
+  diceValue: number
 }
 
 export default FeatureType

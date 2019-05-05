@@ -7,6 +7,7 @@ import Character from '../models/character'
 import CharacterType from '../types/CharacterType'
 import CreateCharacterInput from '../types/CreateCharacterInput'
 import UpdateCharacterInput from '../types/UpdateCharacterInput'
+import createCharacterData from '../utils/createCharacterData'
 
 @Resolver()
 class CharacterResolver {
@@ -47,48 +48,7 @@ class CharacterResolver {
     @Arg('data') data: CreateCharacterInput,
     @Ctx() { req }: IApolloContext
   ): Promise<ICharacterDoc> {
-    const { data: classData } = await Axios.get(
-      `http://dnd5eapi.co/api/classes/${data.class}`
-    )
-    const { data: levelData } = await Axios.get(
-      `http://dnd5eapi.co/api/classes/${classData.name.toLowerCase()}/level/1`
-    )
-
-    const proficiencies = await Promise.all(
-      classData.proficiencies.map(async (proficiency: NamedAPIResource) => {
-        const { data } = await Axios.get(proficiency.url)
-
-        return {
-          type: data.type,
-          name: data.name,
-          searchIndex: data.index,
-        }
-      })
-    )
-
-    const features = await Promise.all(
-      levelData.features.map(async (feature: NamedAPIResource) => {
-        const { data } = await Axios.get(feature.url)
-
-        return {
-          name: data.name,
-          searchIndex: data.index,
-        }
-      })
-    )
-
-    const characterData = {
-      ...data,
-      hitDie: {
-        type: classData.hit_die,
-        amount: 1,
-      },
-      features,
-      proficiencies,
-      proficiencyBonus: levelData.prof_bonus,
-      proficiencyChoices: classData.proficiency_choices[0].choose,
-      abilityScoreBonuse: levelData.ability_score_bonuses,
-    }
+    const characterData = await createCharacterData(data)
 
     const character = new Character({
       ...characterData,

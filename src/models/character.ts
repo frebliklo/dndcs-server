@@ -17,12 +17,12 @@ const characterSchema: Schema = new Schema<ICharacterDoc>(
       default: 1,
     },
     hitDie: {
-      type: {
-        type: Number,
-      },
-      amount: {
+      diceCount: {
         type: Number,
         default: 1,
+      },
+      diceValue: {
+        type: Number,
       },
     },
     maxHp: {
@@ -101,7 +101,14 @@ const characterSchema: Schema = new Schema<ICharacterDoc>(
       },
     ],
     proficiencyChoices: {
-      type: Number,
+      choose: {
+        type: Number,
+      },
+      from: [
+        {
+          type: Number,
+        },
+      ],
     },
     features: [
       {
@@ -111,8 +118,24 @@ const characterSchema: Schema = new Schema<ICharacterDoc>(
         searchIndex: {
           type: Number,
         },
+        diceCount: {
+          type: Number,
+        },
+        diceValue: {
+          type: Number,
+        },
       },
     ],
+    featureChoices: {
+      choose: {
+        type: Number,
+      },
+      from: [
+        {
+          type: Number,
+        },
+      ],
+    },
     spellcasting: {
       spellcastingAbility: {
         name: {
