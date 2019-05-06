@@ -10,12 +10,10 @@ import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import './db/mongoose'
 import IApolloContext from './interfaces/apolloContext'
-import apolloAuth from './middleware/apeolloAuth'
 import auth from './middleware/auth'
 import resolvers from './resolvers'
 // import maintenanceMode from './middleware/maintenance'
 import authRouter from './routers/authRouter'
-import characterRouter from './routers/characterRouter'
 import userRouter from './routers/userRouter'
 
 const main = async () => {
@@ -29,8 +27,7 @@ const main = async () => {
 
   app.use('/api/auth', authRouter)
   app.use('/api/users', auth, userRouter)
-  app.use('/api/characters', auth, characterRouter)
-  app.use('/graphql', apolloAuth)
+  app.use('/graphql', auth)
 
   const schema = await buildSchema({
     resolvers,

@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express'
+import { prisma } from '../generated/prisma-client'
 import AuthToken from '../interfaces/authToken'
 import RequestWithUser from '../interfaces/requestWithUser'
-import User from '../models/user'
 import verifyAuthToken from '../utils/verifyAuthToken'
 
 const auth = async (
@@ -12,7 +12,14 @@ const auth = async (
   try {
     const token = req.header('Authorization').replace('Bearer ', '')
     const decoded = verifyAuthToken(token) as AuthToken
-    const user = await User.findOne({ _id: decoded.id, 'tokens.token': token })
+    const [user] = await prisma.users({
+      where: {
+        id: decoded.id,
+        tokens_some: {
+          token,
+        },
+      },
+    })
 
     if (!user) {
       throw new Error()

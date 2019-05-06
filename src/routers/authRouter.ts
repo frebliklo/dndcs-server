@@ -4,7 +4,6 @@ import { prisma } from '../generated/prisma-client'
 import RequestWithUser from '../interfaces/requestWithUser'
 import { AuthToken } from '../interfaces/user'
 import auth from '../middleware/auth'
-import User from '../models/user'
 import generateAuthToken from '../utils/generateAuthToken'
 import hashPassword from '../utils/hashPassword'
 
@@ -40,11 +39,10 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', auth, async (req: RequestWithUser, res) => {
   try {
-    req.user.tokens = req.user.tokens.filter(
-      (token: AuthToken) => token.token !== req.token
-    )
-
-    await req.user.save()
+    await prisma.updateUser({
+      data: { tokens: { deleteMany: { token: req.token } } },
+      where: { id: req.user.id },
+    })
 
     res.send()
   } catch (err) {
@@ -54,9 +52,14 @@ router.post('/logout', auth, async (req: RequestWithUser, res) => {
 
 router.post('/logout-all', auth, async (req: RequestWithUser, res) => {
   try {
-    req.user.tokens = []
-
-    await req.user.save()
+    await prisma.updateUser({
+      data: {
+        tokens: {
+          deleteMany: {},
+        },
+      },
+      where: { id: req.user.id },
+    })
 
     res.send()
   } catch (err) {
