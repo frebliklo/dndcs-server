@@ -1,11 +1,14 @@
+import bcrypt from 'bcryptjs'
 import { Arg, Mutation, Resolver } from 'type-graphql'
-import User, { IUser } from '../models/user'
+import { prisma, User } from '../generated/prisma-client'
 import AuthType from '../types/AuthType'
 import SigninInput from '../types/SigninInput'
 import SignupInput from '../types/SignupInput'
+import generateAuthToken from '../utils/generateAuthToken'
+import hashPassword from '../utils/hashPassword'
 
 type AuthRes = {
-  user: IUser
+  user: User
   token: string
 }
 
@@ -17,13 +20,15 @@ class AuthResolver {
     email,
     password,
   }: SigninInput): Promise<AuthRes | null> {
-    const user = await User.findByCredentials(email, password)
+    const [user] = await prisma.users({ where: { email } })
 
-    if (!user) {
+    const passMatch = await bcrypt.compare(password, user.password)
+
+    if (!user || !passMatch) {
       return null
     }
 
-    const token = await user.generateAuthToken()
+    const token = generateAuthToken(user.id)
 
     return { user, token }
   }
@@ -35,16 +40,28 @@ class AuthResolver {
     email,
     password,
   }: SignupInput): Promise<AuthRes | null> {
-    const user = new User({
+    const hashedPassword = await hashPassword(password)
+
+    const user = await prisma.createUser({
       name,
       email,
-      password,
+      password: hashedPassword,
     })
 
-    await user.save()
-    const token = await user.generateAuthToken()
+    const token = generateAuthToken(user.id)
 
-    return { user, token }
+    const newUser = await prisma.updateUser({
+      data: {
+        tokens: {
+          create: {
+            token,
+          },
+        },
+      },
+      where: { id: user.id },
+    })
+
+    return { user: newUser, token }
   }
 }
 

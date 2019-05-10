@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql'
-import { IUserDoc } from '../interfaces/user'
+import { User } from '../generated/prisma-client'
 import UserType from './UserType'
 
 @ObjectType()
@@ -8,7 +8,7 @@ class AuthType {
   token: string
 
   @Field(type => UserType)
-  user: IUserDoc
+  user: User
 }
 
 export default AuthType
