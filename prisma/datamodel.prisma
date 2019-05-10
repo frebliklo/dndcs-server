@@ -5,6 +5,8 @@ type User {
   emailVerified: Boolean! @default(value: false)
   password: String
   tokens: [AuthToken]! @relation(link: TABLE onDelete: CASCADE)
+  characters: [Character]! @relation(name: "CharacterToUser" onDelete: CASCADE)
+  rogues: [Rogue]! @relation(name: "RogueToUser" onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
@@ -14,4 +16,110 @@ type AuthToken {
   token: String!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+}
+
+type Character {
+  id: ID! @id
+  public: Boolean! @default(value: false)
+  name: String!
+  level: Int! @default(value: 1)
+  hitDie: Int!
+  maxHp: Int! @default(value: 4)
+  currentHp: Int! @default(value: 4)
+  dndClass: ClassEnum!
+  dndSubclass: SubclassEnum
+  dndRace: RaceEnum!
+  dndSubrace: SubraceEnum
+  abilityScoreBonus: Int! @default(value: 0)
+  strength: Int! @default(value: 0)
+  dexterity: Int! @default(value: 0)
+  constitution: Int! @default(value: 0)
+  intelligence: Int! @default(value: 0)
+  wisdom: Int! @default(value: 0)
+  charisma: Int! @default(value: 0)
+  proficiencyBonus: Int! @default(value: 2)
+  owner: User! @relation(name: "CharacterToUser" onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Rogue {
+  id: ID! @id
+  public: Boolean! @default(value: false)
+  name: String!
+  level: Int! @default(value: 1)
+  hitDie: [Int!]! @scalarList(strategy: RELATION)
+  maxHp: Int! @default(value: 8)
+  currentHp: Int! @default(value: 8)
+  strength: Int!
+  dexterity: Int!
+  constitution: Int!
+  intelligence: Int!
+  wisdom: Int!
+  charisma: Int!
+  proficiencyBonus: Int! @default(value: 2)
+  sneakAttackDie: Int! @default(value: 6)
+  sneakAttackCount: Int! @default(value: 1)
+  abilityScoreBonus: Int! @default(value: 0)
+  archetype: RogueArchetypeEnum
+  owner: User! @relation(name: "RogueToUser" onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+enum RogueArchetypeEnum {
+  THIEF
+  ASSASIN
+  ARCANE_TRICKSTER
+}
+
+enum ClassEnum {
+  BARBARIAN
+  BARD
+  CLERIC
+  DRUID
+  FIGHTER
+  MONK
+  PALADIN
+  RANGER
+  ROGUE
+  SORCERER
+  WARLOCK
+  WIZARD
+}
+
+enum SubclassEnum {
+  BERSERKER
+  LORE
+  LIFE
+  LAND
+  CHAMPION
+  OPEN_HAND
+  DEVOTION
+  HUNTER
+  THIEF
+  DRACONIC
+  FIEND
+  EVOCATION
+}
+
+enum RaceEnum {
+  DWARF
+  ELF
+  HALFLING
+  HUMAN
+  DRAGONBORN
+  GNOME
+  HALF_ELF
+  HALF_ORC
+  TIEFLING
+}
+
+enum SubraceEnum {
+  HILL_DWARF
+  HIGH_ELF
+  LIGHTFOOT_HALFLING
+  MOUNTAIN_DWARF
+  WOOD_ELF
+  DARK_ELF
 }

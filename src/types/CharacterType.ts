@@ -1,15 +1,14 @@
 import Axios, { AxiosResponse } from 'axios'
 import { Field, ID, Int, ObjectType, Root } from 'type-graphql'
+import { prisma, User } from '../generated/prisma-client'
 import {
   ICharacterDoc,
   ICharacterFeature,
   ICharacterProficiency,
 } from '../interfaces/character'
-import User, { IUser } from '../models/user'
 import CharacterFeatureType from './CharacterFeatureType'
 import ChoiceType from './ChoiceType'
 import ClassType from './dnd5eApiTypes/ClassType'
-import FeatureType from './dnd5eApiTypes/FeatureType'
 import ProficiencyType from './dnd5eApiTypes/ProficiencyType'
 import RaceType from './dnd5eApiTypes/RaceType'
 import HitDieType from './HitDieType'
@@ -126,8 +125,9 @@ class CharacterType {
   }
 
   @Field(type => UserType)
-  async owner(@Root() character: ICharacterDoc): Promise<IUser> {
-    const user = await User.findById(character.owner)
+  async owner(@Root() character: ICharacterDoc): Promise<User> {
+    const user = await prisma.user({ id: character.owner })
+
     return user
   }
 }
