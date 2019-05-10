@@ -2,7 +2,6 @@ import bcrypt from 'bcryptjs'
 import { Router } from 'express'
 import { prisma } from '../generated/prisma-client'
 import RequestWithUser from '../interfaces/requestWithUser'
-import { AuthToken } from '../interfaces/user'
 import auth from '../middleware/auth'
 import generateAuthToken from '../utils/generateAuthToken'
 import hashPassword from '../utils/hashPassword'
@@ -68,7 +67,6 @@ router.post('/logout-all', auth, async (req: RequestWithUser, res) => {
 })
 
 router.post('/signup', async (req, res) => {
-  // const user = new User(req.body)
   const hashedPassword = await hashPassword(req.body.password)
 
   const user = await prisma.createUser({
