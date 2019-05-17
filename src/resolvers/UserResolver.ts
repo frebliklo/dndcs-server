@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
-import { prisma, User } from '../generated/prisma-client'
+import { User } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
 import UpdateUserInput from '../types/UpdateUserInput'
 import UserType from '../types/UserType'
@@ -9,9 +9,9 @@ import hashPassword from '../utils/hashPassword'
 class UserResolver {
   @Authorized()
   @Query(() => UserType)
-  async me(@Ctx() context: IApolloContext): Promise<User> {
+  async me(@Ctx() { req, prisma }: IApolloContext): Promise<User> {
     try {
-      return prisma.user({ id: context.req.user.id })
+      return prisma.user({ id: req.user.id })
     } catch (error) {
       return null
     }
@@ -19,7 +19,10 @@ class UserResolver {
 
   @Authorized()
   @Query(() => UserType, { description: 'Find a user by id' })
-  async user(@Arg('id') id: string): Promise<User> {
+  async user(
+    @Arg('id') id: string,
+    @Ctx() { prisma }: IApolloContext
+  ): Promise<User> {
     try {
       return prisma.user({ id })
     } catch (error) {
@@ -29,7 +32,7 @@ class UserResolver {
 
   @Authorized()
   @Query(() => [UserType], { description: 'Find all users' })
-  async users(): Promise<User[]> {
+  async users(@Ctx() { prisma }: IApolloContext): Promise<User[]> {
     const users = await prisma.users()
 
     if (!users) {
@@ -45,7 +48,7 @@ class UserResolver {
   })
   async updateUser(
     @Arg('data') data: UpdateUserInput,
-    @Ctx() context: IApolloContext
+    @Ctx() { prisma, req }: IApolloContext
   ): Promise<User> {
     if (data.password) {
       data.password = await hashPassword(data.password)
@@ -55,7 +58,7 @@ class UserResolver {
       data: {
         ...data,
       },
-      where: { id: context.req.user.id },
+      where: { id: req.user.id },
     })
 
     return user
@@ -65,8 +68,8 @@ class UserResolver {
   @Mutation(() => UserType, {
     description: 'Delete the currently authenticated user',
   })
-  async deleteUser(@Ctx() context: IApolloContext): Promise<User> {
-    const user = await prisma.deleteUser({ id: context.req.user.id })
+  async deleteUser(@Ctx() { prisma, req }: IApolloContext): Promise<User> {
+    const user = await prisma.deleteUser({ id: req.user.id })
 
     return user
   }

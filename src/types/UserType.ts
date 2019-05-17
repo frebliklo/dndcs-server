@@ -20,8 +20,8 @@ class UserType {
   updatedAt: Date
 
   @Field(type => String, { nullable: true })
-  email(@Root() user: User, @Ctx() context: IApolloContext): string | null {
-    if (user.id === context.req.user.id) {
+  email(@Root() user: User, @Ctx() { req }: IApolloContext): string | null {
+    if (user.id === req.user.id) {
       return user.email
     }
 
@@ -31,9 +31,9 @@ class UserType {
   @Field(type => Boolean, { nullable: true })
   emailVerified(
     @Root() user: User,
-    @Ctx() context: IApolloContext
+    @Ctx() { req }: IApolloContext
   ): boolean | null {
-    if (user.id === context.req.user.id) {
+    if (user.id === req.user.id) {
       return user.emailVerified
     }
 

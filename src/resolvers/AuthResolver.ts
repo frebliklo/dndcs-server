@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
-import { Arg, Mutation, Resolver } from 'type-graphql'
-import { prisma, User } from '../generated/prisma-client'
+import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
+import { User } from '../generated/prisma-client'
+import IApolloContext from '../interfaces/apolloContext'
 import AuthType from '../types/AuthType'
 import SigninInput from '../types/SigninInput'
 import SignupInput from '../types/SignupInput'
@@ -15,11 +16,11 @@ type AuthRes = {
 @Resolver()
 class AuthResolver {
   @Mutation(() => AuthType)
-  async loginWithEmail(@Arg('data')
-  {
-    email,
-    password,
-  }: SigninInput): Promise<AuthRes | null> {
+  async loginWithEmail(
+    @Arg('data')
+    { email, password }: SigninInput,
+    @Ctx() { prisma }: IApolloContext
+  ): Promise<AuthRes | null> {
     const [user] = await prisma.users({ where: { email } })
 
     const passMatch = await bcrypt.compare(password, user.password)
@@ -34,12 +35,11 @@ class AuthResolver {
   }
 
   @Mutation(() => AuthType)
-  async signUpWithEmail(@Arg('data')
-  {
-    name,
-    email,
-    password,
-  }: SignupInput): Promise<AuthRes | null> {
+  async signUpWithEmail(
+    @Arg('data')
+    { name, email, password }: SignupInput,
+    @Ctx() { prisma }: IApolloContext
+  ): Promise<AuthRes | null> {
     const hashedPassword = await hashPassword(password)
 
     const user = await prisma.createUser({

@@ -9,6 +9,7 @@ import queryComplexity, {
 import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import './db/mongoose'
+import { prisma } from './generated/prisma-client'
 import IApolloContext from './interfaces/apolloContext'
 import auth from './middleware/auth'
 import resolvers from './resolvers'
@@ -43,6 +44,7 @@ const main = async () => {
       const context = {
         req,
         user: req.user,
+        prisma,
       }
 
       return context
