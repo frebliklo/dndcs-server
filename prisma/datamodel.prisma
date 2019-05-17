@@ -6,7 +6,6 @@ type User {
   password: String
   tokens: [AuthToken]! @relation(link: TABLE onDelete: CASCADE)
   characters: [Character]! @relation(name: "CharacterToUser" onDelete: CASCADE)
-  rogues: [Rogue]! @relation(name: "RogueToUser" onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
@@ -43,36 +42,6 @@ type Character {
   updatedAt: DateTime! @updatedAt
 }
 
-type Rogue {
-  id: ID! @id
-  public: Boolean! @default(value: false)
-  name: String!
-  level: Int! @default(value: 1)
-  hitDie: [Int!]! @scalarList(strategy: RELATION)
-  maxHp: Int! @default(value: 8)
-  currentHp: Int! @default(value: 8)
-  strength: Int!
-  dexterity: Int!
-  constitution: Int!
-  intelligence: Int!
-  wisdom: Int!
-  charisma: Int!
-  proficiencyBonus: Int! @default(value: 2)
-  sneakAttackDie: Int! @default(value: 6)
-  sneakAttackCount: Int! @default(value: 1)
-  abilityScoreBonus: Int! @default(value: 0)
-  archetype: RogueArchetypeEnum
-  owner: User! @relation(name: "RogueToUser" onDelete: SET_NULL)
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
-}
-
-enum RogueArchetypeEnum {
-  THIEF
-  ASSASIN
-  ARCANE_TRICKSTER
-}
-
 enum ClassEnum {
   BARBARIAN
   BARD
@@ -89,17 +58,31 @@ enum ClassEnum {
 }
 
 enum SubclassEnum {
+  # Barbarian
   BERSERKER
+  # Bard
   LORE
+  # Cleric
   LIFE
+  # Druid
   LAND
+  # Fighter
   CHAMPION
+  # Monk
   OPEN_HAND
+  # Paladin
   DEVOTION
+  # Rogue
   HUNTER
+  # Rogue
   THIEF
+  ASSASIN
+  ARCANE_TRICKSTER
+  # Sorcerer
   DRACONIC
+  # Warlock
   FIEND
+  # Wizard
   EVOCATION
 }
 

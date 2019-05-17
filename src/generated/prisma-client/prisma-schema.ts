@@ -10,10 +10,6 @@ type AggregateCharacter {
   count: Int!
 }
 
-type AggregateRogue {
-  count: Int!
-}
-
 type AggregateUser {
   count: Int!
 }
@@ -885,12 +881,6 @@ type Mutation {
   upsertCharacter(where: CharacterWhereUniqueInput!, create: CharacterCreateInput!, update: CharacterUpdateInput!): Character!
   deleteCharacter(where: CharacterWhereUniqueInput!): Character
   deleteManyCharacters(where: CharacterWhereInput): BatchPayload!
-  createRogue(data: RogueCreateInput!): Rogue!
-  updateRogue(data: RogueUpdateInput!, where: RogueWhereUniqueInput!): Rogue
-  updateManyRogues(data: RogueUpdateManyMutationInput!, where: RogueWhereInput): BatchPayload!
-  upsertRogue(where: RogueWhereUniqueInput!, create: RogueCreateInput!, update: RogueUpdateInput!): Rogue!
-  deleteRogue(where: RogueWhereUniqueInput!): Rogue
-  deleteManyRogues(where: RogueWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -923,9 +913,6 @@ type Query {
   character(where: CharacterWhereUniqueInput!): Character
   characters(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Character]!
   charactersConnection(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CharacterConnection!
-  rogue(where: RogueWhereUniqueInput!): Rogue
-  rogues(where: RogueWhereInput, orderBy: RogueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Rogue]!
-  roguesConnection(where: RogueWhereInput, orderBy: RogueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RogueConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -944,619 +931,6 @@ enum RaceEnum {
   TIEFLING
 }
 
-type Rogue {
-  id: ID!
-  public: Boolean!
-  name: String!
-  level: Int!
-  hitDie: [Int!]!
-  maxHp: Int!
-  currentHp: Int!
-  strength: Int!
-  dexterity: Int!
-  constitution: Int!
-  intelligence: Int!
-  wisdom: Int!
-  charisma: Int!
-  proficiencyBonus: Int!
-  sneakAttackDie: Int!
-  sneakAttackCount: Int!
-  abilityScoreBonus: Int!
-  archetype: RogueArchetypeEnum
-  owner: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-enum RogueArchetypeEnum {
-  THIEF
-  ASSASIN
-  ARCANE_TRICKSTER
-}
-
-type RogueConnection {
-  pageInfo: PageInfo!
-  edges: [RogueEdge]!
-  aggregate: AggregateRogue!
-}
-
-input RogueCreatehitDieInput {
-  set: [Int!]
-}
-
-input RogueCreateInput {
-  id: ID
-  public: Boolean
-  name: String!
-  level: Int
-  hitDie: RogueCreatehitDieInput
-  maxHp: Int
-  currentHp: Int
-  strength: Int!
-  dexterity: Int!
-  constitution: Int!
-  intelligence: Int!
-  wisdom: Int!
-  charisma: Int!
-  proficiencyBonus: Int
-  sneakAttackDie: Int
-  sneakAttackCount: Int
-  abilityScoreBonus: Int
-  archetype: RogueArchetypeEnum
-  owner: UserCreateOneWithoutRoguesInput!
-}
-
-input RogueCreateManyWithoutOwnerInput {
-  create: [RogueCreateWithoutOwnerInput!]
-  connect: [RogueWhereUniqueInput!]
-}
-
-input RogueCreateWithoutOwnerInput {
-  id: ID
-  public: Boolean
-  name: String!
-  level: Int
-  hitDie: RogueCreatehitDieInput
-  maxHp: Int
-  currentHp: Int
-  strength: Int!
-  dexterity: Int!
-  constitution: Int!
-  intelligence: Int!
-  wisdom: Int!
-  charisma: Int!
-  proficiencyBonus: Int
-  sneakAttackDie: Int
-  sneakAttackCount: Int
-  abilityScoreBonus: Int
-  archetype: RogueArchetypeEnum
-}
-
-type RogueEdge {
-  node: Rogue!
-  cursor: String!
-}
-
-enum RogueOrderByInput {
-  id_ASC
-  id_DESC
-  public_ASC
-  public_DESC
-  name_ASC
-  name_DESC
-  level_ASC
-  level_DESC
-  maxHp_ASC
-  maxHp_DESC
-  currentHp_ASC
-  currentHp_DESC
-  strength_ASC
-  strength_DESC
-  dexterity_ASC
-  dexterity_DESC
-  constitution_ASC
-  constitution_DESC
-  intelligence_ASC
-  intelligence_DESC
-  wisdom_ASC
-  wisdom_DESC
-  charisma_ASC
-  charisma_DESC
-  proficiencyBonus_ASC
-  proficiencyBonus_DESC
-  sneakAttackDie_ASC
-  sneakAttackDie_DESC
-  sneakAttackCount_ASC
-  sneakAttackCount_DESC
-  abilityScoreBonus_ASC
-  abilityScoreBonus_DESC
-  archetype_ASC
-  archetype_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type RoguePreviousValues {
-  id: ID!
-  public: Boolean!
-  name: String!
-  level: Int!
-  hitDie: [Int!]!
-  maxHp: Int!
-  currentHp: Int!
-  strength: Int!
-  dexterity: Int!
-  constitution: Int!
-  intelligence: Int!
-  wisdom: Int!
-  charisma: Int!
-  proficiencyBonus: Int!
-  sneakAttackDie: Int!
-  sneakAttackCount: Int!
-  abilityScoreBonus: Int!
-  archetype: RogueArchetypeEnum
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input RogueScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  public: Boolean
-  public_not: Boolean
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  level: Int
-  level_not: Int
-  level_in: [Int!]
-  level_not_in: [Int!]
-  level_lt: Int
-  level_lte: Int
-  level_gt: Int
-  level_gte: Int
-  maxHp: Int
-  maxHp_not: Int
-  maxHp_in: [Int!]
-  maxHp_not_in: [Int!]
-  maxHp_lt: Int
-  maxHp_lte: Int
-  maxHp_gt: Int
-  maxHp_gte: Int
-  currentHp: Int
-  currentHp_not: Int
-  currentHp_in: [Int!]
-  currentHp_not_in: [Int!]
-  currentHp_lt: Int
-  currentHp_lte: Int
-  currentHp_gt: Int
-  currentHp_gte: Int
-  strength: Int
-  strength_not: Int
-  strength_in: [Int!]
-  strength_not_in: [Int!]
-  strength_lt: Int
-  strength_lte: Int
-  strength_gt: Int
-  strength_gte: Int
-  dexterity: Int
-  dexterity_not: Int
-  dexterity_in: [Int!]
-  dexterity_not_in: [Int!]
-  dexterity_lt: Int
-  dexterity_lte: Int
-  dexterity_gt: Int
-  dexterity_gte: Int
-  constitution: Int
-  constitution_not: Int
-  constitution_in: [Int!]
-  constitution_not_in: [Int!]
-  constitution_lt: Int
-  constitution_lte: Int
-  constitution_gt: Int
-  constitution_gte: Int
-  intelligence: Int
-  intelligence_not: Int
-  intelligence_in: [Int!]
-  intelligence_not_in: [Int!]
-  intelligence_lt: Int
-  intelligence_lte: Int
-  intelligence_gt: Int
-  intelligence_gte: Int
-  wisdom: Int
-  wisdom_not: Int
-  wisdom_in: [Int!]
-  wisdom_not_in: [Int!]
-  wisdom_lt: Int
-  wisdom_lte: Int
-  wisdom_gt: Int
-  wisdom_gte: Int
-  charisma: Int
-  charisma_not: Int
-  charisma_in: [Int!]
-  charisma_not_in: [Int!]
-  charisma_lt: Int
-  charisma_lte: Int
-  charisma_gt: Int
-  charisma_gte: Int
-  proficiencyBonus: Int
-  proficiencyBonus_not: Int
-  proficiencyBonus_in: [Int!]
-  proficiencyBonus_not_in: [Int!]
-  proficiencyBonus_lt: Int
-  proficiencyBonus_lte: Int
-  proficiencyBonus_gt: Int
-  proficiencyBonus_gte: Int
-  sneakAttackDie: Int
-  sneakAttackDie_not: Int
-  sneakAttackDie_in: [Int!]
-  sneakAttackDie_not_in: [Int!]
-  sneakAttackDie_lt: Int
-  sneakAttackDie_lte: Int
-  sneakAttackDie_gt: Int
-  sneakAttackDie_gte: Int
-  sneakAttackCount: Int
-  sneakAttackCount_not: Int
-  sneakAttackCount_in: [Int!]
-  sneakAttackCount_not_in: [Int!]
-  sneakAttackCount_lt: Int
-  sneakAttackCount_lte: Int
-  sneakAttackCount_gt: Int
-  sneakAttackCount_gte: Int
-  abilityScoreBonus: Int
-  abilityScoreBonus_not: Int
-  abilityScoreBonus_in: [Int!]
-  abilityScoreBonus_not_in: [Int!]
-  abilityScoreBonus_lt: Int
-  abilityScoreBonus_lte: Int
-  abilityScoreBonus_gt: Int
-  abilityScoreBonus_gte: Int
-  archetype: RogueArchetypeEnum
-  archetype_not: RogueArchetypeEnum
-  archetype_in: [RogueArchetypeEnum!]
-  archetype_not_in: [RogueArchetypeEnum!]
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [RogueScalarWhereInput!]
-  OR: [RogueScalarWhereInput!]
-  NOT: [RogueScalarWhereInput!]
-}
-
-type RogueSubscriptionPayload {
-  mutation: MutationType!
-  node: Rogue
-  updatedFields: [String!]
-  previousValues: RoguePreviousValues
-}
-
-input RogueSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: RogueWhereInput
-  AND: [RogueSubscriptionWhereInput!]
-  OR: [RogueSubscriptionWhereInput!]
-  NOT: [RogueSubscriptionWhereInput!]
-}
-
-input RogueUpdatehitDieInput {
-  set: [Int!]
-}
-
-input RogueUpdateInput {
-  public: Boolean
-  name: String
-  level: Int
-  hitDie: RogueUpdatehitDieInput
-  maxHp: Int
-  currentHp: Int
-  strength: Int
-  dexterity: Int
-  constitution: Int
-  intelligence: Int
-  wisdom: Int
-  charisma: Int
-  proficiencyBonus: Int
-  sneakAttackDie: Int
-  sneakAttackCount: Int
-  abilityScoreBonus: Int
-  archetype: RogueArchetypeEnum
-  owner: UserUpdateOneRequiredWithoutRoguesInput
-}
-
-input RogueUpdateManyDataInput {
-  public: Boolean
-  name: String
-  level: Int
-  hitDie: RogueUpdatehitDieInput
-  maxHp: Int
-  currentHp: Int
-  strength: Int
-  dexterity: Int
-  constitution: Int
-  intelligence: Int
-  wisdom: Int
-  charisma: Int
-  proficiencyBonus: Int
-  sneakAttackDie: Int
-  sneakAttackCount: Int
-  abilityScoreBonus: Int
-  archetype: RogueArchetypeEnum
-}
-
-input RogueUpdateManyMutationInput {
-  public: Boolean
-  name: String
-  level: Int
-  hitDie: RogueUpdatehitDieInput
-  maxHp: Int
-  currentHp: Int
-  strength: Int
-  dexterity: Int
-  constitution: Int
-  intelligence: Int
-  wisdom: Int
-  charisma: Int
-  proficiencyBonus: Int
-  sneakAttackDie: Int
-  sneakAttackCount: Int
-  abilityScoreBonus: Int
-  archetype: RogueArchetypeEnum
-}
-
-input RogueUpdateManyWithoutOwnerInput {
-  create: [RogueCreateWithoutOwnerInput!]
-  delete: [RogueWhereUniqueInput!]
-  connect: [RogueWhereUniqueInput!]
-  set: [RogueWhereUniqueInput!]
-  disconnect: [RogueWhereUniqueInput!]
-  update: [RogueUpdateWithWhereUniqueWithoutOwnerInput!]
-  upsert: [RogueUpsertWithWhereUniqueWithoutOwnerInput!]
-  deleteMany: [RogueScalarWhereInput!]
-  updateMany: [RogueUpdateManyWithWhereNestedInput!]
-}
-
-input RogueUpdateManyWithWhereNestedInput {
-  where: RogueScalarWhereInput!
-  data: RogueUpdateManyDataInput!
-}
-
-input RogueUpdateWithoutOwnerDataInput {
-  public: Boolean
-  name: String
-  level: Int
-  hitDie: RogueUpdatehitDieInput
-  maxHp: Int
-  currentHp: Int
-  strength: Int
-  dexterity: Int
-  constitution: Int
-  intelligence: Int
-  wisdom: Int
-  charisma: Int
-  proficiencyBonus: Int
-  sneakAttackDie: Int
-  sneakAttackCount: Int
-  abilityScoreBonus: Int
-  archetype: RogueArchetypeEnum
-}
-
-input RogueUpdateWithWhereUniqueWithoutOwnerInput {
-  where: RogueWhereUniqueInput!
-  data: RogueUpdateWithoutOwnerDataInput!
-}
-
-input RogueUpsertWithWhereUniqueWithoutOwnerInput {
-  where: RogueWhereUniqueInput!
-  update: RogueUpdateWithoutOwnerDataInput!
-  create: RogueCreateWithoutOwnerInput!
-}
-
-input RogueWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  public: Boolean
-  public_not: Boolean
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  level: Int
-  level_not: Int
-  level_in: [Int!]
-  level_not_in: [Int!]
-  level_lt: Int
-  level_lte: Int
-  level_gt: Int
-  level_gte: Int
-  maxHp: Int
-  maxHp_not: Int
-  maxHp_in: [Int!]
-  maxHp_not_in: [Int!]
-  maxHp_lt: Int
-  maxHp_lte: Int
-  maxHp_gt: Int
-  maxHp_gte: Int
-  currentHp: Int
-  currentHp_not: Int
-  currentHp_in: [Int!]
-  currentHp_not_in: [Int!]
-  currentHp_lt: Int
-  currentHp_lte: Int
-  currentHp_gt: Int
-  currentHp_gte: Int
-  strength: Int
-  strength_not: Int
-  strength_in: [Int!]
-  strength_not_in: [Int!]
-  strength_lt: Int
-  strength_lte: Int
-  strength_gt: Int
-  strength_gte: Int
-  dexterity: Int
-  dexterity_not: Int
-  dexterity_in: [Int!]
-  dexterity_not_in: [Int!]
-  dexterity_lt: Int
-  dexterity_lte: Int
-  dexterity_gt: Int
-  dexterity_gte: Int
-  constitution: Int
-  constitution_not: Int
-  constitution_in: [Int!]
-  constitution_not_in: [Int!]
-  constitution_lt: Int
-  constitution_lte: Int
-  constitution_gt: Int
-  constitution_gte: Int
-  intelligence: Int
-  intelligence_not: Int
-  intelligence_in: [Int!]
-  intelligence_not_in: [Int!]
-  intelligence_lt: Int
-  intelligence_lte: Int
-  intelligence_gt: Int
-  intelligence_gte: Int
-  wisdom: Int
-  wisdom_not: Int
-  wisdom_in: [Int!]
-  wisdom_not_in: [Int!]
-  wisdom_lt: Int
-  wisdom_lte: Int
-  wisdom_gt: Int
-  wisdom_gte: Int
-  charisma: Int
-  charisma_not: Int
-  charisma_in: [Int!]
-  charisma_not_in: [Int!]
-  charisma_lt: Int
-  charisma_lte: Int
-  charisma_gt: Int
-  charisma_gte: Int
-  proficiencyBonus: Int
-  proficiencyBonus_not: Int
-  proficiencyBonus_in: [Int!]
-  proficiencyBonus_not_in: [Int!]
-  proficiencyBonus_lt: Int
-  proficiencyBonus_lte: Int
-  proficiencyBonus_gt: Int
-  proficiencyBonus_gte: Int
-  sneakAttackDie: Int
-  sneakAttackDie_not: Int
-  sneakAttackDie_in: [Int!]
-  sneakAttackDie_not_in: [Int!]
-  sneakAttackDie_lt: Int
-  sneakAttackDie_lte: Int
-  sneakAttackDie_gt: Int
-  sneakAttackDie_gte: Int
-  sneakAttackCount: Int
-  sneakAttackCount_not: Int
-  sneakAttackCount_in: [Int!]
-  sneakAttackCount_not_in: [Int!]
-  sneakAttackCount_lt: Int
-  sneakAttackCount_lte: Int
-  sneakAttackCount_gt: Int
-  sneakAttackCount_gte: Int
-  abilityScoreBonus: Int
-  abilityScoreBonus_not: Int
-  abilityScoreBonus_in: [Int!]
-  abilityScoreBonus_not_in: [Int!]
-  abilityScoreBonus_lt: Int
-  abilityScoreBonus_lte: Int
-  abilityScoreBonus_gt: Int
-  abilityScoreBonus_gte: Int
-  archetype: RogueArchetypeEnum
-  archetype_not: RogueArchetypeEnum
-  archetype_in: [RogueArchetypeEnum!]
-  archetype_not_in: [RogueArchetypeEnum!]
-  owner: UserWhereInput
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [RogueWhereInput!]
-  OR: [RogueWhereInput!]
-  NOT: [RogueWhereInput!]
-}
-
-input RogueWhereUniqueInput {
-  id: ID
-}
-
 enum SubclassEnum {
   BERSERKER
   LORE
@@ -1567,6 +941,8 @@ enum SubclassEnum {
   DEVOTION
   HUNTER
   THIEF
+  ASSASIN
+  ARCANE_TRICKSTER
   DRACONIC
   FIEND
   EVOCATION
@@ -1584,7 +960,6 @@ enum SubraceEnum {
 type Subscription {
   authToken(where: AuthTokenSubscriptionWhereInput): AuthTokenSubscriptionPayload
   character(where: CharacterSubscriptionWhereInput): CharacterSubscriptionPayload
-  rogue(where: RogueSubscriptionWhereInput): RogueSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -1596,7 +971,6 @@ type User {
   password: String
   tokens(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthToken!]
   characters(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Character!]
-  rogues(where: RogueWhereInput, orderBy: RogueOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Rogue!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1615,16 +989,10 @@ input UserCreateInput {
   password: String
   tokens: AuthTokenCreateManyInput
   characters: CharacterCreateManyWithoutOwnerInput
-  rogues: RogueCreateManyWithoutOwnerInput
 }
 
 input UserCreateOneWithoutCharactersInput {
   create: UserCreateWithoutCharactersInput
-  connect: UserWhereUniqueInput
-}
-
-input UserCreateOneWithoutRoguesInput {
-  create: UserCreateWithoutRoguesInput
   connect: UserWhereUniqueInput
 }
 
@@ -1635,17 +1003,6 @@ input UserCreateWithoutCharactersInput {
   emailVerified: Boolean
   password: String
   tokens: AuthTokenCreateManyInput
-  rogues: RogueCreateManyWithoutOwnerInput
-}
-
-input UserCreateWithoutRoguesInput {
-  id: ID
-  name: String!
-  email: String!
-  emailVerified: Boolean
-  password: String
-  tokens: AuthTokenCreateManyInput
-  characters: CharacterCreateManyWithoutOwnerInput
 }
 
 type UserEdge {
@@ -1705,7 +1062,6 @@ input UserUpdateInput {
   password: String
   tokens: AuthTokenUpdateManyInput
   characters: CharacterUpdateManyWithoutOwnerInput
-  rogues: RogueUpdateManyWithoutOwnerInput
 }
 
 input UserUpdateManyMutationInput {
@@ -1722,39 +1078,17 @@ input UserUpdateOneRequiredWithoutCharactersInput {
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneRequiredWithoutRoguesInput {
-  create: UserCreateWithoutRoguesInput
-  update: UserUpdateWithoutRoguesDataInput
-  upsert: UserUpsertWithoutRoguesInput
-  connect: UserWhereUniqueInput
-}
-
 input UserUpdateWithoutCharactersDataInput {
   name: String
   email: String
   emailVerified: Boolean
   password: String
   tokens: AuthTokenUpdateManyInput
-  rogues: RogueUpdateManyWithoutOwnerInput
-}
-
-input UserUpdateWithoutRoguesDataInput {
-  name: String
-  email: String
-  emailVerified: Boolean
-  password: String
-  tokens: AuthTokenUpdateManyInput
-  characters: CharacterUpdateManyWithoutOwnerInput
 }
 
 input UserUpsertWithoutCharactersInput {
   update: UserUpdateWithoutCharactersDataInput!
   create: UserCreateWithoutCharactersInput!
-}
-
-input UserUpsertWithoutRoguesInput {
-  update: UserUpdateWithoutRoguesDataInput!
-  create: UserCreateWithoutRoguesInput!
 }
 
 input UserWhereInput {
@@ -1822,9 +1156,6 @@ input UserWhereInput {
   characters_every: CharacterWhereInput
   characters_some: CharacterWhereInput
   characters_none: CharacterWhereInput
-  rogues_every: RogueWhereInput
-  rogues_some: RogueWhereInput
-  rogues_none: RogueWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
