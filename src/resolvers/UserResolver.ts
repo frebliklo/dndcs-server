@@ -9,9 +9,9 @@ import hashPassword from '../utils/hashPassword'
 class UserResolver {
   @Authorized()
   @Query(() => UserType)
-  async me(@Ctx() { req, prisma }: IApolloContext): Promise<User> {
+  async me(@Ctx() { userId, prisma }: IApolloContext): Promise<User> {
     try {
-      return prisma.user({ id: req.user.id })
+      return prisma.user({ id: userId })
     } catch (error) {
       return null
     }
@@ -48,7 +48,7 @@ class UserResolver {
   })
   async updateUser(
     @Arg('data') data: UpdateUserInput,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, userId }: IApolloContext
   ): Promise<User> {
     if (data.password) {
       data.password = await hashPassword(data.password)
@@ -58,7 +58,7 @@ class UserResolver {
       data: {
         ...data,
       },
-      where: { id: req.user.id },
+      where: { id: userId },
     })
 
     return user
@@ -68,8 +68,8 @@ class UserResolver {
   @Mutation(() => UserType, {
     description: 'Delete the currently authenticated user',
   })
-  async deleteUser(@Ctx() { prisma, req }: IApolloContext): Promise<User> {
-    const user = await prisma.deleteUser({ id: req.user.id })
+  async deleteUser(@Ctx() { prisma, userId }: IApolloContext): Promise<User> {
+    const user = await prisma.deleteUser({ id: userId })
 
     return user
   }

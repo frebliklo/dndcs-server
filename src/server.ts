@@ -7,15 +7,19 @@ import queryComplexity, {
   simpleEstimator,
 } from 'graphql-query-complexity'
 import 'reflect-metadata'
-import { buildSchema } from 'type-graphql'
-import './db/mongoose'
-import { prisma } from './generated/prisma-client'
+import { AuthChecker, buildSchema } from 'type-graphql'
+import { AuthToken, prisma, Prisma } from './generated/prisma-client'
 import IApolloContext from './interfaces/apolloContext'
 import auth from './middleware/auth'
 import resolvers from './resolvers'
 // import maintenanceMode from './middleware/maintenance'
 import authRouter from './routers/authRouter'
 import userRouter from './routers/userRouter'
+import verifyAuthToken from './utils/verifyAuthToken'
+
+const authChecker: AuthChecker<IApolloContext> = ({ context }) => {
+  return !!context.userId
+}
 
 const main = async () => {
   const app = Express()
@@ -28,26 +32,27 @@ const main = async () => {
 
   app.use('/api/auth', authRouter)
   app.use('/api/users', auth, userRouter)
-  app.use('/graphql', auth)
 
   const schema = await buildSchema({
     resolvers,
     dateScalarMode: 'timestamp',
-    authChecker: ({ context: { req } }) => {
-      return !!req.user
-    },
+    authChecker,
   })
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }: IApolloContext) => {
-      const context = {
-        req,
-        user: req.user,
-        prisma,
+    context: ({ req }) => {
+      const token = req.header('Authorization').replace('Bearer ', '')
+      const decoded = verifyAuthToken(token) as AuthToken
+
+      if (!decoded) {
+        return { prisma }
       }
 
-      return context
+      return {
+        userId: decoded.id,
+        prisma,
+      }
     },
     validationRules: [
       queryComplexity({

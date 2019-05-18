@@ -1,8 +1,6 @@
 import { Ctx, Field, ID, ObjectType, Root } from 'type-graphql'
-import { User } from '../generated/prisma-client'
+import { Character, User } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
-import { ICharacterDoc } from '../interfaces/character'
-import Character from '../models/character'
 import CharacterType from './CharacterType'
 
 @ObjectType()
@@ -20,8 +18,8 @@ class UserType {
   updatedAt: Date
 
   @Field(type => String, { nullable: true })
-  email(@Root() user: User, @Ctx() { req }: IApolloContext): string | null {
-    if (user.id === req.user.id) {
+  email(@Root() user: User, @Ctx() { userId }: IApolloContext): string | null {
+    if (user.id === userId) {
       return user.email
     }
 
@@ -31,9 +29,9 @@ class UserType {
   @Field(type => Boolean, { nullable: true })
   emailVerified(
     @Root() user: User,
-    @Ctx() { req }: IApolloContext
+    @Ctx() { userId }: IApolloContext
   ): boolean | null {
-    if (user.id === req.user.id) {
+    if (user.id === userId) {
       return user.emailVerified
     }
 
@@ -43,16 +41,18 @@ class UserType {
   @Field(type => [CharacterType])
   async characters(
     @Root() user: User,
-    @Ctx() { req }: IApolloContext
-  ): Promise<ICharacterDoc[]> {
-    const characters = await Character.find({ owner: user.id })
+    @Ctx() { prisma, userId }: IApolloContext
+  ): Promise<Character[]> {
+    const characters = await prisma.characters({
+      where: { owner: { id: userId } },
+    })
 
     if (!characters) {
       return []
     }
 
     const filteredCharacters = characters.filter(
-      character => !!character.public || user.id === req.user.id
+      character => !!character.public || user.id === userId
     )
 
     return filteredCharacters
