@@ -3,6 +3,8 @@ import { Character } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
 import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
+import getModifier from '../utils/getModifier'
+import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
 
 @Resolver()
 class CharacterResolver {
@@ -34,8 +36,11 @@ class CharacterResolver {
     @Arg('data') data: CreateCharacterInput,
     @Ctx() { prisma, userId }: IApolloContext
   ): Promise<Character> {
+    const proficiencyBonus = getProfBonusFromLevel(data.level)
+
     const character = await prisma.createCharacter({
       ...data,
+      proficiencyBonus,
       owner: { connect: { id: userId } },
     })
 

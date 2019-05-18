@@ -30,12 +30,12 @@ type Character {
   dndRace: RaceEnum!
   dndSubrace: SubraceEnum
   abilityScoreBonus: Int! @default(value: 0)
-  strength: Int! @default(value: 0)
-  dexterity: Int! @default(value: 0)
-  constitution: Int! @default(value: 0)
-  intelligence: Int! @default(value: 0)
-  wisdom: Int! @default(value: 0)
-  charisma: Int! @default(value: 0)
+  strength: Int! @default(value: 10)
+  dexterity: Int! @default(value: 10)
+  constitution: Int! @default(value: 10)
+  intelligence: Int! @default(value: 10)
+  wisdom: Int! @default(value: 10)
+  charisma: Int! @default(value: 10)
   proficiencyBonus: Int! @default(value: 2)
   owner: User! @relation(name: "CharacterToUser" onDelete: SET_NULL)
   createdAt: DateTime! @createdAt

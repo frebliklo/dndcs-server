@@ -94,7 +94,4 @@ export class CreateCharacterInput {
   @Min(1)
   @Max(20)
   charisma: number
-
-  @Field(type => Int, { nullable: true })
-  proficiencyBonus: number
 }
