@@ -13,3 +13,6 @@ src/**/*.js.map
 .env.test
 .env.staging
 .env.prod
+
+# Tests
+coverage
