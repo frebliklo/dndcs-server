@@ -10,7 +10,6 @@ src/**/*.js.map
 
 # Environment
 .env.dev
-.env.development
 .env.test
 .env.staging
 .env.prod
