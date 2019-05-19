@@ -10,7 +10,8 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn ./src/server.ts",
+    "heroku-postbuild": "npm run build-ts",
+    "dev": "env-cmd -f ./.env.dev ts-node-dev --respawn ./src/server.ts",
     "build": "npm run build-ts && npm run lint",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
@@ -24,6 +25,7 @@
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "cors": "^2.8.5",
+    "env-cmd": "^9.0.1",
     "express": "^4.16.4",
     "graphql": "^14.2.1",
     "graphql-query-complexity": "^0.2.3",
