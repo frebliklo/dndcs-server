@@ -5,6 +5,7 @@ import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
 import getModifier from '../utils/getModifier'
 import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
+import getUserId from '../utils/getUserId'
 
 @Resolver()
 class CharacterResolver {
@@ -15,8 +16,10 @@ class CharacterResolver {
   })
   async character(
     @Arg('id') id: string,
-    @Ctx() { prisma, userId }: IApolloContext
+    @Ctx() { prisma, req }: IApolloContext
   ): Promise<Character> {
+    const userId = getUserId(req)
+
     try {
       const [character] = await prisma.characters({
         where: { AND: [{ owner: { id: userId } }, { id }] },
@@ -34,8 +37,9 @@ class CharacterResolver {
   })
   async createCharacter(
     @Arg('data') data: CreateCharacterInput,
-    @Ctx() { prisma, userId }: IApolloContext
+    @Ctx() { prisma, req }: IApolloContext
   ): Promise<Character> {
+    const userId = getUserId(req)
     const proficiencyBonus = getProfBonusFromLevel(data.level)
 
     const character = await prisma.createCharacter({
@@ -54,8 +58,9 @@ class CharacterResolver {
   })
   async deleteCharacter(
     @Arg('id') id: string,
-    @Ctx() { prisma, userId }: IApolloContext
+    @Ctx() { prisma, req }: IApolloContext
   ): Promise<Character> {
+    const userId = getUserId(req)
     const [characterToDelete] = await prisma.characters({
       where: { AND: [{ id }, { owner: { id: userId } }] },
     })

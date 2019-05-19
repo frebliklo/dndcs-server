@@ -1,8 +1,9 @@
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
+import { Request } from 'express'
 import { Prisma } from '../generated/prisma-client'
 
 interface IApolloContext extends ExpressContext {
-  userId?: string
+  req: Request
   prisma: Prisma
 }
 

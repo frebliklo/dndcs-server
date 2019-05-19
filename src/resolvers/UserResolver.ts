@@ -3,13 +3,16 @@ import { User } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
 import UpdateUserInput from '../types/UpdateUserInput'
 import UserType from '../types/UserType'
+import getUserId from '../utils/getUserId'
 import hashPassword from '../utils/hashPassword'
 
 @Resolver()
 class UserResolver {
   @Authorized()
   @Query(() => UserType)
-  async me(@Ctx() { userId, prisma }: IApolloContext): Promise<User> {
+  async me(@Ctx() { prisma, req }: IApolloContext): Promise<User> {
+    const userId = getUserId(req)
+
     try {
       return prisma.user({ id: userId })
     } catch (error) {
@@ -48,8 +51,10 @@ class UserResolver {
   })
   async updateUser(
     @Arg('data') data: UpdateUserInput,
-    @Ctx() { prisma, userId }: IApolloContext
+    @Ctx() { prisma, req }: IApolloContext
   ): Promise<User> {
+    const userId = getUserId(req)
+
     if (data.password) {
       data.password = await hashPassword(data.password)
     }
@@ -68,7 +73,8 @@ class UserResolver {
   @Mutation(() => UserType, {
     description: 'Delete the currently authenticated user',
   })
-  async deleteUser(@Ctx() { prisma, userId }: IApolloContext): Promise<User> {
+  async deleteUser(@Ctx() { prisma, req }: IApolloContext): Promise<User> {
+    const userId = getUserId(req)
     const user = await prisma.deleteUser({ id: userId })
 
     return user
