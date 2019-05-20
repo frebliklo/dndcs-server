@@ -8,7 +8,7 @@ This project uses [Prisma](https://www.prisma.io/). To run a local instance you 
 
 When making changes to the schema make sure to run `prisma deploy -e ../.env.dev` for the changes to take effect.
 
-If you have a secret set for your local prisma service then you can login through the CLI to get a valid token, that you can use to make requests.
+If you have a secret set for your local prisma service then you can login through the CLI to get a valid token, that you can use to make requests, by running `prisma token` immediatly after deploying the service.
 
 ## 2.0 Development
 

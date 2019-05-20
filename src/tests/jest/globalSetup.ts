@@ -21,7 +21,7 @@ module.exports = async () => {
 
   apolloServer.applyMiddleware({ app, path: '/graphql' })
 
-  const port = process.env.PORT || 5000
+  const port = process.env.PORT || 5555
 
   global.httpServer = app.listen(port)
 }
