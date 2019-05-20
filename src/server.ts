@@ -14,7 +14,7 @@ import authRouter from './routers/authRouter'
 import userRouter from './routers/userRouter'
 import createSchema from './utils/createSchema'
 
-const main = async () => {
+export const startServer = async () => {
   const app = Express()
 
   app.use(bodyParser.json())
@@ -58,10 +58,12 @@ const main = async () => {
 
   const port = process.env.PORT || 5000
 
-  app.listen(port, () => {
+  const server = await app.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log(`App listening on at http://localhost:${port}`)
   })
+
+  return server
 }
 
-main()
+startServer()
