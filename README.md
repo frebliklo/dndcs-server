@@ -2,6 +2,8 @@
 
 API and web application for managing 5th edition Dungeons and Dragons characters.
 
+[![CircleCI](https://circleci.com/gh/frebliklo/dndcs-server/tree/master.svg?style=svg)](https://circleci.com/gh/frebliklo/dndcs-server/tree/master)
+
 ## 1.0 Database
 
 This project uses [Prisma](https://www.prisma.io/). To run a local instance you need the prisma CLI and Docker. Follow the instructions on their website and make sure that you have valid values set up in your environment. See the `.env.example` for reference.
@@ -25,3 +27,11 @@ npm run dev
 ```
 
 The application should be running locally on port 5000 and your console should show you the the specific url, ie `App listening on at http://localhost:5000`. You can find the GraphQL playground at [/graphql](http://localhost:5000/graphql) when the application is running.
+
+## 3.0 Testing
+
+This project uses Jest for running tests. Currently, the strategy is to run a local server and make requests with ApolloBoost to test from the prespective of clients.
+
+```bash
+npm run test
+```
