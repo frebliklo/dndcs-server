@@ -1,0 +1,109 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  emailVerified: Boolean! @default(value: false)
+  password: String
+  tokens: [AuthToken]! @relation(link: TABLE onDelete: CASCADE)
+  characters: [Character]! @relation(name: "CharacterToUser" onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type AuthToken {
+  id: ID! @id
+  token: String!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Character {
+  id: ID! @id
+  public: Boolean! @default(value: false)
+  name: String!
+  bio: String
+  level: Int! @default(value: 1)
+  hitDie: Int!
+  maxHp: Int! @default(value: 4)
+  currentHp: Int! @default(value: 4)
+  dndClass: ClassEnum!
+  dndSubclass: SubclassEnum
+  dndRace: RaceEnum!
+  dndSubrace: SubraceEnum
+  abilityScoreBonus: Int! @default(value: 0)
+  strength: Int! @default(value: 10)
+  dexterity: Int! @default(value: 10)
+  constitution: Int! @default(value: 10)
+  intelligence: Int! @default(value: 10)
+  wisdom: Int! @default(value: 10)
+  charisma: Int! @default(value: 10)
+  proficiencyBonus: Int! @default(value: 2)
+  owner: User! @relation(name: "CharacterToUser" onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+enum ClassEnum {
+  BARBARIAN
+  BARD
+  CLERIC
+  DRUID
+  FIGHTER
+  MONK
+  PALADIN
+  RANGER
+  ROGUE
+  SORCERER
+  WARLOCK
+  WIZARD
+}
+
+enum SubclassEnum {
+  # Barbarian
+  BERSERKER
+  # Bard
+  LORE
+  # Cleric
+  LIFE
+  # Druid
+  LAND
+  # Fighter
+  CHAMPION
+  # Monk
+  OPEN_HAND
+  # Paladin
+  DEVOTION
+  # Rogue
+  HUNTER
+  # Rogue
+  THIEF
+  ASSASIN
+  ARCANE_TRICKSTER
+  # Sorcerer
+  DRACONIC
+  # Warlock
+  FIEND
+  # Wizard
+  EVOCATION
+}
+
+enum RaceEnum {
+  DWARF
+  ELF
+  HALFLING
+  HUMAN
+  DRAGONBORN
+  GNOME
+  HALF_ELF
+  HALF_ORC
+  TIEFLING
+}
+
+enum SubraceEnum {
+  HILL_DWARF
+  HIGH_ELF
+  LIGHTFOOT_HALFLING
+  MOUNTAIN_DWARF
+  WOOD_ELF
+  DARK_ELF
+}

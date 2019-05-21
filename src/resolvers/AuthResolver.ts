@@ -1,50 +1,67 @@
-import { Arg, Mutation, Resolver } from 'type-graphql'
-import User, { IUser } from '../models/user'
+import bcrypt from 'bcryptjs'
+import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
+import { User } from '../generated/prisma-client'
+import IApolloContext from '../interfaces/apolloContext'
 import AuthType from '../types/AuthType'
 import SigninInput from '../types/SigninInput'
 import SignupInput from '../types/SignupInput'
+import generateAuthToken from '../utils/generateAuthToken'
+import hashPassword from '../utils/hashPassword'
 
 type AuthRes = {
-  user: IUser
+  user: User
   token: string
 }
 
 @Resolver()
 class AuthResolver {
   @Mutation(() => AuthType)
-  async loginWithEmail(@Arg('data')
-  {
-    email,
-    password,
-  }: SigninInput): Promise<AuthRes | null> {
-    const user = await User.findByCredentials(email, password)
+  async loginWithEmail(
+    @Arg('data')
+    { email, password }: SigninInput,
+    @Ctx() { prisma }: IApolloContext
+  ): Promise<AuthRes | null> {
+    const [user] = await prisma.users({ where: { email } })
 
-    if (!user) {
+    const passMatch = await bcrypt.compare(password, user.password)
+
+    if (!user || !passMatch) {
       return null
     }
 
-    const token = await user.generateAuthToken()
+    const token = generateAuthToken(user.id)
 
     return { user, token }
   }
 
   @Mutation(() => AuthType)
-  async signUpWithEmail(@Arg('data')
-  {
-    name,
-    email,
-    password,
-  }: SignupInput): Promise<AuthRes | null> {
-    const user = new User({
+  async signUpWithEmail(
+    @Arg('data')
+    { name, email, password }: SignupInput,
+    @Ctx() { prisma }: IApolloContext
+  ): Promise<AuthRes | null> {
+    const hashedPassword = await hashPassword(password)
+
+    const user = await prisma.createUser({
       name,
       email,
-      password,
+      password: hashedPassword,
     })
 
-    await user.save()
-    const token = await user.generateAuthToken()
+    const token = generateAuthToken(user.id)
 
-    return { user, token }
+    const newUser = await prisma.updateUser({
+      data: {
+        tokens: {
+          create: {
+            token,
+          },
+        },
+      },
+      where: { id: user.id },
+    })
+
+    return { user: newUser, token }
   }
 }
 

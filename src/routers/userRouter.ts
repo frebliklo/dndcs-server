@@ -1,31 +1,12 @@
 import { Router } from 'express'
+import { prisma } from '../generated/prisma-client'
 import RequestWithUser from '../interfaces/requestWithUser'
-import User from '../models/user'
 
 const router = Router()
 
-router.get('/me', (req: RequestWithUser, res) => {
-  res.send(req.user)
-})
-
-router.get('/', async (req, res) => {
+router.get('/me', async (req: RequestWithUser, res) => {
   try {
-    const users = await User.find({})
-    res.send(users)
-  } catch (err) {
-    res.status(500).send()
-  }
-})
-
-router.get('/:id', async (req, res) => {
-  const { id } = req.params
-
-  try {
-    const user = await User.findById(id)
-
-    if (!user) {
-      return res.status(404).send()
-    }
+    const user = await prisma.user({ id: req.user.id })
 
     res.send(user)
   } catch (err) {
@@ -33,31 +14,9 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.patch('/me', async (req: RequestWithUser, res) => {
-  const updates = Object.keys(req.body)
-  const allowedUpdates = ['name', 'email', 'password']
-  const isValidUpdates = updates.every(update =>
-    allowedUpdates.includes(update)
-  )
-
-  if (!isValidUpdates) {
-    return res.status(400).send({ error: 'Invalid updates' })
-  }
-
-  try {
-    updates.forEach(update => (req.user[update] = req.body[update]))
-
-    await req.user.save()
-
-    res.send(req.user)
-  } catch (err) {
-    res.status(400).send(err)
-  }
-})
-
 router.delete('/me', async (req: RequestWithUser, res) => {
   try {
-    await req.user.remove()
+    await prisma.deleteUser({ id: req.user.id })
     res.send(req.user)
   } catch (err) {
     res.status(500).send()

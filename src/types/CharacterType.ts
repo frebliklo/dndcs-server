@@ -1,33 +1,15 @@
-import Axios, { AxiosResponse } from 'axios'
-import { Field, ID, Int, ObjectType, Root } from 'type-graphql'
-import {
-  ICharacterDoc,
-  ICharacterFeature,
-  ICharacterProficiency,
-} from '../interfaces/character'
-import User, { IUser } from '../models/user'
-import CharacterFeatureType from './CharacterFeatureType'
-import ChoiceType from './ChoiceType'
-import ClassType from './dnd5eApiTypes/ClassType'
-import FeatureType from './dnd5eApiTypes/FeatureType'
-import ProficiencyType from './dnd5eApiTypes/ProficiencyType'
-import RaceType from './dnd5eApiTypes/RaceType'
-import HitDieType from './HitDieType'
+import { Ctx, Field, ID, Int, ObjectType, Root } from 'type-graphql'
+import { Character, User } from '../generated/prisma-client'
+import IApolloContext from '../interfaces/apolloContext'
 import UserType from './UserType'
 
 @ObjectType()
 class CharacterType {
-  @Field()
-  public: boolean
-
   @Field(type => ID)
   id: string
 
   @Field()
-  createdAt: Date
-
-  @Field()
-  updatedAt: Date
+  public: boolean
 
   @Field()
   name: string
@@ -35,101 +17,66 @@ class CharacterType {
   @Field(type => Int)
   level: number
 
-  @Field(type => HitDieType, { name: 'hitDie' })
-  hitDie(@Root() root: ICharacterDoc) {
-    return root.hitDie
-  }
+  @Field(type => Int)
+  hitDie: number
 
-  @Field(type => Int, { nullable: true })
+  @Field(type => Int)
   maxHp: number
 
-  @Field(type => Int, { nullable: true })
+  @Field(type => Int)
   currentHp: number
 
-  @Field(type => ClassType, { name: 'class' })
-  async classField(@Root() root: ICharacterDoc): Promise<AxiosResponse> {
-    const { data } = await Axios.get(
-      `http://dnd5eapi.co/api/classes/${root.class}`
-    )
+  @Field()
+  dndClass: string
 
-    return data
-  }
+  @Field(type => String, { nullable: true })
+  dndSubclass: string
 
-  @Field(type => RaceType, { name: 'race' })
-  async raceField(@Root() root: ICharacterDoc): Promise<AxiosResponse> {
-    const { data } = await Axios.get(
-      `http://dnd5eapi.co/api/races/${root.race}`
-    )
+  @Field()
+  dndRace: string
 
-    return data
-  }
+  @Field(type => String, { nullable: true })
+  dndSubrace: string
 
   @Field(type => Int)
   abilityScoreBonus: number
 
   @Field(type => Int)
-  str: number
+  strength: number
 
   @Field(type => Int)
-  dex: number
+  dexterity: number
 
   @Field(type => Int)
-  con: number
+  constitution: number
 
   @Field(type => Int)
-  int: number
+  intelligence: number
 
   @Field(type => Int)
-  wis: number
+  wisdom: number
 
   @Field(type => Int)
-  cha: number
-
-  // THIS NEEDS TO BE FIXED!!!!
-  @Field(type => [ProficiencyType], { name: 'proficiencies', nullable: true })
-  async proficienciesField(
-    @Root() root: ICharacterDoc
-  ): Promise<AxiosResponse[]> {
-    const results = await Promise.all(
-      root.proficiencies.map(async (proficiency: ICharacterProficiency) => {
-        const { data } = await Axios.get(
-          `http://www.dnd5eapi.co/api/proficiencies/${proficiency.searchIndex}`
-        )
-
-        return data
-      })
-    )
-
-    return results
-  }
+  charisma: number
 
   @Field(type => Int)
   proficiencyBonus: number
 
-  @Field(type => ChoiceType, { name: 'proficiencyChoices' })
-  proficiencyChoicesField(@Root() root: ICharacterDoc) {
-    return {
-      choose: root.proficiencyChoices.choose,
-      proficiencies: root.proficiencyChoices.from,
-    }
-  }
-
-  @Field(type => [CharacterFeatureType])
-  features: ICharacterFeature[]
-
-  @Field(type => ChoiceType, { name: 'featureChoices' })
-  featureChoices(@Root() root: ICharacterDoc) {
-    return {
-      choose: root.featureChoices.choose,
-      features: root.featureChoices.from,
-    }
-  }
-
   @Field(type => UserType)
-  async owner(@Root() character: ICharacterDoc): Promise<IUser> {
-    const user = await User.findById(character.owner)
+  async owner(
+    @Root() character: Character,
+    @Ctx() { prisma }: IApolloContext
+  ): Promise<User> {
+    const user = await prisma.character({ id: character.id }).owner()
+
     return user
   }
+
+  @Field()
+  createdAt: Date
+
+  @Field()
+  updatedAt: Date
 }
 
 export default CharacterType

@@ -1,9 +1,9 @@
 import { Request } from 'express'
-import { IUser } from '../models/user'
+import { User } from '../generated/prisma-client'
 
 // tslint:disable-next-line:interface-name
 interface RequestWithUser extends Request {
-  user: IUser
+  user: User
   token: string
 }
 

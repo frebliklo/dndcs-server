@@ -7,18 +7,14 @@ import queryComplexity, {
   simpleEstimator,
 } from 'graphql-query-complexity'
 import 'reflect-metadata'
-import { buildSchema } from 'type-graphql'
-import './db/mongoose'
-import IApolloContext from './interfaces/apolloContext'
-import apolloAuth from './middleware/apeolloAuth'
+import { prisma } from './generated/prisma-client'
 import auth from './middleware/auth'
-import resolvers from './resolvers'
 // import maintenanceMode from './middleware/maintenance'
 import authRouter from './routers/authRouter'
-import characterRouter from './routers/characterRouter'
 import userRouter from './routers/userRouter'
+import createSchema from './utils/createSchema'
 
-const main = async () => {
+export const startServer = async () => {
   const app = Express()
 
   app.use(bodyParser.json())
@@ -29,26 +25,16 @@ const main = async () => {
 
   app.use('/api/auth', authRouter)
   app.use('/api/users', auth, userRouter)
-  app.use('/api/characters', auth, characterRouter)
-  app.use('/graphql', apolloAuth)
 
-  const schema = await buildSchema({
-    resolvers,
-    dateScalarMode: 'timestamp',
-    authChecker: ({ context: { req } }) => {
-      return !!req.user
-    },
-  })
+  const schema = await createSchema()
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }: IApolloContext) => {
-      const context = {
+    context: ({ req }) => {
+      return {
         req,
-        user: req.user,
+        prisma,
       }
-
-      return context
     },
     validationRules: [
       queryComplexity({
@@ -72,10 +58,12 @@ const main = async () => {
 
   const port = process.env.PORT || 5000
 
-  app.listen(port, () => {
+  const server = await app.listen(port, () => {
     // tslint:disable-next-line:no-console
     console.log(`App listening on at http://localhost:${port}`)
   })
+
+  return server
 }
 
-main()
+startServer()

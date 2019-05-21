@@ -1,80 +1,51 @@
-import Axios from 'axios'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import { Character } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
-import { ICharacterDoc } from '../interfaces/character'
-import { NamedAPIResource } from '../interfaces/dndApi'
-import Character from '../models/character'
+import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
-import CreateCharacterInput from '../types/CreateCharacterInput'
-import UpdateCharacterInput from '../types/UpdateCharacterInput'
-import createCharacterData from '../utils/createCharacterData'
+import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
+import getUserId from '../utils/getUserId'
 
 @Resolver()
 class CharacterResolver {
   @Authorized()
-  @Query(() => CharacterType)
-  async character(@Arg('id') id: string): Promise<ICharacterDoc> {
-    const character = await Character.findById(id)
+  @Query(() => CharacterType, {
+    description:
+      'Find a character belonging to the currently authenticated user',
+  })
+  async character(
+    @Arg('id') id: string,
+    @Ctx() { prisma, req }: IApolloContext
+  ): Promise<Character> {
+    const userId = getUserId(req)
 
-    if (!character) {
+    try {
+      const [character] = await prisma.characters({
+        where: { AND: [{ owner: { id: userId } }, { id }] },
+      })
+
+      return character
+    } catch (err) {
       return null
     }
-
-    return character
-  }
-
-  @Authorized()
-  @Query(() => [CharacterType], { description: 'Find all characters' })
-  async characters(@Ctx() { req }: IApolloContext): Promise<ICharacterDoc[]> {
-    const characters = await Character.find({})
-
-    if (!characters) {
-      return []
-    }
-
-    const filteredCharacters = characters.filter(character => {
-      return !!character.public || character.owner.toString() === req.user.id
-    })
-
-    return filteredCharacters
   }
 
   @Authorized()
   @Mutation(() => CharacterType, {
-    description:
-      'Create a new character owned by the currently authenticated user',
+    description: 'Create a character for the currently authenticated user',
   })
   async createCharacter(
     @Arg('data') data: CreateCharacterInput,
-    @Ctx() { req }: IApolloContext
-  ): Promise<ICharacterDoc> {
-    const characterData = await createCharacterData(data)
+    @Ctx() { prisma, req }: IApolloContext
+  ): Promise<Character> {
+    const userId = getUserId(req)
+    const proficiencyBonus = getProfBonusFromLevel(data.level)
 
-    const character = new Character({
-      ...characterData,
-      owner: req.user.id,
+    const character = await prisma.createCharacter({
+      ...data,
+      proficiencyBonus,
+      owner: { connect: { id: userId } },
     })
-
-    await character.save()
-
-    return character
-  }
-
-  @Authorized()
-  @Mutation(() => CharacterType, {
-    description:
-      'Update a character by id owned by the currently authenticated user',
-  })
-  async updateCharacter(
-    @Arg('id') id: string,
-    @Arg('data') data: UpdateCharacterInput,
-    @Ctx() { req }: IApolloContext
-  ): Promise<ICharacterDoc> {
-    const character = await Character.findOneAndUpdate(
-      { _id: id, owner: req.user.id },
-      { ...data },
-      { new: true }
-    )
 
     return character
   }
@@ -86,13 +57,22 @@ class CharacterResolver {
   })
   async deleteCharacter(
     @Arg('id') id: string,
-    @Ctx() { req }: IApolloContext
-  ): Promise<ICharacterDoc> {
-    const character = await Character.findOne({ _id: id, owner: req.user.id })
+    @Ctx() { prisma, req }: IApolloContext
+  ): Promise<Character> {
+    const userId = getUserId(req)
+    const [characterToDelete] = await prisma.characters({
+      where: { AND: [{ id }, { owner: { id: userId } }] },
+    })
 
-    await character.remove()
+    if (!characterToDelete) {
+      throw new Error('User not found')
+    }
 
-    return character
+    const deletedCharacter = await prisma.deleteCharacter({
+      id: characterToDelete.id,
+    })
+
+    return deletedCharacter
   }
 }
 

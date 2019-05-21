@@ -1,8 +1,7 @@
 import { Ctx, Field, ID, ObjectType, Root } from 'type-graphql'
+import { Character, User } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
-import { ICharacterDoc } from '../interfaces/character'
-import Character from '../models/character'
-import { IUser } from '../models/user'
+import getUserId from '../utils/getUserId'
 import CharacterType from './CharacterType'
 
 @ObjectType()
@@ -19,21 +18,28 @@ class UserType {
   @Field()
   updatedAt: Date
 
-  @Field(type => String, { nullable: true })
-  email(@Root() user: IUser, @Ctx() context: IApolloContext): string | null {
-    if (user.id === context.req.user.id) {
+  @Field(type => String, { nullable: true, name: 'email' })
+  emailField(
+    @Root() user: User,
+    @Ctx() { req }: IApolloContext
+  ): string | null {
+    const userId = getUserId(req)
+
+    if (user.id === userId) {
       return user.email
     }
 
     return null
   }
 
-  @Field(type => Boolean, { nullable: true })
-  emailVerified(
-    @Root() user: IUser,
-    @Ctx() context: IApolloContext
+  @Field(type => Boolean, { nullable: true, name: 'emailVerified' })
+  emailVerifiedField(
+    @Root() user: User,
+    @Ctx() { req }: IApolloContext
   ): boolean | null {
-    if (user.id === context.req.user.id) {
+    const userId = getUserId(req)
+
+    if (user.id === userId) {
       return user.emailVerified
     }
 
@@ -42,17 +48,20 @@ class UserType {
 
   @Field(type => [CharacterType])
   async characters(
-    @Root() user: IUser,
-    @Ctx() { req }: IApolloContext
-  ): Promise<ICharacterDoc[]> {
-    const characters = await Character.find({ owner: user.id })
+    @Root() user: User,
+    @Ctx() { prisma, req }: IApolloContext
+  ): Promise<Character[]> {
+    const userId = getUserId(req)
+    const characters = await prisma.characters({
+      where: { owner: { id: userId } },
+    })
 
     if (!characters) {
       return []
     }
 
     const filteredCharacters = characters.filter(
-      character => !!character.public || user.id === req.user.id
+      character => !!character.public || user.id === userId
     )
 
     return filteredCharacters

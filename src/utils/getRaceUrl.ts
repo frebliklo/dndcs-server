@@ -1,32 +1,32 @@
-import { TraitRaces } from '../interfaces/dndApi'
+import { RaceEnum } from '../generated/prisma-client'
 
-const getRaceUrl = (race: TraitRaces): string | null => {
-  switch (race.name) {
-    case 'Dwarf': {
+const getRaceUrl = (race: RaceEnum): string | null => {
+  switch (race) {
+    case 'DWARF': {
       return 'http://www.dnd5eapi.co/api/races/1'
     }
-    case 'Elf': {
+    case 'ELF': {
       return 'http://www.dnd5eapi.co/api/races/2'
     }
-    case 'Halfling': {
+    case 'HALFLING': {
       return 'http://www.dnd5eapi.co/api/races/3'
     }
-    case 'Human': {
+    case 'HUMAN': {
       return 'http://www.dnd5eapi.co/api/races/4'
     }
-    case 'Dragonborn': {
+    case 'DRAGONBORN': {
       return 'http://www.dnd5eapi.co/api/races/5'
     }
-    case 'Gnome': {
+    case 'GNOME': {
       return 'http://www.dnd5eapi.co/api/races/6'
     }
-    case 'Half-Elf': {
+    case 'HALF_ELF': {
       return 'http://www.dnd5eapi.co/api/races/7'
     }
-    case 'Half-Orc': {
+    case 'HALF_ORC': {
       return 'http://www.dnd5eapi.co/api/races/8'
     }
-    case 'Tiefling': {
+    case 'TIEFLING': {
       return 'http://www.dnd5eapi.co/api/races/9'
     }
     default: {
