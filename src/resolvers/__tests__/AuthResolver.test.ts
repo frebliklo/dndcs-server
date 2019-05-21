@@ -1,15 +1,13 @@
-import ApolloBoost, { gql } from 'apollo-boost'
+// tslint:disable:no-console
+import { gql } from 'apollo-boost'
 import 'cross-fetch/polyfill'
 import { prisma } from '../../generated/prisma-client'
-import seed from '../../tests/utils/seed'
+import getClient from '../../tests/utils/getClient'
+import seed, { testUser } from '../../tests/utils/seed'
 
-const client = new ApolloBoost({
-  uri: `http://localhost:${process.env.PORT}/graphql/`,
-})
+const client = getClient()
 
 beforeAll(async () => {
-  await prisma.deleteManyUsers()
-  await prisma.deleteManyCharacters()
   await seed()
 })
 
@@ -46,6 +44,9 @@ describe('Test registering with email', () => {
   })
 
   it('should throw when signing up with an existing email', async () => {
+    const originalError = console.warn
+    console.warn = jest.fn()
+
     await expect(
       client.mutate({
         mutation: signUnWithEmail,
@@ -58,9 +59,14 @@ describe('Test registering with email', () => {
         },
       })
     ).rejects.toThrow()
+
+    console.warn = originalError
   })
 
   it('should throw when signing up with a short password', async () => {
+    const originalError = console.warn
+    console.warn = jest.fn()
+
     await expect(
       client.mutate({
         mutation: signUnWithEmail,
@@ -73,6 +79,8 @@ describe('Test registering with email', () => {
         },
       })
     ).rejects.toThrow()
+
+    console.warn = originalError
   })
 })
 
@@ -94,21 +102,26 @@ describe('Test sign in with email', () => {
     const response = await client.mutate({
       mutation: loginWithEmail,
       variables: {
-        email: 'jane@example.com',
-        password: 'rødgrødmedfløde',
+        email: testUser.user.email,
+        password: 'test1234',
       },
     })
 
     expect(response.data.loginWithEmail).toHaveProperty('token')
-    expect(response.data.loginWithEmail.user.email).toBe('jane@example.com')
+    expect(response.data.loginWithEmail.user.email).toBe(testUser.user.email)
   })
 
   it('should throw when signing in with bad credentials', async () => {
+    const originalError = console.warn
+    console.warn = jest.fn()
+
     await expect(
       client.mutate({
         mutation: loginWithEmail,
         variables: { email: 'jane@example.com', password: 'rødgrødmedFløde' },
       })
     ).rejects.toThrow()
+
+    console.warn = originalError
   })
 })
