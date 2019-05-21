@@ -21,6 +21,7 @@ type Character {
   id: ID! @id
   public: Boolean! @default(value: false)
   name: String!
+  bio: String
   level: Int! @default(value: 1)
   hitDie: Int!
   maxHp: Int! @default(value: 4)

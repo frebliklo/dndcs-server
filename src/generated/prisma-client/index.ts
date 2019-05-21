@@ -245,6 +245,8 @@ export type CharacterOrderByInput =
   | "public_DESC"
   | "name_ASC"
   | "name_DESC"
+  | "bio_ASC"
+  | "bio_DESC"
   | "level_ASC"
   | "level_DESC"
   | "hitDie_ASC"
@@ -304,6 +306,7 @@ export interface CharacterCreateInput {
   id?: Maybe<ID_Input>;
   public?: Maybe<Boolean>;
   name: String;
+  bio?: Maybe<String>;
   level?: Maybe<Int>;
   hitDie: Int;
   maxHp?: Maybe<Int>;
@@ -379,6 +382,7 @@ export interface AuthTokenUpdateInput {
 export interface CharacterUpdateManyDataInput {
   public?: Maybe<Boolean>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
   level?: Maybe<Int>;
   hitDie?: Maybe<Int>;
   maxHp?: Maybe<Int>;
@@ -505,6 +509,7 @@ export interface UserWhereInput {
 export interface CharacterUpdateManyMutationInput {
   public?: Maybe<Boolean>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
   level?: Maybe<Int>;
   hitDie?: Maybe<Int>;
   maxHp?: Maybe<Int>;
@@ -580,6 +585,7 @@ export interface CharacterCreateWithoutOwnerInput {
   id?: Maybe<ID_Input>;
   public?: Maybe<Boolean>;
   name: String;
+  bio?: Maybe<String>;
   level?: Maybe<Int>;
   hitDie: Int;
   maxHp?: Maybe<Int>;
@@ -623,6 +629,7 @@ export interface CharacterSubscriptionWhereInput {
 export interface CharacterUpdateInput {
   public?: Maybe<Boolean>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
   level?: Maybe<Int>;
   hitDie?: Maybe<Int>;
   maxHp?: Maybe<Int>;
@@ -727,6 +734,20 @@ export interface CharacterScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
   level?: Maybe<Int>;
   level_not?: Maybe<Int>;
   level_in?: Maybe<Int[] | Int>;
@@ -989,6 +1010,7 @@ export interface UserUpdateInput {
 export interface CharacterUpdateWithoutOwnerDataInput {
   public?: Maybe<Boolean>;
   name?: Maybe<String>;
+  bio?: Maybe<String>;
   level?: Maybe<Int>;
   hitDie?: Maybe<Int>;
   maxHp?: Maybe<Int>;
@@ -1038,6 +1060,20 @@ export interface CharacterWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
   level?: Maybe<Int>;
   level_not?: Maybe<Int>;
   level_in?: Maybe<Int[] | Int>;
@@ -1331,6 +1367,7 @@ export interface CharacterPreviousValues {
   id: ID_Output;
   public: Boolean;
   name: String;
+  bio?: String;
   level: Int;
   hitDie: Int;
   maxHp: Int;
@@ -1357,6 +1394,7 @@ export interface CharacterPreviousValuesPromise
   id: () => Promise<ID_Output>;
   public: () => Promise<Boolean>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
   level: () => Promise<Int>;
   hitDie: () => Promise<Int>;
   maxHp: () => Promise<Int>;
@@ -1383,6 +1421,7 @@ export interface CharacterPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   public: () => Promise<AsyncIterator<Boolean>>;
   name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
   level: () => Promise<AsyncIterator<Int>>;
   hitDie: () => Promise<AsyncIterator<Int>>;
   maxHp: () => Promise<AsyncIterator<Int>>;
@@ -1553,6 +1592,7 @@ export interface Character {
   id: ID_Output;
   public: Boolean;
   name: String;
+  bio?: String;
   level: Int;
   hitDie: Int;
   maxHp: Int;
@@ -1577,6 +1617,7 @@ export interface CharacterPromise extends Promise<Character>, Fragmentable {
   id: () => Promise<ID_Output>;
   public: () => Promise<Boolean>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
   level: () => Promise<Int>;
   hitDie: () => Promise<Int>;
   maxHp: () => Promise<Int>;
@@ -1604,6 +1645,7 @@ export interface CharacterSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   public: () => Promise<AsyncIterator<Boolean>>;
   name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
   level: () => Promise<AsyncIterator<Int>>;
   hitDie: () => Promise<AsyncIterator<Int>>;
   maxHp: () => Promise<AsyncIterator<Int>>;
@@ -1631,6 +1673,7 @@ export interface CharacterNullablePromise
   id: () => Promise<ID_Output>;
   public: () => Promise<Boolean>;
   name: () => Promise<String>;
+  bio: () => Promise<String>;
   level: () => Promise<Int>;
   hitDie: () => Promise<Int>;
   maxHp: () => Promise<Int>;

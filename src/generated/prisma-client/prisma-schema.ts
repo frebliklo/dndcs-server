@@ -234,6 +234,7 @@ type Character {
   id: ID!
   public: Boolean!
   name: String!
+  bio: String
   level: Int!
   hitDie: Int!
   maxHp: Int!
@@ -265,6 +266,7 @@ input CharacterCreateInput {
   id: ID
   public: Boolean
   name: String!
+  bio: String
   level: Int
   hitDie: Int!
   maxHp: Int
@@ -293,6 +295,7 @@ input CharacterCreateWithoutOwnerInput {
   id: ID
   public: Boolean
   name: String!
+  bio: String
   level: Int
   hitDie: Int!
   maxHp: Int
@@ -323,6 +326,8 @@ enum CharacterOrderByInput {
   public_DESC
   name_ASC
   name_DESC
+  bio_ASC
+  bio_DESC
   level_ASC
   level_DESC
   hitDie_ASC
@@ -365,6 +370,7 @@ type CharacterPreviousValues {
   id: ID!
   public: Boolean!
   name: String!
+  bio: String
   level: Int!
   hitDie: Int!
   maxHp: Int!
@@ -416,6 +422,20 @@ input CharacterScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  bio: String
+  bio_not: String
+  bio_in: [String!]
+  bio_not_in: [String!]
+  bio_lt: String
+  bio_lte: String
+  bio_gt: String
+  bio_gte: String
+  bio_contains: String
+  bio_not_contains: String
+  bio_starts_with: String
+  bio_not_starts_with: String
+  bio_ends_with: String
+  bio_not_ends_with: String
   level: Int
   level_not: Int
   level_in: [Int!]
@@ -570,6 +590,7 @@ input CharacterSubscriptionWhereInput {
 input CharacterUpdateInput {
   public: Boolean
   name: String
+  bio: String
   level: Int
   hitDie: Int
   maxHp: Int
@@ -592,6 +613,7 @@ input CharacterUpdateInput {
 input CharacterUpdateManyDataInput {
   public: Boolean
   name: String
+  bio: String
   level: Int
   hitDie: Int
   maxHp: Int
@@ -613,6 +635,7 @@ input CharacterUpdateManyDataInput {
 input CharacterUpdateManyMutationInput {
   public: Boolean
   name: String
+  bio: String
   level: Int
   hitDie: Int
   maxHp: Int
@@ -651,6 +674,7 @@ input CharacterUpdateManyWithWhereNestedInput {
 input CharacterUpdateWithoutOwnerDataInput {
   public: Boolean
   name: String
+  bio: String
   level: Int
   hitDie: Int
   maxHp: Int
@@ -711,6 +735,20 @@ input CharacterWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  bio: String
+  bio_not: String
+  bio_in: [String!]
+  bio_not_in: [String!]
+  bio_lt: String
+  bio_lte: String
+  bio_gt: String
+  bio_gte: String
+  bio_contains: String
+  bio_not_contains: String
+  bio_starts_with: String
+  bio_not_starts_with: String
+  bio_ends_with: String
+  bio_not_ends_with: String
   level: Int
   level_not: Int
   level_in: [Int!]
