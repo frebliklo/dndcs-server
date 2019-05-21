@@ -14,6 +14,7 @@
     "dev": "env-cmd -f ./.env.dev ts-node-dev --respawn ./src/server.ts",
     "test": "env-cmd -f ./.env.test jest --runInBand",
     "test:watch": "env-cmd -f ./.env.test jest --watch --runInBand",
+    "test:ci": "jest --runInBand",
     "test:coverage": "jest --coverage",
     "build": "npm run ts:build && npm run lint",
     "ts:build": "tsc",
