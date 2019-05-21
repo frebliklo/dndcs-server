@@ -1,13 +1,13 @@
 import { Field, ObjectType } from 'type-graphql'
 import { User } from '../generated/prisma-client'
-import UserType from './UserType'
+import AuthUserType from './AuthUserType'
 
 @ObjectType()
 class AuthType {
   @Field()
   token: string
 
-  @Field(type => UserType)
+  @Field(type => AuthUserType)
   user: User
 }
 
