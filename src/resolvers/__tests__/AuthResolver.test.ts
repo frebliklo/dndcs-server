@@ -14,19 +14,19 @@ beforeAll(async () => {
 })
 
 describe('Test registering with email', () => {
-  it('should create a new user', async () => {
-    const signUnWithEmail = gql`
-      mutation SignUp($data: SignupInput!) {
-        signUpWithEmail(data: $data) {
-          token
-          user {
-            id
-            name
-          }
+  const signUnWithEmail = gql`
+    mutation SignUp($data: SignupInput!) {
+      signUpWithEmail(data: $data) {
+        token
+        user {
+          id
+          name
         }
       }
-    `
+    }
+  `
 
+  it('should create a new user', async () => {
     const response = await client.mutate({
       mutation: signUnWithEmail,
       variables: {
@@ -44,23 +44,53 @@ describe('Test registering with email', () => {
 
     expect(exists).toBe(true)
   })
+
+  it('should throw when signing up with an existing email', async () => {
+    await expect(
+      client.mutate({
+        mutation: signUnWithEmail,
+        variables: {
+          data: {
+            name: 'Flemming',
+            email: 'tester@esther.dk',
+            password: 'verysecretpassword',
+          },
+        },
+      })
+    ).rejects.toThrow()
+  })
+
+  it('should throw when signing up with a short password', async () => {
+    await expect(
+      client.mutate({
+        mutation: signUnWithEmail,
+        variables: {
+          data: {
+            name: 'Flemming',
+            email: 'tester@flemming.dk',
+            password: 'test',
+          },
+        },
+      })
+    ).rejects.toThrow()
+  })
 })
 
 describe('Test sign in with email', () => {
-  it('should return a token and correct user when signing in', async () => {
-    const loginWithEmail = gql`
-      mutation SignIn($email: String!, $password: String!) {
-        loginWithEmail(data: { email: $email, password: $password }) {
-          token
-          user {
-            id
-            name
-            email
-          }
+  const loginWithEmail = gql`
+    mutation SignIn($email: String!, $password: String!) {
+      loginWithEmail(data: { email: $email, password: $password }) {
+        token
+        user {
+          id
+          name
+          email
         }
       }
-    `
+    }
+  `
 
+  it('should return a token and correct user when signing in', async () => {
     const response = await client.mutate({
       mutation: loginWithEmail,
       variables: {
@@ -71,5 +101,14 @@ describe('Test sign in with email', () => {
 
     expect(response.data.loginWithEmail).toHaveProperty('token')
     expect(response.data.loginWithEmail.user.email).toBe('jane@example.com')
+  })
+
+  it('should throw when signing in with bad credentials', async () => {
+    await expect(
+      client.mutate({
+        mutation: loginWithEmail,
+        variables: { email: 'jane@example.com', password: 'rødgrødmedFløde' },
+      })
+    ).rejects.toThrow()
   })
 })
