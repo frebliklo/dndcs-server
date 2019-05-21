@@ -1,8 +1,10 @@
+[![CircleCI](https://circleci.com/gh/frebliklo/dndcs-server/tree/master.svg?style=svg)](https://circleci.com/gh/frebliklo/dndcs-server/tree/master)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
+
 # DnD CS
 
 API and web application for managing 5th edition Dungeons and Dragons characters.
 
-[![CircleCI](https://circleci.com/gh/frebliklo/dndcs-server/tree/master.svg?style=svg)](https://circleci.com/gh/frebliklo/dndcs-server/tree/master)
 
 ## 1.0 Database
 
