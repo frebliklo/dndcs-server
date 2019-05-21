@@ -3,7 +3,6 @@ import { Character } from '../generated/prisma-client'
 import IApolloContext from '../interfaces/apolloContext'
 import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
-import getModifier from '../utils/getModifier'
 import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
 import getUserId from '../utils/getUserId'
 
