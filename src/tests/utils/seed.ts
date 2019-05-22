@@ -28,6 +28,7 @@ interface TestCharacter {
     hitDie: number
     dndClass: ClassEnum
     dndRace: RaceEnum
+    level?: number
   }
   character: Character
 }
@@ -62,6 +63,17 @@ export const testCharacter: TestCharacter = {
   character: undefined,
 }
 
+export const testLvl7Character: TestCharacter = {
+  input: {
+    name: 'The Hound',
+    hitDie: 12,
+    dndClass: 'BARBARIAN',
+    dndRace: 'HUMAN',
+    level: 7,
+  },
+  character: undefined,
+}
+
 const seed = async () => {
   await prisma.deleteManyUsers()
   await prisma.deleteManyCharacters()
@@ -80,6 +92,11 @@ const seed = async () => {
   testCharacter.character = await prisma.createCharacter({
     ...testCharacter.input,
     owner: { connect: { id: testAuthUser.user.id } },
+  })
+
+  testLvl7Character.character = await prisma.createCharacter({
+    ...testLvl7Character.input,
+    owner: { connect: { id: testUser.user.id } },
   })
 }
 

@@ -9,15 +9,27 @@ import {
 
 const getFeatureList = async (character: Character) => {
   const { dndClass, level } = character
+  const classString = dndClass.toLowerCase()
 
-  const levelUrl = `${DND5EAPI}/classes/${dndClass.toLowerCase()}/level/${level}`
+  const getLevelUrl = (lvl: number) =>
+    `${DND5EAPI}/classes/${classString}/level/${lvl}`
 
-  const { data: apiResponse }: AxiosResponse<LevelFromApi> = await Axios.get(
-    levelUrl
+  const levels: number[] = Array.apply(null, { length: level }).map(
+    Number.call,
+    Number
+  )
+
+  const apiResponse = await Promise.all(
+    levels.map(async level => {
+      const url = getLevelUrl(level + 1)
+      const { data }: AxiosResponse<LevelFromApi> = await Axios.get(url)
+
+      return data.features
+    })
   )
 
   const featuresFromApi = await Promise.all(
-    apiResponse.features.map(async ({ url }: NamedAPIResource) => {
+    apiResponse.flat().map(async ({ url }) => {
       const { data }: AxiosResponse<FeatureFromApi> = await Axios.get(url)
 
       return data
