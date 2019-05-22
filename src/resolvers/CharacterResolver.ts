@@ -3,6 +3,7 @@ import { Character } from '../generated/prisma-client'
 import ApolloContext from '../interfaces/apolloContext'
 import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
+import getFeatureList from '../utils/dndApi/getFeatureList'
 import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
 import getUserId from '../utils/getUserId'
 
@@ -41,10 +42,20 @@ class CharacterResolver {
     const userId = getUserId(req)
     const proficiencyBonus = getProfBonusFromLevel(data.level)
 
-    const character = await prisma.createCharacter({
+    const newCharacter = await prisma.createCharacter({
       ...data,
       proficiencyBonus,
       owner: { connect: { id: userId } },
+    })
+
+    const features = await getFeatureList(newCharacter)
+    const featuresToConnect = features.map(feature => ({ id: feature.id }))
+
+    const character = await prisma.updateCharacter({
+      where: { id: newCharacter.id },
+      data: {
+        features: { connect: featuresToConnect },
+      },
     })
 
     return character
