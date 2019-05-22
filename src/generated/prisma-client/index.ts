@@ -18,6 +18,7 @@ export type Maybe<T> = T | undefined | null;
 export interface Exists {
   authToken: (where?: AuthTokenWhereInput) => Promise<boolean>;
   character: (where?: CharacterWhereInput) => Promise<boolean>;
+  feature: (where?: FeatureWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -78,6 +79,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => CharacterConnectionPromise;
+  feature: (where: FeatureWhereUniqueInput) => FeatureNullablePromise;
+  features: (args?: {
+    where?: FeatureWhereInput;
+    orderBy?: FeatureOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Feature>;
+  featuresConnection: (args?: {
+    where?: FeatureWhereInput;
+    orderBy?: FeatureOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FeatureConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -135,6 +155,22 @@ export interface Prisma {
   }) => CharacterPromise;
   deleteCharacter: (where: CharacterWhereUniqueInput) => CharacterPromise;
   deleteManyCharacters: (where?: CharacterWhereInput) => BatchPayloadPromise;
+  createFeature: (data: FeatureCreateInput) => FeaturePromise;
+  updateFeature: (args: {
+    data: FeatureUpdateInput;
+    where: FeatureWhereUniqueInput;
+  }) => FeaturePromise;
+  updateManyFeatures: (args: {
+    data: FeatureUpdateManyMutationInput;
+    where?: FeatureWhereInput;
+  }) => BatchPayloadPromise;
+  upsertFeature: (args: {
+    where: FeatureWhereUniqueInput;
+    create: FeatureCreateInput;
+    update: FeatureUpdateInput;
+  }) => FeaturePromise;
+  deleteFeature: (where: FeatureWhereUniqueInput) => FeaturePromise;
+  deleteManyFeatures: (where?: FeatureWhereInput) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -166,6 +202,9 @@ export interface Subscription {
   character: (
     where?: CharacterSubscriptionWhereInput
   ) => CharacterSubscriptionPayloadSubscription;
+  feature: (
+    where?: FeatureSubscriptionWhereInput
+  ) => FeatureSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -220,6 +259,14 @@ export type RaceEnum =
   | "HALF_ORC"
   | "TIEFLING";
 
+export type SubraceEnum =
+  | "HILL_DWARF"
+  | "HIGH_ELF"
+  | "LIGHTFOOT_HALFLING"
+  | "MOUNTAIN_DWARF"
+  | "WOOD_ELF"
+  | "DARK_ELF";
+
 export type AuthTokenOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -230,13 +277,13 @@ export type AuthTokenOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type SubraceEnum =
-  | "HILL_DWARF"
-  | "HIGH_ELF"
-  | "LIGHTFOOT_HALFLING"
-  | "MOUNTAIN_DWARF"
-  | "WOOD_ELF"
-  | "DARK_ELF";
+export type FeatureOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "index_ASC"
+  | "index_DESC"
+  | "name_ASC"
+  | "name_DESC";
 
 export type CharacterOrderByInput =
   | "id_ASC"
@@ -302,7 +349,39 @@ export type UserOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface CharacterCreateInput {
+export interface FeatureUpdateManyWithoutCharactersInput {
+  create?: Maybe<
+    FeatureCreateWithoutCharactersInput[] | FeatureCreateWithoutCharactersInput
+  >;
+  delete?: Maybe<FeatureWhereUniqueInput[] | FeatureWhereUniqueInput>;
+  connect?: Maybe<FeatureWhereUniqueInput[] | FeatureWhereUniqueInput>;
+  set?: Maybe<FeatureWhereUniqueInput[] | FeatureWhereUniqueInput>;
+  disconnect?: Maybe<FeatureWhereUniqueInput[] | FeatureWhereUniqueInput>;
+  update?: Maybe<
+    | FeatureUpdateWithWhereUniqueWithoutCharactersInput[]
+    | FeatureUpdateWithWhereUniqueWithoutCharactersInput
+  >;
+  upsert?: Maybe<
+    | FeatureUpsertWithWhereUniqueWithoutCharactersInput[]
+    | FeatureUpsertWithWhereUniqueWithoutCharactersInput
+  >;
+  deleteMany?: Maybe<FeatureScalarWhereInput[] | FeatureScalarWhereInput>;
+  updateMany?: Maybe<
+    | FeatureUpdateManyWithWhereNestedInput[]
+    | FeatureUpdateManyWithWhereNestedInput
+  >;
+}
+
+export type AuthTokenWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CharacterUpdateWithWhereUniqueWithoutFeaturesInput {
+  where: CharacterWhereUniqueInput;
+  data: CharacterUpdateWithoutFeaturesDataInput;
+}
+
+export interface CharacterCreateWithoutFeaturesInput {
   id?: Maybe<ID_Input>;
   public?: Maybe<Boolean>;
   name: String;
@@ -326,262 +405,7 @@ export interface CharacterCreateInput {
   owner: UserCreateOneWithoutCharactersInput;
 }
 
-export type AuthTokenWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface CharacterCreateManyWithoutOwnerInput {
-  create?: Maybe<
-    CharacterCreateWithoutOwnerInput[] | CharacterCreateWithoutOwnerInput
-  >;
-  connect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
-}
-
-export interface AuthTokenUpdateManyWithWhereNestedInput {
-  where: AuthTokenScalarWhereInput;
-  data: AuthTokenUpdateManyDataInput;
-}
-
-export interface UserUpdateOneRequiredWithoutCharactersInput {
-  create?: Maybe<UserCreateWithoutCharactersInput>;
-  update?: Maybe<UserUpdateWithoutCharactersDataInput>;
-  upsert?: Maybe<UserUpsertWithoutCharactersInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export type CharacterWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface AuthTokenCreateInput {
-  id?: Maybe<ID_Input>;
-  token: String;
-}
-
-export interface AuthTokenSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<AuthTokenWhereInput>;
-  AND?: Maybe<
-    AuthTokenSubscriptionWhereInput[] | AuthTokenSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    AuthTokenSubscriptionWhereInput[] | AuthTokenSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    AuthTokenSubscriptionWhereInput[] | AuthTokenSubscriptionWhereInput
-  >;
-}
-
-export interface AuthTokenUpdateInput {
-  token?: Maybe<String>;
-}
-
-export interface CharacterUpdateManyDataInput {
-  public?: Maybe<Boolean>;
-  name?: Maybe<String>;
-  bio?: Maybe<String>;
-  level?: Maybe<Int>;
-  hitDie?: Maybe<Int>;
-  maxHp?: Maybe<Int>;
-  currentHp?: Maybe<Int>;
-  dndClass?: Maybe<ClassEnum>;
-  dndSubclass?: Maybe<SubclassEnum>;
-  dndRace?: Maybe<RaceEnum>;
-  dndSubrace?: Maybe<SubraceEnum>;
-  abilityScoreBonus?: Maybe<Int>;
-  strength?: Maybe<Int>;
-  dexterity?: Maybe<Int>;
-  constitution?: Maybe<Int>;
-  intelligence?: Maybe<Int>;
-  wisdom?: Maybe<Int>;
-  charisma?: Maybe<Int>;
-  proficiencyBonus?: Maybe<Int>;
-}
-
-export interface AuthTokenUpdateManyMutationInput {
-  token?: Maybe<String>;
-}
-
-export interface CharacterUpdateManyWithWhereNestedInput {
-  where: CharacterScalarWhereInput;
-  data: CharacterUpdateManyDataInput;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  email: String;
-  emailVerified?: Maybe<Boolean>;
-  password?: Maybe<String>;
-  tokens?: Maybe<AuthTokenCreateManyInput>;
-  characters?: Maybe<CharacterCreateManyWithoutOwnerInput>;
-}
-
-export interface UserWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  email?: Maybe<String>;
-  email_not?: Maybe<String>;
-  email_in?: Maybe<String[] | String>;
-  email_not_in?: Maybe<String[] | String>;
-  email_lt?: Maybe<String>;
-  email_lte?: Maybe<String>;
-  email_gt?: Maybe<String>;
-  email_gte?: Maybe<String>;
-  email_contains?: Maybe<String>;
-  email_not_contains?: Maybe<String>;
-  email_starts_with?: Maybe<String>;
-  email_not_starts_with?: Maybe<String>;
-  email_ends_with?: Maybe<String>;
-  email_not_ends_with?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  emailVerified_not?: Maybe<Boolean>;
-  password?: Maybe<String>;
-  password_not?: Maybe<String>;
-  password_in?: Maybe<String[] | String>;
-  password_not_in?: Maybe<String[] | String>;
-  password_lt?: Maybe<String>;
-  password_lte?: Maybe<String>;
-  password_gt?: Maybe<String>;
-  password_gte?: Maybe<String>;
-  password_contains?: Maybe<String>;
-  password_not_contains?: Maybe<String>;
-  password_starts_with?: Maybe<String>;
-  password_not_starts_with?: Maybe<String>;
-  password_ends_with?: Maybe<String>;
-  password_not_ends_with?: Maybe<String>;
-  tokens_every?: Maybe<AuthTokenWhereInput>;
-  tokens_some?: Maybe<AuthTokenWhereInput>;
-  tokens_none?: Maybe<AuthTokenWhereInput>;
-  characters_every?: Maybe<CharacterWhereInput>;
-  characters_some?: Maybe<CharacterWhereInput>;
-  characters_none?: Maybe<CharacterWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<UserWhereInput[] | UserWhereInput>;
-  OR?: Maybe<UserWhereInput[] | UserWhereInput>;
-  NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
-}
-
-export interface CharacterUpdateManyMutationInput {
-  public?: Maybe<Boolean>;
-  name?: Maybe<String>;
-  bio?: Maybe<String>;
-  level?: Maybe<Int>;
-  hitDie?: Maybe<Int>;
-  maxHp?: Maybe<Int>;
-  currentHp?: Maybe<Int>;
-  dndClass?: Maybe<ClassEnum>;
-  dndSubclass?: Maybe<SubclassEnum>;
-  dndRace?: Maybe<RaceEnum>;
-  dndSubrace?: Maybe<SubraceEnum>;
-  abilityScoreBonus?: Maybe<Int>;
-  strength?: Maybe<Int>;
-  dexterity?: Maybe<Int>;
-  constitution?: Maybe<Int>;
-  intelligence?: Maybe<Int>;
-  wisdom?: Maybe<Int>;
-  charisma?: Maybe<Int>;
-  proficiencyBonus?: Maybe<Int>;
-}
-
-export interface CharacterUpsertWithWhereUniqueWithoutOwnerInput {
-  where: CharacterWhereUniqueInput;
-  update: CharacterUpdateWithoutOwnerDataInput;
-  create: CharacterCreateWithoutOwnerInput;
-}
-
-export interface UserUpsertWithoutCharactersInput {
-  update: UserUpdateWithoutCharactersDataInput;
-  create: UserCreateWithoutCharactersInput;
-}
-
-export interface CharacterUpdateWithWhereUniqueWithoutOwnerInput {
-  where: CharacterWhereUniqueInput;
-  data: CharacterUpdateWithoutOwnerDataInput;
-}
-
-export interface UserCreateOneWithoutCharactersInput {
-  create?: Maybe<UserCreateWithoutCharactersInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface CharacterUpdateManyWithoutOwnerInput {
-  create?: Maybe<
-    CharacterCreateWithoutOwnerInput[] | CharacterCreateWithoutOwnerInput
-  >;
-  delete?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
-  connect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
-  set?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
-  disconnect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
-  update?: Maybe<
-    | CharacterUpdateWithWhereUniqueWithoutOwnerInput[]
-    | CharacterUpdateWithWhereUniqueWithoutOwnerInput
-  >;
-  upsert?: Maybe<
-    | CharacterUpsertWithWhereUniqueWithoutOwnerInput[]
-    | CharacterUpsertWithWhereUniqueWithoutOwnerInput
-  >;
-  deleteMany?: Maybe<CharacterScalarWhereInput[] | CharacterScalarWhereInput>;
-  updateMany?: Maybe<
-    | CharacterUpdateManyWithWhereNestedInput[]
-    | CharacterUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface UserCreateWithoutCharactersInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  email: String;
-  emailVerified?: Maybe<Boolean>;
-  password?: Maybe<String>;
-  tokens?: Maybe<AuthTokenCreateManyInput>;
-}
-
-export interface CharacterCreateWithoutOwnerInput {
+export interface CharacterCreateInput {
   id?: Maybe<ID_Input>;
   public?: Maybe<Boolean>;
   name: String;
@@ -602,11 +426,38 @@ export interface CharacterCreateWithoutOwnerInput {
   wisdom?: Maybe<Int>;
   charisma?: Maybe<Int>;
   proficiencyBonus?: Maybe<Int>;
+  features?: Maybe<FeatureCreateManyWithoutCharactersInput>;
+  owner: UserCreateOneWithoutCharactersInput;
 }
 
-export interface AuthTokenCreateManyInput {
-  create?: Maybe<AuthTokenCreateInput[] | AuthTokenCreateInput>;
-  connect?: Maybe<AuthTokenWhereUniqueInput[] | AuthTokenWhereUniqueInput>;
+export interface FeatureUpdateManyWithWhereNestedInput {
+  where: FeatureScalarWhereInput;
+  data: FeatureUpdateManyDataInput;
+}
+
+export interface FeatureCreateManyWithoutCharactersInput {
+  create?: Maybe<
+    FeatureCreateWithoutCharactersInput[] | FeatureCreateWithoutCharactersInput
+  >;
+  connect?: Maybe<FeatureWhereUniqueInput[] | FeatureWhereUniqueInput>;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+}
+
+export interface FeatureCreateWithoutCharactersInput {
+  id?: Maybe<ID_Input>;
+  index: Int;
+  name: String;
+  description?: Maybe<FeatureCreatedescriptionInput>;
 }
 
 export interface CharacterSubscriptionWhereInput {
@@ -626,27 +477,211 @@ export interface CharacterSubscriptionWhereInput {
   >;
 }
 
-export interface CharacterUpdateInput {
-  public?: Maybe<Boolean>;
+export interface FeatureCreatedescriptionInput {
+  set?: Maybe<String[] | String>;
+}
+
+export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
+  email?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  password?: Maybe<String>;
+}
+
+export interface UserCreateOneWithoutCharactersInput {
+  create?: Maybe<UserCreateWithoutCharactersInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface CharacterWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  public?: Maybe<Boolean>;
+  public_not?: Maybe<Boolean>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
   bio?: Maybe<String>;
+  bio_not?: Maybe<String>;
+  bio_in?: Maybe<String[] | String>;
+  bio_not_in?: Maybe<String[] | String>;
+  bio_lt?: Maybe<String>;
+  bio_lte?: Maybe<String>;
+  bio_gt?: Maybe<String>;
+  bio_gte?: Maybe<String>;
+  bio_contains?: Maybe<String>;
+  bio_not_contains?: Maybe<String>;
+  bio_starts_with?: Maybe<String>;
+  bio_not_starts_with?: Maybe<String>;
+  bio_ends_with?: Maybe<String>;
+  bio_not_ends_with?: Maybe<String>;
   level?: Maybe<Int>;
+  level_not?: Maybe<Int>;
+  level_in?: Maybe<Int[] | Int>;
+  level_not_in?: Maybe<Int[] | Int>;
+  level_lt?: Maybe<Int>;
+  level_lte?: Maybe<Int>;
+  level_gt?: Maybe<Int>;
+  level_gte?: Maybe<Int>;
   hitDie?: Maybe<Int>;
+  hitDie_not?: Maybe<Int>;
+  hitDie_in?: Maybe<Int[] | Int>;
+  hitDie_not_in?: Maybe<Int[] | Int>;
+  hitDie_lt?: Maybe<Int>;
+  hitDie_lte?: Maybe<Int>;
+  hitDie_gt?: Maybe<Int>;
+  hitDie_gte?: Maybe<Int>;
   maxHp?: Maybe<Int>;
+  maxHp_not?: Maybe<Int>;
+  maxHp_in?: Maybe<Int[] | Int>;
+  maxHp_not_in?: Maybe<Int[] | Int>;
+  maxHp_lt?: Maybe<Int>;
+  maxHp_lte?: Maybe<Int>;
+  maxHp_gt?: Maybe<Int>;
+  maxHp_gte?: Maybe<Int>;
   currentHp?: Maybe<Int>;
+  currentHp_not?: Maybe<Int>;
+  currentHp_in?: Maybe<Int[] | Int>;
+  currentHp_not_in?: Maybe<Int[] | Int>;
+  currentHp_lt?: Maybe<Int>;
+  currentHp_lte?: Maybe<Int>;
+  currentHp_gt?: Maybe<Int>;
+  currentHp_gte?: Maybe<Int>;
   dndClass?: Maybe<ClassEnum>;
+  dndClass_not?: Maybe<ClassEnum>;
+  dndClass_in?: Maybe<ClassEnum[] | ClassEnum>;
+  dndClass_not_in?: Maybe<ClassEnum[] | ClassEnum>;
   dndSubclass?: Maybe<SubclassEnum>;
+  dndSubclass_not?: Maybe<SubclassEnum>;
+  dndSubclass_in?: Maybe<SubclassEnum[] | SubclassEnum>;
+  dndSubclass_not_in?: Maybe<SubclassEnum[] | SubclassEnum>;
   dndRace?: Maybe<RaceEnum>;
+  dndRace_not?: Maybe<RaceEnum>;
+  dndRace_in?: Maybe<RaceEnum[] | RaceEnum>;
+  dndRace_not_in?: Maybe<RaceEnum[] | RaceEnum>;
   dndSubrace?: Maybe<SubraceEnum>;
+  dndSubrace_not?: Maybe<SubraceEnum>;
+  dndSubrace_in?: Maybe<SubraceEnum[] | SubraceEnum>;
+  dndSubrace_not_in?: Maybe<SubraceEnum[] | SubraceEnum>;
   abilityScoreBonus?: Maybe<Int>;
+  abilityScoreBonus_not?: Maybe<Int>;
+  abilityScoreBonus_in?: Maybe<Int[] | Int>;
+  abilityScoreBonus_not_in?: Maybe<Int[] | Int>;
+  abilityScoreBonus_lt?: Maybe<Int>;
+  abilityScoreBonus_lte?: Maybe<Int>;
+  abilityScoreBonus_gt?: Maybe<Int>;
+  abilityScoreBonus_gte?: Maybe<Int>;
   strength?: Maybe<Int>;
+  strength_not?: Maybe<Int>;
+  strength_in?: Maybe<Int[] | Int>;
+  strength_not_in?: Maybe<Int[] | Int>;
+  strength_lt?: Maybe<Int>;
+  strength_lte?: Maybe<Int>;
+  strength_gt?: Maybe<Int>;
+  strength_gte?: Maybe<Int>;
   dexterity?: Maybe<Int>;
+  dexterity_not?: Maybe<Int>;
+  dexterity_in?: Maybe<Int[] | Int>;
+  dexterity_not_in?: Maybe<Int[] | Int>;
+  dexterity_lt?: Maybe<Int>;
+  dexterity_lte?: Maybe<Int>;
+  dexterity_gt?: Maybe<Int>;
+  dexterity_gte?: Maybe<Int>;
   constitution?: Maybe<Int>;
+  constitution_not?: Maybe<Int>;
+  constitution_in?: Maybe<Int[] | Int>;
+  constitution_not_in?: Maybe<Int[] | Int>;
+  constitution_lt?: Maybe<Int>;
+  constitution_lte?: Maybe<Int>;
+  constitution_gt?: Maybe<Int>;
+  constitution_gte?: Maybe<Int>;
   intelligence?: Maybe<Int>;
+  intelligence_not?: Maybe<Int>;
+  intelligence_in?: Maybe<Int[] | Int>;
+  intelligence_not_in?: Maybe<Int[] | Int>;
+  intelligence_lt?: Maybe<Int>;
+  intelligence_lte?: Maybe<Int>;
+  intelligence_gt?: Maybe<Int>;
+  intelligence_gte?: Maybe<Int>;
   wisdom?: Maybe<Int>;
+  wisdom_not?: Maybe<Int>;
+  wisdom_in?: Maybe<Int[] | Int>;
+  wisdom_not_in?: Maybe<Int[] | Int>;
+  wisdom_lt?: Maybe<Int>;
+  wisdom_lte?: Maybe<Int>;
+  wisdom_gt?: Maybe<Int>;
+  wisdom_gte?: Maybe<Int>;
   charisma?: Maybe<Int>;
+  charisma_not?: Maybe<Int>;
+  charisma_in?: Maybe<Int[] | Int>;
+  charisma_not_in?: Maybe<Int[] | Int>;
+  charisma_lt?: Maybe<Int>;
+  charisma_lte?: Maybe<Int>;
+  charisma_gt?: Maybe<Int>;
+  charisma_gte?: Maybe<Int>;
   proficiencyBonus?: Maybe<Int>;
-  owner?: Maybe<UserUpdateOneRequiredWithoutCharactersInput>;
+  proficiencyBonus_not?: Maybe<Int>;
+  proficiencyBonus_in?: Maybe<Int[] | Int>;
+  proficiencyBonus_not_in?: Maybe<Int[] | Int>;
+  proficiencyBonus_lt?: Maybe<Int>;
+  proficiencyBonus_lte?: Maybe<Int>;
+  proficiencyBonus_gt?: Maybe<Int>;
+  proficiencyBonus_gte?: Maybe<Int>;
+  features_every?: Maybe<FeatureWhereInput>;
+  features_some?: Maybe<FeatureWhereInput>;
+  features_none?: Maybe<FeatureWhereInput>;
+  owner?: Maybe<UserWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<CharacterWhereInput[] | CharacterWhereInput>;
+  OR?: Maybe<CharacterWhereInput[] | CharacterWhereInput>;
+  NOT?: Maybe<CharacterWhereInput[] | CharacterWhereInput>;
+}
+
+export interface UserCreateWithoutCharactersInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  emailVerified?: Maybe<Boolean>;
+  password?: Maybe<String>;
+  tokens?: Maybe<AuthTokenCreateManyInput>;
 }
 
 export interface AuthTokenWhereInput {
@@ -699,8 +734,182 @@ export interface AuthTokenWhereInput {
   NOT?: Maybe<AuthTokenWhereInput[] | AuthTokenWhereInput>;
 }
 
-export interface AuthTokenUpdateManyDataInput {
-  token?: Maybe<String>;
+export interface AuthTokenCreateManyInput {
+  create?: Maybe<AuthTokenCreateInput[] | AuthTokenCreateInput>;
+  connect?: Maybe<AuthTokenWhereUniqueInput[] | AuthTokenWhereUniqueInput>;
+}
+
+export interface CharacterUpdateWithoutOwnerDataInput {
+  public?: Maybe<Boolean>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  level?: Maybe<Int>;
+  hitDie?: Maybe<Int>;
+  maxHp?: Maybe<Int>;
+  currentHp?: Maybe<Int>;
+  dndClass?: Maybe<ClassEnum>;
+  dndSubclass?: Maybe<SubclassEnum>;
+  dndRace?: Maybe<RaceEnum>;
+  dndSubrace?: Maybe<SubraceEnum>;
+  abilityScoreBonus?: Maybe<Int>;
+  strength?: Maybe<Int>;
+  dexterity?: Maybe<Int>;
+  constitution?: Maybe<Int>;
+  intelligence?: Maybe<Int>;
+  wisdom?: Maybe<Int>;
+  charisma?: Maybe<Int>;
+  proficiencyBonus?: Maybe<Int>;
+  features?: Maybe<FeatureUpdateManyWithoutCharactersInput>;
+}
+
+export interface CharacterUpdateInput {
+  public?: Maybe<Boolean>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  level?: Maybe<Int>;
+  hitDie?: Maybe<Int>;
+  maxHp?: Maybe<Int>;
+  currentHp?: Maybe<Int>;
+  dndClass?: Maybe<ClassEnum>;
+  dndSubclass?: Maybe<SubclassEnum>;
+  dndRace?: Maybe<RaceEnum>;
+  dndSubrace?: Maybe<SubraceEnum>;
+  abilityScoreBonus?: Maybe<Int>;
+  strength?: Maybe<Int>;
+  dexterity?: Maybe<Int>;
+  constitution?: Maybe<Int>;
+  intelligence?: Maybe<Int>;
+  wisdom?: Maybe<Int>;
+  charisma?: Maybe<Int>;
+  proficiencyBonus?: Maybe<Int>;
+  features?: Maybe<FeatureUpdateManyWithoutCharactersInput>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutCharactersInput>;
+}
+
+export interface CharacterUpdateManyWithoutOwnerInput {
+  create?: Maybe<
+    CharacterCreateWithoutOwnerInput[] | CharacterCreateWithoutOwnerInput
+  >;
+  delete?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  connect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  set?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  disconnect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  update?: Maybe<
+    | CharacterUpdateWithWhereUniqueWithoutOwnerInput[]
+    | CharacterUpdateWithWhereUniqueWithoutOwnerInput
+  >;
+  upsert?: Maybe<
+    | CharacterUpsertWithWhereUniqueWithoutOwnerInput[]
+    | CharacterUpsertWithWhereUniqueWithoutOwnerInput
+  >;
+  deleteMany?: Maybe<CharacterScalarWhereInput[] | CharacterScalarWhereInput>;
+  updateMany?: Maybe<
+    | CharacterUpdateManyWithWhereNestedInput[]
+    | CharacterUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface CharacterUpdateManyWithoutFeaturesInput {
+  create?: Maybe<
+    CharacterCreateWithoutFeaturesInput[] | CharacterCreateWithoutFeaturesInput
+  >;
+  delete?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  connect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  set?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  disconnect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+  update?: Maybe<
+    | CharacterUpdateWithWhereUniqueWithoutFeaturesInput[]
+    | CharacterUpdateWithWhereUniqueWithoutFeaturesInput
+  >;
+  upsert?: Maybe<
+    | CharacterUpsertWithWhereUniqueWithoutFeaturesInput[]
+    | CharacterUpsertWithWhereUniqueWithoutFeaturesInput
+  >;
+  deleteMany?: Maybe<CharacterScalarWhereInput[] | CharacterScalarWhereInput>;
+  updateMany?: Maybe<
+    | CharacterUpdateManyWithWhereNestedInput[]
+    | CharacterUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface CharacterCreateWithoutOwnerInput {
+  id?: Maybe<ID_Input>;
+  public?: Maybe<Boolean>;
+  name: String;
+  bio?: Maybe<String>;
+  level?: Maybe<Int>;
+  hitDie: Int;
+  maxHp?: Maybe<Int>;
+  currentHp?: Maybe<Int>;
+  dndClass: ClassEnum;
+  dndSubclass?: Maybe<SubclassEnum>;
+  dndRace: RaceEnum;
+  dndSubrace?: Maybe<SubraceEnum>;
+  abilityScoreBonus?: Maybe<Int>;
+  strength?: Maybe<Int>;
+  dexterity?: Maybe<Int>;
+  constitution?: Maybe<Int>;
+  intelligence?: Maybe<Int>;
+  wisdom?: Maybe<Int>;
+  charisma?: Maybe<Int>;
+  proficiencyBonus?: Maybe<Int>;
+  features?: Maybe<FeatureCreateManyWithoutCharactersInput>;
+}
+
+export interface FeatureUpdateWithWhereUniqueWithoutCharactersInput {
+  where: FeatureWhereUniqueInput;
+  data: FeatureUpdateWithoutCharactersDataInput;
+}
+
+export interface CharacterCreateManyWithoutOwnerInput {
+  create?: Maybe<
+    CharacterCreateWithoutOwnerInput[] | CharacterCreateWithoutOwnerInput
+  >;
+  connect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+}
+
+export interface FeatureUpdateWithoutCharactersDataInput {
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  description?: Maybe<FeatureUpdatedescriptionInput>;
+}
+
+export interface FeatureUpdateManyMutationInput {
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  description?: Maybe<FeatureUpdatedescriptionInput>;
+}
+
+export interface FeatureUpdatedescriptionInput {
+  set?: Maybe<String[] | String>;
+}
+
+export interface CharacterUpdateManyDataInput {
+  public?: Maybe<Boolean>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  level?: Maybe<Int>;
+  hitDie?: Maybe<Int>;
+  maxHp?: Maybe<Int>;
+  currentHp?: Maybe<Int>;
+  dndClass?: Maybe<ClassEnum>;
+  dndSubclass?: Maybe<SubclassEnum>;
+  dndRace?: Maybe<RaceEnum>;
+  dndSubrace?: Maybe<SubraceEnum>;
+  abilityScoreBonus?: Maybe<Int>;
+  strength?: Maybe<Int>;
+  dexterity?: Maybe<Int>;
+  constitution?: Maybe<Int>;
+  intelligence?: Maybe<Int>;
+  wisdom?: Maybe<Int>;
+  charisma?: Maybe<Int>;
+  proficiencyBonus?: Maybe<Int>;
+}
+
+export interface FeatureUpsertWithWhereUniqueWithoutCharactersInput {
+  where: FeatureWhereUniqueInput;
+  update: FeatureUpdateWithoutCharactersDataInput;
+  create: FeatureCreateWithoutCharactersInput;
 }
 
 export interface CharacterScalarWhereInput {
@@ -881,6 +1090,151 @@ export interface CharacterScalarWhereInput {
   NOT?: Maybe<CharacterScalarWhereInput[] | CharacterScalarWhereInput>;
 }
 
+export interface FeatureScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  index_not?: Maybe<Int>;
+  index_in?: Maybe<Int[] | Int>;
+  index_not_in?: Maybe<Int[] | Int>;
+  index_lt?: Maybe<Int>;
+  index_lte?: Maybe<Int>;
+  index_gt?: Maybe<Int>;
+  index_gte?: Maybe<Int>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  AND?: Maybe<FeatureScalarWhereInput[] | FeatureScalarWhereInput>;
+  OR?: Maybe<FeatureScalarWhereInput[] | FeatureScalarWhereInput>;
+  NOT?: Maybe<FeatureScalarWhereInput[] | FeatureScalarWhereInput>;
+}
+
+export interface AuthTokenUpdateInput {
+  token?: Maybe<String>;
+}
+
+export interface FeatureUpdateInput {
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  description?: Maybe<FeatureUpdatedescriptionInput>;
+  characters?: Maybe<CharacterUpdateManyWithoutFeaturesInput>;
+}
+
+export interface CharacterUpdateWithoutFeaturesDataInput {
+  public?: Maybe<Boolean>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  level?: Maybe<Int>;
+  hitDie?: Maybe<Int>;
+  maxHp?: Maybe<Int>;
+  currentHp?: Maybe<Int>;
+  dndClass?: Maybe<ClassEnum>;
+  dndSubclass?: Maybe<SubclassEnum>;
+  dndRace?: Maybe<RaceEnum>;
+  dndSubrace?: Maybe<SubraceEnum>;
+  abilityScoreBonus?: Maybe<Int>;
+  strength?: Maybe<Int>;
+  dexterity?: Maybe<Int>;
+  constitution?: Maybe<Int>;
+  intelligence?: Maybe<Int>;
+  wisdom?: Maybe<Int>;
+  charisma?: Maybe<Int>;
+  proficiencyBonus?: Maybe<Int>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutCharactersInput>;
+}
+
+export interface FeatureUpdateManyDataInput {
+  index?: Maybe<Int>;
+  name?: Maybe<String>;
+  description?: Maybe<FeatureUpdatedescriptionInput>;
+}
+
+export interface FeatureSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<FeatureWhereInput>;
+  AND?: Maybe<FeatureSubscriptionWhereInput[] | FeatureSubscriptionWhereInput>;
+  OR?: Maybe<FeatureSubscriptionWhereInput[] | FeatureSubscriptionWhereInput>;
+  NOT?: Maybe<FeatureSubscriptionWhereInput[] | FeatureSubscriptionWhereInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutCharactersInput {
+  create?: Maybe<UserCreateWithoutCharactersInput>;
+  update?: Maybe<UserUpdateWithoutCharactersDataInput>;
+  upsert?: Maybe<UserUpsertWithoutCharactersInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface FeatureWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  index?: Maybe<Int>;
+  index_not?: Maybe<Int>;
+  index_in?: Maybe<Int[] | Int>;
+  index_not_in?: Maybe<Int[] | Int>;
+  index_lt?: Maybe<Int>;
+  index_lte?: Maybe<Int>;
+  index_gt?: Maybe<Int>;
+  index_gte?: Maybe<Int>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  characters_every?: Maybe<CharacterWhereInput>;
+  characters_some?: Maybe<CharacterWhereInput>;
+  characters_none?: Maybe<CharacterWhereInput>;
+  AND?: Maybe<FeatureWhereInput[] | FeatureWhereInput>;
+  OR?: Maybe<FeatureWhereInput[] | FeatureWhereInput>;
+  NOT?: Maybe<FeatureWhereInput[] | FeatureWhereInput>;
+}
+
 export interface UserUpdateWithoutCharactersDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
@@ -889,10 +1243,11 @@ export interface UserUpdateWithoutCharactersDataInput {
   tokens?: Maybe<AuthTokenUpdateManyInput>;
 }
 
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  email?: Maybe<String>;
-}>;
+export interface CharacterUpsertWithWhereUniqueWithoutOwnerInput {
+  where: CharacterWhereUniqueInput;
+  update: CharacterUpdateWithoutOwnerDataInput;
+  create: CharacterCreateWithoutOwnerInput;
+}
 
 export interface AuthTokenUpdateManyInput {
   create?: Maybe<AuthTokenCreateInput[] | AuthTokenCreateInput>;
@@ -915,15 +1270,48 @@ export interface AuthTokenUpdateManyInput {
   >;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+export interface UserUpdateInput {
+  name?: Maybe<String>;
+  email?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  password?: Maybe<String>;
+  tokens?: Maybe<AuthTokenUpdateManyInput>;
+  characters?: Maybe<CharacterUpdateManyWithoutOwnerInput>;
+}
+
+export interface AuthTokenUpdateWithWhereUniqueNestedInput {
+  where: AuthTokenWhereUniqueInput;
+  data: AuthTokenUpdateDataInput;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  email: String;
+  emailVerified?: Maybe<Boolean>;
+  password?: Maybe<String>;
+  tokens?: Maybe<AuthTokenCreateManyInput>;
+  characters?: Maybe<CharacterCreateManyWithoutOwnerInput>;
+}
+
+export interface AuthTokenUpdateDataInput {
+  token?: Maybe<String>;
+}
+
+export interface CharacterUpdateManyWithWhereNestedInput {
+  where: CharacterScalarWhereInput;
+  data: CharacterUpdateManyDataInput;
+}
+
+export interface AuthTokenUpsertWithWhereUniqueNestedInput {
+  where: AuthTokenWhereUniqueInput;
+  update: AuthTokenUpdateDataInput;
+  create: AuthTokenCreateInput;
+}
+
+export interface AuthTokenCreateInput {
+  id?: Maybe<ID_Input>;
+  token: String;
 }
 
 export interface AuthTokenScalarWhereInput {
@@ -976,60 +1364,16 @@ export interface AuthTokenScalarWhereInput {
   NOT?: Maybe<AuthTokenScalarWhereInput[] | AuthTokenScalarWhereInput>;
 }
 
-export interface AuthTokenUpsertWithWhereUniqueNestedInput {
-  where: AuthTokenWhereUniqueInput;
-  update: AuthTokenUpdateDataInput;
-  create: AuthTokenCreateInput;
+export type CharacterWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface AuthTokenUpdateManyWithWhereNestedInput {
+  where: AuthTokenScalarWhereInput;
+  data: AuthTokenUpdateManyDataInput;
 }
 
-export interface AuthTokenUpdateDataInput {
-  token?: Maybe<String>;
-}
-
-export interface AuthTokenUpdateWithWhereUniqueNestedInput {
-  where: AuthTokenWhereUniqueInput;
-  data: AuthTokenUpdateDataInput;
-}
-
-export interface UserUpdateManyMutationInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  password?: Maybe<String>;
-}
-
-export interface UserUpdateInput {
-  name?: Maybe<String>;
-  email?: Maybe<String>;
-  emailVerified?: Maybe<Boolean>;
-  password?: Maybe<String>;
-  tokens?: Maybe<AuthTokenUpdateManyInput>;
-  characters?: Maybe<CharacterUpdateManyWithoutOwnerInput>;
-}
-
-export interface CharacterUpdateWithoutOwnerDataInput {
-  public?: Maybe<Boolean>;
-  name?: Maybe<String>;
-  bio?: Maybe<String>;
-  level?: Maybe<Int>;
-  hitDie?: Maybe<Int>;
-  maxHp?: Maybe<Int>;
-  currentHp?: Maybe<Int>;
-  dndClass?: Maybe<ClassEnum>;
-  dndSubclass?: Maybe<SubclassEnum>;
-  dndRace?: Maybe<RaceEnum>;
-  dndSubrace?: Maybe<SubraceEnum>;
-  abilityScoreBonus?: Maybe<Int>;
-  strength?: Maybe<Int>;
-  dexterity?: Maybe<Int>;
-  constitution?: Maybe<Int>;
-  intelligence?: Maybe<Int>;
-  wisdom?: Maybe<Int>;
-  charisma?: Maybe<Int>;
-  proficiencyBonus?: Maybe<Int>;
-}
-
-export interface CharacterWhereInput {
+export interface UserWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -1044,8 +1388,6 @@ export interface CharacterWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  public?: Maybe<Boolean>;
-  public_not?: Maybe<Boolean>;
   name?: Maybe<String>;
   name_not?: Maybe<String>;
   name_in?: Maybe<String[] | String>;
@@ -1060,133 +1402,42 @@ export interface CharacterWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
-  bio?: Maybe<String>;
-  bio_not?: Maybe<String>;
-  bio_in?: Maybe<String[] | String>;
-  bio_not_in?: Maybe<String[] | String>;
-  bio_lt?: Maybe<String>;
-  bio_lte?: Maybe<String>;
-  bio_gt?: Maybe<String>;
-  bio_gte?: Maybe<String>;
-  bio_contains?: Maybe<String>;
-  bio_not_contains?: Maybe<String>;
-  bio_starts_with?: Maybe<String>;
-  bio_not_starts_with?: Maybe<String>;
-  bio_ends_with?: Maybe<String>;
-  bio_not_ends_with?: Maybe<String>;
-  level?: Maybe<Int>;
-  level_not?: Maybe<Int>;
-  level_in?: Maybe<Int[] | Int>;
-  level_not_in?: Maybe<Int[] | Int>;
-  level_lt?: Maybe<Int>;
-  level_lte?: Maybe<Int>;
-  level_gt?: Maybe<Int>;
-  level_gte?: Maybe<Int>;
-  hitDie?: Maybe<Int>;
-  hitDie_not?: Maybe<Int>;
-  hitDie_in?: Maybe<Int[] | Int>;
-  hitDie_not_in?: Maybe<Int[] | Int>;
-  hitDie_lt?: Maybe<Int>;
-  hitDie_lte?: Maybe<Int>;
-  hitDie_gt?: Maybe<Int>;
-  hitDie_gte?: Maybe<Int>;
-  maxHp?: Maybe<Int>;
-  maxHp_not?: Maybe<Int>;
-  maxHp_in?: Maybe<Int[] | Int>;
-  maxHp_not_in?: Maybe<Int[] | Int>;
-  maxHp_lt?: Maybe<Int>;
-  maxHp_lte?: Maybe<Int>;
-  maxHp_gt?: Maybe<Int>;
-  maxHp_gte?: Maybe<Int>;
-  currentHp?: Maybe<Int>;
-  currentHp_not?: Maybe<Int>;
-  currentHp_in?: Maybe<Int[] | Int>;
-  currentHp_not_in?: Maybe<Int[] | Int>;
-  currentHp_lt?: Maybe<Int>;
-  currentHp_lte?: Maybe<Int>;
-  currentHp_gt?: Maybe<Int>;
-  currentHp_gte?: Maybe<Int>;
-  dndClass?: Maybe<ClassEnum>;
-  dndClass_not?: Maybe<ClassEnum>;
-  dndClass_in?: Maybe<ClassEnum[] | ClassEnum>;
-  dndClass_not_in?: Maybe<ClassEnum[] | ClassEnum>;
-  dndSubclass?: Maybe<SubclassEnum>;
-  dndSubclass_not?: Maybe<SubclassEnum>;
-  dndSubclass_in?: Maybe<SubclassEnum[] | SubclassEnum>;
-  dndSubclass_not_in?: Maybe<SubclassEnum[] | SubclassEnum>;
-  dndRace?: Maybe<RaceEnum>;
-  dndRace_not?: Maybe<RaceEnum>;
-  dndRace_in?: Maybe<RaceEnum[] | RaceEnum>;
-  dndRace_not_in?: Maybe<RaceEnum[] | RaceEnum>;
-  dndSubrace?: Maybe<SubraceEnum>;
-  dndSubrace_not?: Maybe<SubraceEnum>;
-  dndSubrace_in?: Maybe<SubraceEnum[] | SubraceEnum>;
-  dndSubrace_not_in?: Maybe<SubraceEnum[] | SubraceEnum>;
-  abilityScoreBonus?: Maybe<Int>;
-  abilityScoreBonus_not?: Maybe<Int>;
-  abilityScoreBonus_in?: Maybe<Int[] | Int>;
-  abilityScoreBonus_not_in?: Maybe<Int[] | Int>;
-  abilityScoreBonus_lt?: Maybe<Int>;
-  abilityScoreBonus_lte?: Maybe<Int>;
-  abilityScoreBonus_gt?: Maybe<Int>;
-  abilityScoreBonus_gte?: Maybe<Int>;
-  strength?: Maybe<Int>;
-  strength_not?: Maybe<Int>;
-  strength_in?: Maybe<Int[] | Int>;
-  strength_not_in?: Maybe<Int[] | Int>;
-  strength_lt?: Maybe<Int>;
-  strength_lte?: Maybe<Int>;
-  strength_gt?: Maybe<Int>;
-  strength_gte?: Maybe<Int>;
-  dexterity?: Maybe<Int>;
-  dexterity_not?: Maybe<Int>;
-  dexterity_in?: Maybe<Int[] | Int>;
-  dexterity_not_in?: Maybe<Int[] | Int>;
-  dexterity_lt?: Maybe<Int>;
-  dexterity_lte?: Maybe<Int>;
-  dexterity_gt?: Maybe<Int>;
-  dexterity_gte?: Maybe<Int>;
-  constitution?: Maybe<Int>;
-  constitution_not?: Maybe<Int>;
-  constitution_in?: Maybe<Int[] | Int>;
-  constitution_not_in?: Maybe<Int[] | Int>;
-  constitution_lt?: Maybe<Int>;
-  constitution_lte?: Maybe<Int>;
-  constitution_gt?: Maybe<Int>;
-  constitution_gte?: Maybe<Int>;
-  intelligence?: Maybe<Int>;
-  intelligence_not?: Maybe<Int>;
-  intelligence_in?: Maybe<Int[] | Int>;
-  intelligence_not_in?: Maybe<Int[] | Int>;
-  intelligence_lt?: Maybe<Int>;
-  intelligence_lte?: Maybe<Int>;
-  intelligence_gt?: Maybe<Int>;
-  intelligence_gte?: Maybe<Int>;
-  wisdom?: Maybe<Int>;
-  wisdom_not?: Maybe<Int>;
-  wisdom_in?: Maybe<Int[] | Int>;
-  wisdom_not_in?: Maybe<Int[] | Int>;
-  wisdom_lt?: Maybe<Int>;
-  wisdom_lte?: Maybe<Int>;
-  wisdom_gt?: Maybe<Int>;
-  wisdom_gte?: Maybe<Int>;
-  charisma?: Maybe<Int>;
-  charisma_not?: Maybe<Int>;
-  charisma_in?: Maybe<Int[] | Int>;
-  charisma_not_in?: Maybe<Int[] | Int>;
-  charisma_lt?: Maybe<Int>;
-  charisma_lte?: Maybe<Int>;
-  charisma_gt?: Maybe<Int>;
-  charisma_gte?: Maybe<Int>;
-  proficiencyBonus?: Maybe<Int>;
-  proficiencyBonus_not?: Maybe<Int>;
-  proficiencyBonus_in?: Maybe<Int[] | Int>;
-  proficiencyBonus_not_in?: Maybe<Int[] | Int>;
-  proficiencyBonus_lt?: Maybe<Int>;
-  proficiencyBonus_lte?: Maybe<Int>;
-  proficiencyBonus_gt?: Maybe<Int>;
-  proficiencyBonus_gte?: Maybe<Int>;
-  owner?: Maybe<UserWhereInput>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  emailVerified?: Maybe<Boolean>;
+  emailVerified_not?: Maybe<Boolean>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
+  tokens_every?: Maybe<AuthTokenWhereInput>;
+  tokens_some?: Maybe<AuthTokenWhereInput>;
+  tokens_none?: Maybe<AuthTokenWhereInput>;
+  characters_every?: Maybe<CharacterWhereInput>;
+  characters_some?: Maybe<CharacterWhereInput>;
+  characters_none?: Maybe<CharacterWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1203,9 +1454,96 @@ export interface CharacterWhereInput {
   updatedAt_lte?: Maybe<DateTimeInput>;
   updatedAt_gt?: Maybe<DateTimeInput>;
   updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<CharacterWhereInput[] | CharacterWhereInput>;
-  OR?: Maybe<CharacterWhereInput[] | CharacterWhereInput>;
-  NOT?: Maybe<CharacterWhereInput[] | CharacterWhereInput>;
+  AND?: Maybe<UserWhereInput[] | UserWhereInput>;
+  OR?: Maybe<UserWhereInput[] | UserWhereInput>;
+  NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
+}
+
+export interface AuthTokenUpdateManyDataInput {
+  token?: Maybe<String>;
+}
+
+export type FeatureWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CharacterCreateManyWithoutFeaturesInput {
+  create?: Maybe<
+    CharacterCreateWithoutFeaturesInput[] | CharacterCreateWithoutFeaturesInput
+  >;
+  connect?: Maybe<CharacterWhereUniqueInput[] | CharacterWhereUniqueInput>;
+}
+
+export interface FeatureCreateInput {
+  id?: Maybe<ID_Input>;
+  index: Int;
+  name: String;
+  description?: Maybe<FeatureCreatedescriptionInput>;
+  characters?: Maybe<CharacterCreateManyWithoutFeaturesInput>;
+}
+
+export interface CharacterUpdateManyMutationInput {
+  public?: Maybe<Boolean>;
+  name?: Maybe<String>;
+  bio?: Maybe<String>;
+  level?: Maybe<Int>;
+  hitDie?: Maybe<Int>;
+  maxHp?: Maybe<Int>;
+  currentHp?: Maybe<Int>;
+  dndClass?: Maybe<ClassEnum>;
+  dndSubclass?: Maybe<SubclassEnum>;
+  dndRace?: Maybe<RaceEnum>;
+  dndSubrace?: Maybe<SubraceEnum>;
+  abilityScoreBonus?: Maybe<Int>;
+  strength?: Maybe<Int>;
+  dexterity?: Maybe<Int>;
+  constitution?: Maybe<Int>;
+  intelligence?: Maybe<Int>;
+  wisdom?: Maybe<Int>;
+  charisma?: Maybe<Int>;
+  proficiencyBonus?: Maybe<Int>;
+}
+
+export interface UserUpsertWithoutCharactersInput {
+  update: UserUpdateWithoutCharactersDataInput;
+  create: UserCreateWithoutCharactersInput;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
+export interface CharacterUpdateWithWhereUniqueWithoutOwnerInput {
+  where: CharacterWhereUniqueInput;
+  data: CharacterUpdateWithoutOwnerDataInput;
+}
+
+export interface AuthTokenSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<AuthTokenWhereInput>;
+  AND?: Maybe<
+    AuthTokenSubscriptionWhereInput[] | AuthTokenSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    AuthTokenSubscriptionWhereInput[] | AuthTokenSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    AuthTokenSubscriptionWhereInput[] | AuthTokenSubscriptionWhereInput
+  >;
+}
+
+export interface AuthTokenUpdateManyMutationInput {
+  token?: Maybe<String>;
+}
+
+export interface CharacterUpsertWithWhereUniqueWithoutFeaturesInput {
+  where: CharacterWhereUniqueInput;
+  update: CharacterUpdateWithoutFeaturesDataInput;
+  create: CharacterCreateWithoutFeaturesInput;
 }
 
 export interface NodeNode {
@@ -1244,6 +1582,41 @@ export interface UserPreviousValuesSubscription
   password: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface AuthTokenEdge {
+  node: AuthToken;
+  cursor: String;
+}
+
+export interface AuthTokenEdgePromise
+  extends Promise<AuthTokenEdge>,
+    Fragmentable {
+  node: <T = AuthTokenPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface AuthTokenEdgeSubscription
+  extends Promise<AsyncIterator<AuthTokenEdge>>,
+    Fragmentable {
+  node: <T = AuthTokenSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateAuthToken {
+  count: Int;
+}
+
+export interface AggregateAuthTokenPromise
+  extends Promise<AggregateAuthToken>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateAuthTokenSubscription
+  extends Promise<AsyncIterator<AggregateAuthToken>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface User {
@@ -1344,23 +1717,458 @@ export interface UserNullablePromise
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface AuthTokenEdge {
-  node: AuthToken;
+export interface FeatureSubscriptionPayload {
+  mutation: MutationType;
+  node: Feature;
+  updatedFields: String[];
+  previousValues: FeaturePreviousValues;
+}
+
+export interface FeatureSubscriptionPayloadPromise
+  extends Promise<FeatureSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = FeaturePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = FeaturePreviousValuesPromise>() => T;
+}
+
+export interface FeatureSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<FeatureSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = FeatureSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = FeaturePreviousValuesSubscription>() => T;
+}
+
+export interface Character {
+  id: ID_Output;
+  public: Boolean;
+  name: String;
+  bio?: String;
+  level: Int;
+  hitDie: Int;
+  maxHp: Int;
+  currentHp: Int;
+  dndClass: ClassEnum;
+  dndSubclass?: SubclassEnum;
+  dndRace: RaceEnum;
+  dndSubrace?: SubraceEnum;
+  abilityScoreBonus: Int;
+  strength: Int;
+  dexterity: Int;
+  constitution: Int;
+  intelligence: Int;
+  wisdom: Int;
+  charisma: Int;
+  proficiencyBonus: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface CharacterPromise extends Promise<Character>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  public: () => Promise<Boolean>;
+  name: () => Promise<String>;
+  bio: () => Promise<String>;
+  level: () => Promise<Int>;
+  hitDie: () => Promise<Int>;
+  maxHp: () => Promise<Int>;
+  currentHp: () => Promise<Int>;
+  dndClass: () => Promise<ClassEnum>;
+  dndSubclass: () => Promise<SubclassEnum>;
+  dndRace: () => Promise<RaceEnum>;
+  dndSubrace: () => Promise<SubraceEnum>;
+  abilityScoreBonus: () => Promise<Int>;
+  strength: () => Promise<Int>;
+  dexterity: () => Promise<Int>;
+  constitution: () => Promise<Int>;
+  intelligence: () => Promise<Int>;
+  wisdom: () => Promise<Int>;
+  charisma: () => Promise<Int>;
+  proficiencyBonus: () => Promise<Int>;
+  features: <T = FragmentableArray<Feature>>(args?: {
+    where?: FeatureWhereInput;
+    orderBy?: FeatureOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  owner: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface CharacterSubscription
+  extends Promise<AsyncIterator<Character>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  public: () => Promise<AsyncIterator<Boolean>>;
+  name: () => Promise<AsyncIterator<String>>;
+  bio: () => Promise<AsyncIterator<String>>;
+  level: () => Promise<AsyncIterator<Int>>;
+  hitDie: () => Promise<AsyncIterator<Int>>;
+  maxHp: () => Promise<AsyncIterator<Int>>;
+  currentHp: () => Promise<AsyncIterator<Int>>;
+  dndClass: () => Promise<AsyncIterator<ClassEnum>>;
+  dndSubclass: () => Promise<AsyncIterator<SubclassEnum>>;
+  dndRace: () => Promise<AsyncIterator<RaceEnum>>;
+  dndSubrace: () => Promise<AsyncIterator<SubraceEnum>>;
+  abilityScoreBonus: () => Promise<AsyncIterator<Int>>;
+  strength: () => Promise<AsyncIterator<Int>>;
+  dexterity: () => Promise<AsyncIterator<Int>>;
+  constitution: () => Promise<AsyncIterator<Int>>;
+  intelligence: () => Promise<AsyncIterator<Int>>;
+  wisdom: () => Promise<AsyncIterator<Int>>;
+  charisma: () => Promise<AsyncIterator<Int>>;
+  proficiencyBonus: () => Promise<AsyncIterator<Int>>;
+  features: <T = Promise<AsyncIterator<FeatureSubscription>>>(args?: {
+    where?: FeatureWhereInput;
+    orderBy?: FeatureOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  owner: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface CharacterNullablePromise
+  extends Promise<Character | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  public: () => Promise<Boolean>;
+  name: () => Promise<String>;
+  bio: () => Promise<String>;
+  level: () => Promise<Int>;
+  hitDie: () => Promise<Int>;
+  maxHp: () => Promise<Int>;
+  currentHp: () => Promise<Int>;
+  dndClass: () => Promise<ClassEnum>;
+  dndSubclass: () => Promise<SubclassEnum>;
+  dndRace: () => Promise<RaceEnum>;
+  dndSubrace: () => Promise<SubraceEnum>;
+  abilityScoreBonus: () => Promise<Int>;
+  strength: () => Promise<Int>;
+  dexterity: () => Promise<Int>;
+  constitution: () => Promise<Int>;
+  intelligence: () => Promise<Int>;
+  wisdom: () => Promise<Int>;
+  charisma: () => Promise<Int>;
+  proficiencyBonus: () => Promise<Int>;
+  features: <T = FragmentableArray<Feature>>(args?: {
+    where?: FeatureWhereInput;
+    orderBy?: FeatureOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  owner: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface Feature {
+  id: ID_Output;
+  index: Int;
+  name: String;
+  description: String[];
+}
+
+export interface FeaturePromise extends Promise<Feature>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  description: () => Promise<String[]>;
+  characters: <T = FragmentableArray<Character>>(args?: {
+    where?: CharacterWhereInput;
+    orderBy?: CharacterOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface FeatureSubscription
+  extends Promise<AsyncIterator<Feature>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String[]>>;
+  characters: <T = Promise<AsyncIterator<CharacterSubscription>>>(args?: {
+    where?: CharacterWhereInput;
+    orderBy?: CharacterOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface FeatureNullablePromise
+  extends Promise<Feature | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  description: () => Promise<String[]>;
+  characters: <T = FragmentableArray<Character>>(args?: {
+    where?: CharacterWhereInput;
+    orderBy?: CharacterOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface UserEdge {
+  node: User;
   cursor: String;
 }
 
-export interface AuthTokenEdgePromise
-  extends Promise<AuthTokenEdge>,
-    Fragmentable {
-  node: <T = AuthTokenPromise>() => T;
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface AuthTokenEdgeSubscription
-  extends Promise<AsyncIterator<AuthTokenEdge>>,
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
     Fragmentable {
-  node: <T = AuthTokenSubscription>() => T;
+  node: <T = UserSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface FeaturePreviousValues {
+  id: ID_Output;
+  index: Int;
+  name: String;
+  description: String[];
+}
+
+export interface FeaturePreviousValuesPromise
+  extends Promise<FeaturePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  index: () => Promise<Int>;
+  name: () => Promise<String>;
+  description: () => Promise<String[]>;
+}
+
+export interface FeaturePreviousValuesSubscription
+  extends Promise<AsyncIterator<FeaturePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  index: () => Promise<AsyncIterator<Int>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String[]>>;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface AuthTokenConnection {
+  pageInfo: PageInfo;
+  edges: AuthTokenEdge[];
+}
+
+export interface AuthTokenConnectionPromise
+  extends Promise<AuthTokenConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<AuthTokenEdge>>() => T;
+  aggregate: <T = AggregateAuthTokenPromise>() => T;
+}
+
+export interface AuthTokenConnectionSubscription
+  extends Promise<AsyncIterator<AuthTokenConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<AuthTokenEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateAuthTokenSubscription>() => T;
+}
+
+export interface FeatureEdge {
+  node: Feature;
+  cursor: String;
+}
+
+export interface FeatureEdgePromise extends Promise<FeatureEdge>, Fragmentable {
+  node: <T = FeaturePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface FeatureEdgeSubscription
+  extends Promise<AsyncIterator<FeatureEdge>>,
+    Fragmentable {
+  node: <T = FeatureSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AuthToken {
+  id: ID_Output;
+  token: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface AuthTokenPromise extends Promise<AuthToken>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  token: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface AuthTokenSubscription
+  extends Promise<AsyncIterator<AuthToken>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  token: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface AuthTokenNullablePromise
+  extends Promise<AuthToken | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  token: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface AggregateCharacter {
+  count: Int;
+}
+
+export interface AggregateCharacterPromise
+  extends Promise<AggregateCharacter>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCharacterSubscription
+  extends Promise<AsyncIterator<AggregateCharacter>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AuthTokenSubscriptionPayload {
+  mutation: MutationType;
+  node: AuthToken;
+  updatedFields: String[];
+  previousValues: AuthTokenPreviousValues;
+}
+
+export interface AuthTokenSubscriptionPayloadPromise
+  extends Promise<AuthTokenSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = AuthTokenPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = AuthTokenPreviousValuesPromise>() => T;
+}
+
+export interface AuthTokenSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<AuthTokenSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = AuthTokenSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = AuthTokenPreviousValuesSubscription>() => T;
+}
+
+export interface CharacterConnection {
+  pageInfo: PageInfo;
+  edges: CharacterEdge[];
+}
+
+export interface CharacterConnectionPromise
+  extends Promise<CharacterConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CharacterEdge>>() => T;
+  aggregate: <T = AggregateCharacterPromise>() => T;
+}
+
+export interface CharacterConnectionSubscription
+  extends Promise<AsyncIterator<CharacterConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CharacterEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCharacterSubscription>() => T;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface CharacterPreviousValues {
@@ -1467,85 +2275,6 @@ export interface CharacterSubscriptionPayloadSubscription
   previousValues: <T = CharacterPreviousValuesSubscription>() => T;
 }
 
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AuthTokenConnection {
-  pageInfo: PageInfo;
-  edges: AuthTokenEdge[];
-}
-
-export interface AuthTokenConnectionPromise
-  extends Promise<AuthTokenConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<AuthTokenEdge>>() => T;
-  aggregate: <T = AggregateAuthTokenPromise>() => T;
-}
-
-export interface AuthTokenConnectionSubscription
-  extends Promise<AsyncIterator<AuthTokenConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<AuthTokenEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateAuthTokenSubscription>() => T;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
 export interface PageInfo {
   hasNextPage: Boolean;
   hasPreviousPage: Boolean;
@@ -1567,132 +2296,6 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface CharacterEdge {
-  node: Character;
-  cursor: String;
-}
-
-export interface CharacterEdgePromise
-  extends Promise<CharacterEdge>,
-    Fragmentable {
-  node: <T = CharacterPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface CharacterEdgeSubscription
-  extends Promise<AsyncIterator<CharacterEdge>>,
-    Fragmentable {
-  node: <T = CharacterSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface Character {
-  id: ID_Output;
-  public: Boolean;
-  name: String;
-  bio?: String;
-  level: Int;
-  hitDie: Int;
-  maxHp: Int;
-  currentHp: Int;
-  dndClass: ClassEnum;
-  dndSubclass?: SubclassEnum;
-  dndRace: RaceEnum;
-  dndSubrace?: SubraceEnum;
-  abilityScoreBonus: Int;
-  strength: Int;
-  dexterity: Int;
-  constitution: Int;
-  intelligence: Int;
-  wisdom: Int;
-  charisma: Int;
-  proficiencyBonus: Int;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface CharacterPromise extends Promise<Character>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  public: () => Promise<Boolean>;
-  name: () => Promise<String>;
-  bio: () => Promise<String>;
-  level: () => Promise<Int>;
-  hitDie: () => Promise<Int>;
-  maxHp: () => Promise<Int>;
-  currentHp: () => Promise<Int>;
-  dndClass: () => Promise<ClassEnum>;
-  dndSubclass: () => Promise<SubclassEnum>;
-  dndRace: () => Promise<RaceEnum>;
-  dndSubrace: () => Promise<SubraceEnum>;
-  abilityScoreBonus: () => Promise<Int>;
-  strength: () => Promise<Int>;
-  dexterity: () => Promise<Int>;
-  constitution: () => Promise<Int>;
-  intelligence: () => Promise<Int>;
-  wisdom: () => Promise<Int>;
-  charisma: () => Promise<Int>;
-  proficiencyBonus: () => Promise<Int>;
-  owner: <T = UserPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface CharacterSubscription
-  extends Promise<AsyncIterator<Character>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  public: () => Promise<AsyncIterator<Boolean>>;
-  name: () => Promise<AsyncIterator<String>>;
-  bio: () => Promise<AsyncIterator<String>>;
-  level: () => Promise<AsyncIterator<Int>>;
-  hitDie: () => Promise<AsyncIterator<Int>>;
-  maxHp: () => Promise<AsyncIterator<Int>>;
-  currentHp: () => Promise<AsyncIterator<Int>>;
-  dndClass: () => Promise<AsyncIterator<ClassEnum>>;
-  dndSubclass: () => Promise<AsyncIterator<SubclassEnum>>;
-  dndRace: () => Promise<AsyncIterator<RaceEnum>>;
-  dndSubrace: () => Promise<AsyncIterator<SubraceEnum>>;
-  abilityScoreBonus: () => Promise<AsyncIterator<Int>>;
-  strength: () => Promise<AsyncIterator<Int>>;
-  dexterity: () => Promise<AsyncIterator<Int>>;
-  constitution: () => Promise<AsyncIterator<Int>>;
-  intelligence: () => Promise<AsyncIterator<Int>>;
-  wisdom: () => Promise<AsyncIterator<Int>>;
-  charisma: () => Promise<AsyncIterator<Int>>;
-  proficiencyBonus: () => Promise<AsyncIterator<Int>>;
-  owner: <T = UserSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface CharacterNullablePromise
-  extends Promise<Character | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  public: () => Promise<Boolean>;
-  name: () => Promise<String>;
-  bio: () => Promise<String>;
-  level: () => Promise<Int>;
-  hitDie: () => Promise<Int>;
-  maxHp: () => Promise<Int>;
-  currentHp: () => Promise<Int>;
-  dndClass: () => Promise<ClassEnum>;
-  dndSubclass: () => Promise<SubclassEnum>;
-  dndRace: () => Promise<RaceEnum>;
-  dndSubrace: () => Promise<SubraceEnum>;
-  abilityScoreBonus: () => Promise<Int>;
-  strength: () => Promise<Int>;
-  dexterity: () => Promise<Int>;
-  constitution: () => Promise<Int>;
-  intelligence: () => Promise<Int>;
-  wisdom: () => Promise<Int>;
-  charisma: () => Promise<Int>;
-  proficiencyBonus: () => Promise<Int>;
-  owner: <T = UserPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface AuthTokenPreviousValues {
@@ -1720,119 +2323,20 @@ export interface AuthTokenPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface AuthTokenSubscriptionPayload {
-  mutation: MutationType;
-  node: AuthToken;
-  updatedFields: String[];
-  previousValues: AuthTokenPreviousValues;
-}
-
-export interface AuthTokenSubscriptionPayloadPromise
-  extends Promise<AuthTokenSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = AuthTokenPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = AuthTokenPreviousValuesPromise>() => T;
-}
-
-export interface AuthTokenSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<AuthTokenSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = AuthTokenSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = AuthTokenPreviousValuesSubscription>() => T;
-}
-
-export interface AuthToken {
-  id: ID_Output;
-  token: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface AuthTokenPromise extends Promise<AuthToken>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  token: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface AuthTokenSubscription
-  extends Promise<AsyncIterator<AuthToken>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  token: () => Promise<AsyncIterator<String>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface AuthTokenNullablePromise
-  extends Promise<AuthToken | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  token: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface CharacterConnection {
-  pageInfo: PageInfo;
-  edges: CharacterEdge[];
-}
-
-export interface CharacterConnectionPromise
-  extends Promise<CharacterConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CharacterEdge>>() => T;
-  aggregate: <T = AggregateCharacterPromise>() => T;
-}
-
-export interface CharacterConnectionSubscription
-  extends Promise<AsyncIterator<CharacterConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CharacterEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCharacterSubscription>() => T;
-}
-
-export interface AggregateCharacter {
+export interface AggregateFeature {
   count: Int;
 }
 
-export interface AggregateCharacterPromise
-  extends Promise<AggregateCharacter>,
+export interface AggregateFeaturePromise
+  extends Promise<AggregateFeature>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateCharacterSubscription
-  extends Promise<AsyncIterator<AggregateCharacter>>,
+export interface AggregateFeatureSubscription
+  extends Promise<AsyncIterator<AggregateFeature>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
-}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
-}
-
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface AggregateUser {
@@ -1851,38 +2355,45 @@ export interface AggregateUserSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface AggregateAuthToken {
-  count: Int;
+export interface CharacterEdge {
+  node: Character;
+  cursor: String;
 }
 
-export interface AggregateAuthTokenPromise
-  extends Promise<AggregateAuthToken>,
+export interface CharacterEdgePromise
+  extends Promise<CharacterEdge>,
     Fragmentable {
-  count: () => Promise<Int>;
+  node: <T = CharacterPromise>() => T;
+  cursor: () => Promise<String>;
 }
 
-export interface AggregateAuthTokenSubscription
-  extends Promise<AsyncIterator<AggregateAuthToken>>,
+export interface CharacterEdgeSubscription
+  extends Promise<AsyncIterator<CharacterEdge>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  node: <T = CharacterSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number;
+export interface FeatureConnection {
+  pageInfo: PageInfo;
+  edges: FeatureEdge[];
+}
 
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
+export interface FeatureConnectionPromise
+  extends Promise<FeatureConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<FeatureEdge>>() => T;
+  aggregate: <T = AggregateFeaturePromise>() => T;
+}
 
-export type Long = string;
-
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
+export interface FeatureConnectionSubscription
+  extends Promise<AsyncIterator<FeatureConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<FeatureEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateFeatureSubscription>() => T;
+}
 
 /*
 DateTime scalar input type, allowing Date
@@ -1894,11 +2405,28 @@ DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
 
+export type Long = string;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
+
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 */
 export type ID_Input = string | number;
 export type ID_Output = string;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /**
  * Model Metadata
@@ -1915,6 +2443,10 @@ export const models: Model[] = [
   },
   {
     name: "Character",
+    embedded: false
+  },
+  {
+    name: "Feature",
     embedded: false
   },
   {
@@ -1942,6 +2474,7 @@ export const models: Model[] = [
 export const Prisma = makePrismaClientClass<ClientConstructor<Prisma>>({
   typeDefs,
   models,
-  endpoint: `${process.env["PRISMA_ENDPOINT"]}`
+  endpoint: `${process.env["PRISMA_ENDPOINT"]}`,
+  secret: `${process.env["PRISMA_SECRET"]}`
 });
 export const prisma = new Prisma();

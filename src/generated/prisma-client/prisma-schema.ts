@@ -10,6 +10,10 @@ type AggregateCharacter {
   count: Int!
 }
 
+type AggregateFeature {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -251,6 +255,7 @@ type Character {
   wisdom: Int!
   charisma: Int!
   proficiencyBonus: Int!
+  features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature!]
   owner: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -283,12 +288,42 @@ input CharacterCreateInput {
   wisdom: Int
   charisma: Int
   proficiencyBonus: Int
+  features: FeatureCreateManyWithoutCharactersInput
   owner: UserCreateOneWithoutCharactersInput!
+}
+
+input CharacterCreateManyWithoutFeaturesInput {
+  create: [CharacterCreateWithoutFeaturesInput!]
+  connect: [CharacterWhereUniqueInput!]
 }
 
 input CharacterCreateManyWithoutOwnerInput {
   create: [CharacterCreateWithoutOwnerInput!]
   connect: [CharacterWhereUniqueInput!]
+}
+
+input CharacterCreateWithoutFeaturesInput {
+  id: ID
+  public: Boolean
+  name: String!
+  bio: String
+  level: Int
+  hitDie: Int!
+  maxHp: Int
+  currentHp: Int
+  dndClass: ClassEnum!
+  dndSubclass: SubclassEnum
+  dndRace: RaceEnum!
+  dndSubrace: SubraceEnum
+  abilityScoreBonus: Int
+  strength: Int
+  dexterity: Int
+  constitution: Int
+  intelligence: Int
+  wisdom: Int
+  charisma: Int
+  proficiencyBonus: Int
+  owner: UserCreateOneWithoutCharactersInput!
 }
 
 input CharacterCreateWithoutOwnerInput {
@@ -312,6 +347,7 @@ input CharacterCreateWithoutOwnerInput {
   wisdom: Int
   charisma: Int
   proficiencyBonus: Int
+  features: FeatureCreateManyWithoutCharactersInput
 }
 
 type CharacterEdge {
@@ -607,6 +643,7 @@ input CharacterUpdateInput {
   wisdom: Int
   charisma: Int
   proficiencyBonus: Int
+  features: FeatureUpdateManyWithoutCharactersInput
   owner: UserUpdateOneRequiredWithoutCharactersInput
 }
 
@@ -654,6 +691,18 @@ input CharacterUpdateManyMutationInput {
   proficiencyBonus: Int
 }
 
+input CharacterUpdateManyWithoutFeaturesInput {
+  create: [CharacterCreateWithoutFeaturesInput!]
+  delete: [CharacterWhereUniqueInput!]
+  connect: [CharacterWhereUniqueInput!]
+  set: [CharacterWhereUniqueInput!]
+  disconnect: [CharacterWhereUniqueInput!]
+  update: [CharacterUpdateWithWhereUniqueWithoutFeaturesInput!]
+  upsert: [CharacterUpsertWithWhereUniqueWithoutFeaturesInput!]
+  deleteMany: [CharacterScalarWhereInput!]
+  updateMany: [CharacterUpdateManyWithWhereNestedInput!]
+}
+
 input CharacterUpdateManyWithoutOwnerInput {
   create: [CharacterCreateWithoutOwnerInput!]
   delete: [CharacterWhereUniqueInput!]
@@ -669,6 +718,29 @@ input CharacterUpdateManyWithoutOwnerInput {
 input CharacterUpdateManyWithWhereNestedInput {
   where: CharacterScalarWhereInput!
   data: CharacterUpdateManyDataInput!
+}
+
+input CharacterUpdateWithoutFeaturesDataInput {
+  public: Boolean
+  name: String
+  bio: String
+  level: Int
+  hitDie: Int
+  maxHp: Int
+  currentHp: Int
+  dndClass: ClassEnum
+  dndSubclass: SubclassEnum
+  dndRace: RaceEnum
+  dndSubrace: SubraceEnum
+  abilityScoreBonus: Int
+  strength: Int
+  dexterity: Int
+  constitution: Int
+  intelligence: Int
+  wisdom: Int
+  charisma: Int
+  proficiencyBonus: Int
+  owner: UserUpdateOneRequiredWithoutCharactersInput
 }
 
 input CharacterUpdateWithoutOwnerDataInput {
@@ -691,11 +763,23 @@ input CharacterUpdateWithoutOwnerDataInput {
   wisdom: Int
   charisma: Int
   proficiencyBonus: Int
+  features: FeatureUpdateManyWithoutCharactersInput
+}
+
+input CharacterUpdateWithWhereUniqueWithoutFeaturesInput {
+  where: CharacterWhereUniqueInput!
+  data: CharacterUpdateWithoutFeaturesDataInput!
 }
 
 input CharacterUpdateWithWhereUniqueWithoutOwnerInput {
   where: CharacterWhereUniqueInput!
   data: CharacterUpdateWithoutOwnerDataInput!
+}
+
+input CharacterUpsertWithWhereUniqueWithoutFeaturesInput {
+  where: CharacterWhereUniqueInput!
+  update: CharacterUpdateWithoutFeaturesDataInput!
+  create: CharacterCreateWithoutFeaturesInput!
 }
 
 input CharacterUpsertWithWhereUniqueWithoutOwnerInput {
@@ -861,6 +945,9 @@ input CharacterWhereInput {
   proficiencyBonus_lte: Int
   proficiencyBonus_gt: Int
   proficiencyBonus_gte: Int
+  features_every: FeatureWhereInput
+  features_some: FeatureWhereInput
+  features_none: FeatureWhereInput
   owner: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
@@ -904,6 +991,231 @@ enum ClassEnum {
 
 scalar DateTime
 
+type Feature {
+  id: ID!
+  index: Int!
+  name: String!
+  description: [String!]!
+  characters(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Character!]
+}
+
+type FeatureConnection {
+  pageInfo: PageInfo!
+  edges: [FeatureEdge]!
+  aggregate: AggregateFeature!
+}
+
+input FeatureCreatedescriptionInput {
+  set: [String!]
+}
+
+input FeatureCreateInput {
+  id: ID
+  index: Int!
+  name: String!
+  description: FeatureCreatedescriptionInput
+  characters: CharacterCreateManyWithoutFeaturesInput
+}
+
+input FeatureCreateManyWithoutCharactersInput {
+  create: [FeatureCreateWithoutCharactersInput!]
+  connect: [FeatureWhereUniqueInput!]
+}
+
+input FeatureCreateWithoutCharactersInput {
+  id: ID
+  index: Int!
+  name: String!
+  description: FeatureCreatedescriptionInput
+}
+
+type FeatureEdge {
+  node: Feature!
+  cursor: String!
+}
+
+enum FeatureOrderByInput {
+  id_ASC
+  id_DESC
+  index_ASC
+  index_DESC
+  name_ASC
+  name_DESC
+}
+
+type FeaturePreviousValues {
+  id: ID!
+  index: Int!
+  name: String!
+  description: [String!]!
+}
+
+input FeatureScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [FeatureScalarWhereInput!]
+  OR: [FeatureScalarWhereInput!]
+  NOT: [FeatureScalarWhereInput!]
+}
+
+type FeatureSubscriptionPayload {
+  mutation: MutationType!
+  node: Feature
+  updatedFields: [String!]
+  previousValues: FeaturePreviousValues
+}
+
+input FeatureSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: FeatureWhereInput
+  AND: [FeatureSubscriptionWhereInput!]
+  OR: [FeatureSubscriptionWhereInput!]
+  NOT: [FeatureSubscriptionWhereInput!]
+}
+
+input FeatureUpdatedescriptionInput {
+  set: [String!]
+}
+
+input FeatureUpdateInput {
+  index: Int
+  name: String
+  description: FeatureUpdatedescriptionInput
+  characters: CharacterUpdateManyWithoutFeaturesInput
+}
+
+input FeatureUpdateManyDataInput {
+  index: Int
+  name: String
+  description: FeatureUpdatedescriptionInput
+}
+
+input FeatureUpdateManyMutationInput {
+  index: Int
+  name: String
+  description: FeatureUpdatedescriptionInput
+}
+
+input FeatureUpdateManyWithoutCharactersInput {
+  create: [FeatureCreateWithoutCharactersInput!]
+  delete: [FeatureWhereUniqueInput!]
+  connect: [FeatureWhereUniqueInput!]
+  set: [FeatureWhereUniqueInput!]
+  disconnect: [FeatureWhereUniqueInput!]
+  update: [FeatureUpdateWithWhereUniqueWithoutCharactersInput!]
+  upsert: [FeatureUpsertWithWhereUniqueWithoutCharactersInput!]
+  deleteMany: [FeatureScalarWhereInput!]
+  updateMany: [FeatureUpdateManyWithWhereNestedInput!]
+}
+
+input FeatureUpdateManyWithWhereNestedInput {
+  where: FeatureScalarWhereInput!
+  data: FeatureUpdateManyDataInput!
+}
+
+input FeatureUpdateWithoutCharactersDataInput {
+  index: Int
+  name: String
+  description: FeatureUpdatedescriptionInput
+}
+
+input FeatureUpdateWithWhereUniqueWithoutCharactersInput {
+  where: FeatureWhereUniqueInput!
+  data: FeatureUpdateWithoutCharactersDataInput!
+}
+
+input FeatureUpsertWithWhereUniqueWithoutCharactersInput {
+  where: FeatureWhereUniqueInput!
+  update: FeatureUpdateWithoutCharactersDataInput!
+  create: FeatureCreateWithoutCharactersInput!
+}
+
+input FeatureWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  characters_every: CharacterWhereInput
+  characters_some: CharacterWhereInput
+  characters_none: CharacterWhereInput
+  AND: [FeatureWhereInput!]
+  OR: [FeatureWhereInput!]
+  NOT: [FeatureWhereInput!]
+}
+
+input FeatureWhereUniqueInput {
+  id: ID
+}
+
 scalar Long
 
 type Mutation {
@@ -919,6 +1231,12 @@ type Mutation {
   upsertCharacter(where: CharacterWhereUniqueInput!, create: CharacterCreateInput!, update: CharacterUpdateInput!): Character!
   deleteCharacter(where: CharacterWhereUniqueInput!): Character
   deleteManyCharacters(where: CharacterWhereInput): BatchPayload!
+  createFeature(data: FeatureCreateInput!): Feature!
+  updateFeature(data: FeatureUpdateInput!, where: FeatureWhereUniqueInput!): Feature
+  updateManyFeatures(data: FeatureUpdateManyMutationInput!, where: FeatureWhereInput): BatchPayload!
+  upsertFeature(where: FeatureWhereUniqueInput!, create: FeatureCreateInput!, update: FeatureUpdateInput!): Feature!
+  deleteFeature(where: FeatureWhereUniqueInput!): Feature
+  deleteManyFeatures(where: FeatureWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -951,6 +1269,9 @@ type Query {
   character(where: CharacterWhereUniqueInput!): Character
   characters(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Character]!
   charactersConnection(where: CharacterWhereInput, orderBy: CharacterOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CharacterConnection!
+  feature(where: FeatureWhereUniqueInput!): Feature
+  features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature]!
+  featuresConnection(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeatureConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -998,6 +1319,7 @@ enum SubraceEnum {
 type Subscription {
   authToken(where: AuthTokenSubscriptionWhereInput): AuthTokenSubscriptionPayload
   character(where: CharacterSubscriptionWhereInput): CharacterSubscriptionPayload
+  feature(where: FeatureSubscriptionWhereInput): FeatureSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 

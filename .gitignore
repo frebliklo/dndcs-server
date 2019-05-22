@@ -35,3 +35,4 @@ src/**/*.js.map
 .env.test
 .env.staging
 .env.prod
+prisma/.env

@@ -11,12 +11,12 @@ services:
         databases:
           default:
             connector: postgres
-            host: ec2-54-246-92-116.eu-west-1.compute.amazonaws.com
-            database: d8ncfd7e8c8edt
+            host: ${HEROKU_HOST}
+            database: ${HEROKU_DATABASE}
             ssl: true
             port: 5432
-            user: jlugbyqedelfuj
-            password: cdfcff75a30a9050d2dd84f620cb5e1ad1b01804881896714df11f0fb3b8b5de
+            user: ${HEROKU_USER}
+            password: ${HEROKU_PASSWORD}
   postgres:
     image: postgres:10.3
     restart: always

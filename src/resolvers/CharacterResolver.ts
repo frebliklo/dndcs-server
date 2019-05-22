@@ -1,8 +1,9 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Character } from '../generated/prisma-client'
-import IApolloContext from '../interfaces/apolloContext'
+import ApolloContext from '../interfaces/apolloContext'
 import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
+import getFeatureList from '../utils/dndApi/getFeatureList'
 import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
 import getUserId from '../utils/getUserId'
 
@@ -15,7 +16,7 @@ class CharacterResolver {
   })
   async character(
     @Arg('id') id: string,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character> {
     const userId = getUserId(req)
 
@@ -36,15 +37,25 @@ class CharacterResolver {
   })
   async createCharacter(
     @Arg('data') data: CreateCharacterInput,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character> {
     const userId = getUserId(req)
     const proficiencyBonus = getProfBonusFromLevel(data.level)
 
-    const character = await prisma.createCharacter({
+    const newCharacter = await prisma.createCharacter({
       ...data,
       proficiencyBonus,
       owner: { connect: { id: userId } },
+    })
+
+    const features = await getFeatureList(newCharacter)
+    const featuresToConnect = features.map(feature => ({ id: feature.id }))
+
+    const character = await prisma.updateCharacter({
+      where: { id: newCharacter.id },
+      data: {
+        features: { connect: featuresToConnect },
+      },
     })
 
     return character
@@ -57,7 +68,7 @@ class CharacterResolver {
   })
   async deleteCharacter(
     @Arg('id') id: string,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character> {
     const userId = getUserId(req)
     const [characterToDelete] = await prisma.characters({

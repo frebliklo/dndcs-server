@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
 import { User } from '../generated/prisma-client'
-import IApolloContext from '../interfaces/apolloContext'
+import ApolloContext from '../interfaces/apolloContext'
 import AuthType from '../types/AuthType'
 import SigninInput from '../types/SigninInput'
 import SignupInput from '../types/SignupInput'
@@ -19,7 +19,7 @@ class AuthResolver {
   async loginWithEmail(
     @Arg('data')
     { email, password }: SigninInput,
-    @Ctx() { prisma }: IApolloContext
+    @Ctx() { prisma }: ApolloContext
   ): Promise<AuthRes | null> {
     const [user] = await prisma.users({ where: { email } })
 
@@ -38,7 +38,7 @@ class AuthResolver {
   async signUpWithEmail(
     @Arg('data')
     { name, email, password }: SignupInput,
-    @Ctx() { prisma }: IApolloContext
+    @Ctx() { prisma }: ApolloContext
   ): Promise<AuthRes | null> {
     const hashedPassword = await hashPassword(password)
 

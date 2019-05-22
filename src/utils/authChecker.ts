@@ -1,8 +1,8 @@
 import { AuthChecker } from 'type-graphql'
-import IApolloContext from '../interfaces/apolloContext'
+import ApolloContext from '../interfaces/apolloContext'
 import getUserId from './getUserId'
 
-const authChecker: AuthChecker<IApolloContext> = ({ context }) => {
+const authChecker: AuthChecker<ApolloContext> = ({ context }) => {
   const userId = getUserId(context.req)
 
   return !!userId
