@@ -1,6 +1,6 @@
 import { Ctx, Field, ID, ObjectType, Root } from 'type-graphql'
 import { Character, User } from '../generated/prisma-client'
-import IApolloContext from '../interfaces/apolloContext'
+import ApolloContext from '../interfaces/apolloContext'
 import getUserId from '../utils/getUserId'
 import CharacterType from './CharacterType'
 
@@ -19,10 +19,7 @@ class UserType {
   updatedAt: Date
 
   @Field(type => String, { nullable: true, name: 'email' })
-  emailField(
-    @Root() user: User,
-    @Ctx() { req }: IApolloContext
-  ): string | null {
+  emailField(@Root() user: User, @Ctx() { req }: ApolloContext): string | null {
     const userId = getUserId(req)
 
     if (user.id === userId) {
@@ -35,7 +32,7 @@ class UserType {
   @Field(type => Boolean, { nullable: true, name: 'emailVerified' })
   emailVerifiedField(
     @Root() user: User,
-    @Ctx() { req }: IApolloContext
+    @Ctx() { req }: ApolloContext
   ): boolean | null {
     const userId = getUserId(req)
 
@@ -49,7 +46,7 @@ class UserType {
   @Field(type => [CharacterType])
   async characters(
     @Root() user: User,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character[]> {
     const userId = getUserId(req)
     const characters = await prisma.characters({

@@ -1,6 +1,6 @@
 import { Ctx, Field, ID, Int, ObjectType, Root } from 'type-graphql'
 import { Character, Feature, prisma, User } from '../generated/prisma-client'
-import IApolloContext from '../interfaces/apolloContext'
+import ApolloContext from '../interfaces/apolloContext'
 import FeatureType from './FeatureType'
 import UserType from './UserType'
 
@@ -77,7 +77,7 @@ class CharacterType {
   @Field(type => UserType)
   async owner(
     @Root() character: Character,
-    @Ctx() { prisma }: IApolloContext
+    @Ctx() { prisma }: ApolloContext
   ): Promise<User> {
     const user = await prisma.character({ id: character.id }).owner()
 

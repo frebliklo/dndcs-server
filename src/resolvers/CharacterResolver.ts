@@ -1,6 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Character } from '../generated/prisma-client'
-import IApolloContext from '../interfaces/apolloContext'
+import ApolloContext from '../interfaces/apolloContext'
 import { CreateCharacterInput } from '../types/CharacterInputs'
 import CharacterType from '../types/CharacterType'
 import getProfBonusFromLevel from '../utils/getProfBonusFromLevel'
@@ -15,7 +15,7 @@ class CharacterResolver {
   })
   async character(
     @Arg('id') id: string,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character> {
     const userId = getUserId(req)
 
@@ -36,7 +36,7 @@ class CharacterResolver {
   })
   async createCharacter(
     @Arg('data') data: CreateCharacterInput,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character> {
     const userId = getUserId(req)
     const proficiencyBonus = getProfBonusFromLevel(data.level)
@@ -57,7 +57,7 @@ class CharacterResolver {
   })
   async deleteCharacter(
     @Arg('id') id: string,
-    @Ctx() { prisma, req }: IApolloContext
+    @Ctx() { prisma, req }: ApolloContext
   ): Promise<Character> {
     const userId = getUserId(req)
     const [characterToDelete] = await prisma.characters({
