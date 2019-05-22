@@ -22,7 +22,8 @@ jobs:
             cd prisma
             docker-compose up -d
             sleep 20
-            prisma deploy --force
+            prisma local nuke
+            prisma deploy
       - run:
           name: Run tests
           command: |
