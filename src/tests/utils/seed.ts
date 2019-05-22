@@ -65,6 +65,7 @@ export const testCharacter: TestCharacter = {
 const seed = async () => {
   await prisma.deleteManyUsers()
   await prisma.deleteManyCharacters()
+  await prisma.deleteManyFeatures()
 
   testAuthUser.user = await prisma.createUser({
     ...testAuthUser.input,

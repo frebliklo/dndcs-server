@@ -14,7 +14,16 @@ describe('Get list of features', () => {
     expect(url).toBe('http://www.dnd5eapi.co/api/classes/rogue/level/1')
   })
 
-  it('should return the correct features from API', async () => {
+  it('should correctly add features to db and return them', async () => {
+    const features = await getFeatureList(testCharacter.character)
+
+    expect(features).toHaveLength(2)
+    expect(features[1]).toHaveProperty('index')
+    expect(features[1]).toHaveProperty('name')
+    expect(features[1]).toHaveProperty('description')
+  })
+
+  it('should correctly return existing features from db', async () => {
     const features = await getFeatureList(testCharacter.character)
 
     expect(features).toHaveLength(2)
