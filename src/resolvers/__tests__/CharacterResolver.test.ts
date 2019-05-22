@@ -41,7 +41,7 @@ describe('Character query', () => {
     expect(response.data.character.dndRace).toBe(
       testCharacter.character.dndRace
     )
-  })
+  }, 45000)
 
   it('should resolve owner correctly', async () => {
     const client = getClient(testAuthUser.token)
@@ -52,7 +52,7 @@ describe('Character query', () => {
     })
 
     expect(response.data.character.owner.name).toBe(testAuthUser.user.name)
-  })
+  }, 45000)
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
@@ -102,7 +102,7 @@ describe('Create character mutation', () => {
 
     expect(exists).toBe(true)
     expect(response.data.createCharacter.name).toBe(data.name)
-  }, 15000)
+  }, 45000)
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
@@ -137,7 +137,7 @@ describe('Delete character mutation', () => {
 
     expect(response.data.deleteCharacter.name).toBe(testCharacter.input.name)
     expect(exists).toBe(false)
-  })
+  }, 45000)
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
