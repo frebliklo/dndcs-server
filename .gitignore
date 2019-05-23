@@ -38,7 +38,4 @@ src/**/*.js.map
 prisma/.env
 
 # Generated code
-src/generated/**/*.ts
-src/generated/**/*.js
-src/generated/prisma-client/prisma-schema.ts
-src/generated/prisma-client/index.ts
+src/generated/
