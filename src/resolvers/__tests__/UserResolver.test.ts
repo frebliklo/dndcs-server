@@ -10,7 +10,6 @@ import seed, {
 } from '../../tests/utils/seed'
 
 beforeAll(async () => {
-  jest.setTimeout(60000)
   await seed()
 })
 
@@ -40,7 +39,7 @@ describe('Me query', () => {
     expect(response.data.me.id).toBe(testAuthUser.user.id)
     expect(response.data.me.name).toBe(testAuthUser.user.name)
     expect(response.data.me.email).toBe(testAuthUser.user.email)
-  }, 45000)
+  })
 
   it('should return character field correctly', async () => {
     const client = getClient(testAuthUser.token)
@@ -50,7 +49,7 @@ describe('Me query', () => {
     expect(response.data.me.characters[0].name).toBe(
       testCharacter.character.name
     )
-  }, 45000)
+  })
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
@@ -83,7 +82,7 @@ describe('User query', () => {
 
     expect(response.data.user.id).toBe(testUser.user.id)
     expect(response.data.user.name).toBe(testUser.user.name)
-  }, 45000)
+  })
 
   it('should return null value in email', async () => {
     const client = getClient(testAuthUser.token)
@@ -94,7 +93,7 @@ describe('User query', () => {
     })
 
     expect(response.data.user.email).toBe(null)
-  }, 45000)
+  })
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
@@ -129,7 +128,7 @@ describe('Users query', () => {
     expect(response.data.users[1]).toHaveProperty('id')
     expect(response.data.users[1]).toHaveProperty('name')
     expect(response.data.users[1]).toHaveProperty('email')
-  }, 45000)
+  })
 
   it('should return the correct values for email', async () => {
     const client = getClient(testAuthUser.token)
@@ -146,7 +145,7 @@ describe('Users query', () => {
 
     expect(currentUser.email).toBe(testAuthUser.user.email)
     expect(otherUser.email).toBe(null)
-  }, 45000)
+  })
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
@@ -184,7 +183,7 @@ describe('Update user mutation', () => {
 
     expect(response.data.updateUser.name).toBe(testAuthUser.user.name)
     expect(response.data.updateUser.email).toBe('gunhilda@hotmail.dk')
-  }, 45000)
+  })
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
@@ -223,7 +222,7 @@ describe('Delete user mutation', () => {
 
     expect(response.data.deleteUser.name).toBe(testAuthUser.input.name)
     expect(exists).toBe(false)
-  }, 45000)
+  })
 
   it('should throw when there is no authenticated user', async () => {
     const originalError = console.warn
