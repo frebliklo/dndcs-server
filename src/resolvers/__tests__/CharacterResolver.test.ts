@@ -6,6 +6,7 @@ import getClient from '../../tests/utils/getClient'
 import seed, { testAuthUser, testCharacter } from '../../tests/utils/seed'
 
 beforeEach(async () => {
+  jest.setTimeout(60000)
   await seed()
 })
 

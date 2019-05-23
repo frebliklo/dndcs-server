@@ -10,6 +10,7 @@ import seed, {
 } from '../../tests/utils/seed'
 
 beforeAll(async () => {
+  jest.setTimeout(60000)
   await seed()
 })
 

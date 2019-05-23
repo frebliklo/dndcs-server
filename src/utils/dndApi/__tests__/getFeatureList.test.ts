@@ -6,6 +6,7 @@ import seed, {
 import getFeatureList from '../getFeatureList'
 
 beforeAll(async () => {
+  jest.setTimeout(60000)
   await seed()
 })
 
