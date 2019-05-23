@@ -10,7 +10,7 @@ API and web application for managing 5th edition Dungeons and Dragons characters
 
 This project uses [Prisma](https://www.prisma.io/). To run a local instance you need the prisma CLI and Docker. Follow the instructions on their website and make sure that you have valid values set up in your environment. See the `.env.example` for reference.
 
-When making changes to the schema make sure to run `prisma deploy -e ../.env.dev` for the changes to take effect.
+When making changes to the schema make sure to run `prisma deploy -e ./.env.dev` for the changes to take effect.
 
 If you have a secret set for your local prisma service then you can login through the CLI to get a valid token, that you can use to make requests, by running `prisma token` immediatly after deploying the service.
 
@@ -34,6 +34,9 @@ The application should be running locally on port 5000 and your console should s
 
 This project uses Jest for running tests. Currently, the strategy is to run a local server and make requests with ApolloBoost to test from the prespective of clients.
 
+The test scripts are setup to use a seperate testing environment, so make sure to deploy Prisma with the appropriate environment variables.
+
 ```bash
+prisma deploy -e ./.env.test
 npm run test
 ```

@@ -8,7 +8,6 @@ import seed, { testUser } from '../../tests/utils/seed'
 const client = getClient()
 
 beforeAll(async () => {
-  jest.setTimeout(60000)
   await seed()
 })
 

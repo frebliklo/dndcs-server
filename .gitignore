@@ -36,3 +36,6 @@ src/**/*.js.map
 .env.staging
 .env.prod
 prisma/.env
+
+# Generated code
+src/generated/
