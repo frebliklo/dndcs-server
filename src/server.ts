@@ -30,6 +30,8 @@ export const startServer = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
+    introspection: true,
+    playground: true,
     context: ({ req }) => {
       return {
         req,
