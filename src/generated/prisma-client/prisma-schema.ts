@@ -2,7 +2,174 @@
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-export const typeDefs = /* GraphQL */ `type AggregateAuthToken {
+export const typeDefs = /* GraphQL */ `type AbilityScore {
+  id: ID!
+  index: Int!
+  name: String!
+  description: [String!]!
+  skills(where: SkillWhereInput, orderBy: SkillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Skill!]
+}
+
+type AbilityScoreConnection {
+  pageInfo: PageInfo!
+  edges: [AbilityScoreEdge]!
+  aggregate: AggregateAbilityScore!
+}
+
+input AbilityScoreCreatedescriptionInput {
+  set: [String!]
+}
+
+input AbilityScoreCreateInput {
+  id: ID
+  index: Int!
+  name: String!
+  description: AbilityScoreCreatedescriptionInput
+  skills: SkillCreateManyWithoutAbilityScoreInput
+}
+
+input AbilityScoreCreateOneWithoutSkillsInput {
+  create: AbilityScoreCreateWithoutSkillsInput
+  connect: AbilityScoreWhereUniqueInput
+}
+
+input AbilityScoreCreateWithoutSkillsInput {
+  id: ID
+  index: Int!
+  name: String!
+  description: AbilityScoreCreatedescriptionInput
+}
+
+type AbilityScoreEdge {
+  node: AbilityScore!
+  cursor: String!
+}
+
+enum AbilityScoreOrderByInput {
+  id_ASC
+  id_DESC
+  index_ASC
+  index_DESC
+  name_ASC
+  name_DESC
+}
+
+type AbilityScorePreviousValues {
+  id: ID!
+  index: Int!
+  name: String!
+  description: [String!]!
+}
+
+type AbilityScoreSubscriptionPayload {
+  mutation: MutationType!
+  node: AbilityScore
+  updatedFields: [String!]
+  previousValues: AbilityScorePreviousValues
+}
+
+input AbilityScoreSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: AbilityScoreWhereInput
+  AND: [AbilityScoreSubscriptionWhereInput!]
+  OR: [AbilityScoreSubscriptionWhereInput!]
+  NOT: [AbilityScoreSubscriptionWhereInput!]
+}
+
+input AbilityScoreUpdatedescriptionInput {
+  set: [String!]
+}
+
+input AbilityScoreUpdateInput {
+  index: Int
+  name: String
+  description: AbilityScoreUpdatedescriptionInput
+  skills: SkillUpdateManyWithoutAbilityScoreInput
+}
+
+input AbilityScoreUpdateManyMutationInput {
+  index: Int
+  name: String
+  description: AbilityScoreUpdatedescriptionInput
+}
+
+input AbilityScoreUpdateOneWithoutSkillsInput {
+  create: AbilityScoreCreateWithoutSkillsInput
+  update: AbilityScoreUpdateWithoutSkillsDataInput
+  upsert: AbilityScoreUpsertWithoutSkillsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: AbilityScoreWhereUniqueInput
+}
+
+input AbilityScoreUpdateWithoutSkillsDataInput {
+  index: Int
+  name: String
+  description: AbilityScoreUpdatedescriptionInput
+}
+
+input AbilityScoreUpsertWithoutSkillsInput {
+  update: AbilityScoreUpdateWithoutSkillsDataInput!
+  create: AbilityScoreCreateWithoutSkillsInput!
+}
+
+input AbilityScoreWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  skills_every: SkillWhereInput
+  skills_some: SkillWhereInput
+  skills_none: SkillWhereInput
+  AND: [AbilityScoreWhereInput!]
+  OR: [AbilityScoreWhereInput!]
+  NOT: [AbilityScoreWhereInput!]
+}
+
+input AbilityScoreWhereUniqueInput {
+  id: ID
+}
+
+type AggregateAbilityScore {
+  count: Int!
+}
+
+type AggregateAuthToken {
   count: Int!
 }
 
@@ -11,6 +178,10 @@ type AggregateCharacter {
 }
 
 type AggregateFeature {
+  count: Int!
+}
+
+type AggregateSkill {
   count: Int!
 }
 
@@ -1219,6 +1390,12 @@ input FeatureWhereUniqueInput {
 scalar Long
 
 type Mutation {
+  createAbilityScore(data: AbilityScoreCreateInput!): AbilityScore!
+  updateAbilityScore(data: AbilityScoreUpdateInput!, where: AbilityScoreWhereUniqueInput!): AbilityScore
+  updateManyAbilityScores(data: AbilityScoreUpdateManyMutationInput!, where: AbilityScoreWhereInput): BatchPayload!
+  upsertAbilityScore(where: AbilityScoreWhereUniqueInput!, create: AbilityScoreCreateInput!, update: AbilityScoreUpdateInput!): AbilityScore!
+  deleteAbilityScore(where: AbilityScoreWhereUniqueInput!): AbilityScore
+  deleteManyAbilityScores(where: AbilityScoreWhereInput): BatchPayload!
   createAuthToken(data: AuthTokenCreateInput!): AuthToken!
   updateAuthToken(data: AuthTokenUpdateInput!, where: AuthTokenWhereUniqueInput!): AuthToken
   updateManyAuthTokens(data: AuthTokenUpdateManyMutationInput!, where: AuthTokenWhereInput): BatchPayload!
@@ -1237,6 +1414,12 @@ type Mutation {
   upsertFeature(where: FeatureWhereUniqueInput!, create: FeatureCreateInput!, update: FeatureUpdateInput!): Feature!
   deleteFeature(where: FeatureWhereUniqueInput!): Feature
   deleteManyFeatures(where: FeatureWhereInput): BatchPayload!
+  createSkill(data: SkillCreateInput!): Skill!
+  updateSkill(data: SkillUpdateInput!, where: SkillWhereUniqueInput!): Skill
+  updateManySkills(data: SkillUpdateManyMutationInput!, where: SkillWhereInput): BatchPayload!
+  upsertSkill(where: SkillWhereUniqueInput!, create: SkillCreateInput!, update: SkillUpdateInput!): Skill!
+  deleteSkill(where: SkillWhereUniqueInput!): Skill
+  deleteManySkills(where: SkillWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -1263,6 +1446,9 @@ type PageInfo {
 }
 
 type Query {
+  abilityScore(where: AbilityScoreWhereUniqueInput!): AbilityScore
+  abilityScores(where: AbilityScoreWhereInput, orderBy: AbilityScoreOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AbilityScore]!
+  abilityScoresConnection(where: AbilityScoreWhereInput, orderBy: AbilityScoreOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AbilityScoreConnection!
   authToken(where: AuthTokenWhereUniqueInput!): AuthToken
   authTokens(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AuthToken]!
   authTokensConnection(where: AuthTokenWhereInput, orderBy: AuthTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AuthTokenConnection!
@@ -1272,6 +1458,9 @@ type Query {
   feature(where: FeatureWhereUniqueInput!): Feature
   features(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Feature]!
   featuresConnection(where: FeatureWhereInput, orderBy: FeatureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FeatureConnection!
+  skill(where: SkillWhereUniqueInput!): Skill
+  skills(where: SkillWhereInput, orderBy: SkillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Skill]!
+  skillsConnection(where: SkillWhereInput, orderBy: SkillOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SkillConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -1288,6 +1477,229 @@ enum RaceEnum {
   HALF_ELF
   HALF_ORC
   TIEFLING
+}
+
+type Skill {
+  id: ID!
+  index: Int!
+  name: String!
+  description: [String!]!
+  abilityScore: AbilityScore
+}
+
+type SkillConnection {
+  pageInfo: PageInfo!
+  edges: [SkillEdge]!
+  aggregate: AggregateSkill!
+}
+
+input SkillCreatedescriptionInput {
+  set: [String!]
+}
+
+input SkillCreateInput {
+  id: ID
+  index: Int!
+  name: String!
+  description: SkillCreatedescriptionInput
+  abilityScore: AbilityScoreCreateOneWithoutSkillsInput
+}
+
+input SkillCreateManyWithoutAbilityScoreInput {
+  create: [SkillCreateWithoutAbilityScoreInput!]
+  connect: [SkillWhereUniqueInput!]
+}
+
+input SkillCreateWithoutAbilityScoreInput {
+  id: ID
+  index: Int!
+  name: String!
+  description: SkillCreatedescriptionInput
+}
+
+type SkillEdge {
+  node: Skill!
+  cursor: String!
+}
+
+enum SkillOrderByInput {
+  id_ASC
+  id_DESC
+  index_ASC
+  index_DESC
+  name_ASC
+  name_DESC
+}
+
+type SkillPreviousValues {
+  id: ID!
+  index: Int!
+  name: String!
+  description: [String!]!
+}
+
+input SkillScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [SkillScalarWhereInput!]
+  OR: [SkillScalarWhereInput!]
+  NOT: [SkillScalarWhereInput!]
+}
+
+type SkillSubscriptionPayload {
+  mutation: MutationType!
+  node: Skill
+  updatedFields: [String!]
+  previousValues: SkillPreviousValues
+}
+
+input SkillSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: SkillWhereInput
+  AND: [SkillSubscriptionWhereInput!]
+  OR: [SkillSubscriptionWhereInput!]
+  NOT: [SkillSubscriptionWhereInput!]
+}
+
+input SkillUpdatedescriptionInput {
+  set: [String!]
+}
+
+input SkillUpdateInput {
+  index: Int
+  name: String
+  description: SkillUpdatedescriptionInput
+  abilityScore: AbilityScoreUpdateOneWithoutSkillsInput
+}
+
+input SkillUpdateManyDataInput {
+  index: Int
+  name: String
+  description: SkillUpdatedescriptionInput
+}
+
+input SkillUpdateManyMutationInput {
+  index: Int
+  name: String
+  description: SkillUpdatedescriptionInput
+}
+
+input SkillUpdateManyWithoutAbilityScoreInput {
+  create: [SkillCreateWithoutAbilityScoreInput!]
+  delete: [SkillWhereUniqueInput!]
+  connect: [SkillWhereUniqueInput!]
+  set: [SkillWhereUniqueInput!]
+  disconnect: [SkillWhereUniqueInput!]
+  update: [SkillUpdateWithWhereUniqueWithoutAbilityScoreInput!]
+  upsert: [SkillUpsertWithWhereUniqueWithoutAbilityScoreInput!]
+  deleteMany: [SkillScalarWhereInput!]
+  updateMany: [SkillUpdateManyWithWhereNestedInput!]
+}
+
+input SkillUpdateManyWithWhereNestedInput {
+  where: SkillScalarWhereInput!
+  data: SkillUpdateManyDataInput!
+}
+
+input SkillUpdateWithoutAbilityScoreDataInput {
+  index: Int
+  name: String
+  description: SkillUpdatedescriptionInput
+}
+
+input SkillUpdateWithWhereUniqueWithoutAbilityScoreInput {
+  where: SkillWhereUniqueInput!
+  data: SkillUpdateWithoutAbilityScoreDataInput!
+}
+
+input SkillUpsertWithWhereUniqueWithoutAbilityScoreInput {
+  where: SkillWhereUniqueInput!
+  update: SkillUpdateWithoutAbilityScoreDataInput!
+  create: SkillCreateWithoutAbilityScoreInput!
+}
+
+input SkillWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  index: Int
+  index_not: Int
+  index_in: [Int!]
+  index_not_in: [Int!]
+  index_lt: Int
+  index_lte: Int
+  index_gt: Int
+  index_gte: Int
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  abilityScore: AbilityScoreWhereInput
+  AND: [SkillWhereInput!]
+  OR: [SkillWhereInput!]
+  NOT: [SkillWhereInput!]
+}
+
+input SkillWhereUniqueInput {
+  id: ID
 }
 
 enum SubclassEnum {
@@ -1317,9 +1729,11 @@ enum SubraceEnum {
 }
 
 type Subscription {
+  abilityScore(where: AbilityScoreSubscriptionWhereInput): AbilityScoreSubscriptionPayload
   authToken(where: AuthTokenSubscriptionWhereInput): AuthTokenSubscriptionPayload
   character(where: CharacterSubscriptionWhereInput): CharacterSubscriptionPayload
   feature(where: FeatureSubscriptionWhereInput): FeatureSubscriptionPayload
+  skill(where: SkillSubscriptionWhereInput): SkillSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 

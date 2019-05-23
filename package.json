@@ -10,7 +10,7 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "node dist/server.js",
-    "heroku-postbuild": "npm run build-ts",
+    "heroku-postbuild": "npm run ts:build",
     "dev": "env-cmd -f ./.env.dev ts-node-dev --respawn ./src/server.ts",
     "test": "env-cmd -f ./.env.test jest --runInBand",
     "test:watch": "env-cmd -f ./.env.test jest --watch --runInBand",
