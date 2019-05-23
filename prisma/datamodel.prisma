@@ -52,6 +52,22 @@ type Feature {
   characters: [Character!] @relation(name: "FeatureToCharacter" onDelete: SET_NULL)
 }
 
+type AbilityScore {
+  id: ID! @id
+  index: Int!
+  name: String!
+  description: [String!]! @scalarList(strategy: RELATION)
+  skills: [Skill!] @relation(name: "SkillToAbilityScore" onDelete: SET_NULL)
+}
+
+type Skill {
+  id: ID! @id
+  index: Int!
+  name: String!
+  description: [String!]! @scalarList(strategy: RELATION)
+  abilityScore: AbilityScore @relation(name: "SkillToAbilityScore" onDelete: SET_NULL)
+}
+
 enum ClassEnum {
   BARBARIAN
   BARD
