@@ -8,7 +8,7 @@
   "author": "frebliklo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/frebliklo/dndcs"
+    "url": "https://github.com/frebliklo/dndcs-server"
   },
   "main": "src/server.ts",
   "scripts": {
