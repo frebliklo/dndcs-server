@@ -9,6 +9,7 @@ import queryComplexity, {
 import 'reflect-metadata'
 import { prisma } from './generated/prisma-client'
 import auth from './middleware/auth'
+import forceSSL from './middleware/forceSSL'
 // import maintenanceMode from './middleware/maintenance'
 import authRouter from './routers/authRouter'
 import userRouter from './routers/userRouter'
@@ -19,6 +20,7 @@ export const startServer = async () => {
 
   app.use(bodyParser.json())
   app.use(cors())
+  app.use(forceSSL)
 
   // Uncomment next line when in maintenance
   // app.use(maintenanceMode)
