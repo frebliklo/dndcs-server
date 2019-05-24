@@ -1,7 +1,10 @@
 {
   "name": "dndcs-web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "API and web client for creating and viewing character sheets for DnD 5e",
+  "engines": {
+    "node": "12.1.0"
+  },
   "author": "frebliklo",
   "repository": {
     "type": "git",
